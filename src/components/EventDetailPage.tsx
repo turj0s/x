@@ -79,7 +79,7 @@ export const EventDetailPage: React.FC = () => {
             <EventLocation address={event.address} onGetDirections={handleGetDirections} />
           </div>
           
-          <div className="sticky bottom-0 left-0 right-0 bg-white py-6 border-t border-border w-full max-md:relative max-md:py-6 max-md:border-t-0 max-sm:py-5">
+          <div className="fixed bottom-0 right-0 w-[540px] bg-white py-6 border-t border-border max-md:relative max-md:w-full max-md:py-6 max-md:border-t-0 max-sm:py-5">
             <div className="px-10 max-md:px-[30px] max-sm:px-5">
               <EventRegistration onRegister={handleRegister} isRegistered={isRegistered} className="opacity-0 animate-fade-in [animation-delay:400ms]" />
             </div>
