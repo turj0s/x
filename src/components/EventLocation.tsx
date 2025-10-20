@@ -30,11 +30,10 @@ export const EventLocation: React.FC<EventLocationProps> = ({
         </button>
       </div>
       <iframe
-        src={`https://www.google.com/maps?q=${encodedAddress}&output=embed&z=15`}
-        className="h-[214px] self-stretch relative w-full max-sm:h-[180px] border-0 pointer-events-none"
+        src={`https://www.google.com/maps?q=${encodedAddress}&output=embed`}
+        className="h-[214px] self-stretch relative w-full max-sm:h-[180px] border-0"
         loading="lazy"
         title="Event location map"
-        style={{ filter: 'grayscale(0)' }}
       />
     </section>
   );
