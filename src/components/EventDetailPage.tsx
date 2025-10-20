@@ -16,7 +16,6 @@ interface Event {
   time: string;
   address: string;
   background_image_url: string;
-  map_image_url: string;
   target_date: string;
 }
 
@@ -33,9 +32,8 @@ export const EventDetailPage: React.FC = () => {
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (!error && data) {
       setEvent(data);
@@ -110,11 +108,10 @@ export const EventDetailPage: React.FC = () => {
               description={event.description}
             />
             
-            <EventLocation 
-              address={event.address}
-              mapImageUrl={event.map_image_url}
-              onGetDirections={handleGetDirections}
-            />
+          <EventLocation 
+            address={event.address}
+            onGetDirections={handleGetDirections}
+          />
           </div>
           
           <EventRegistration 

@@ -15,7 +15,6 @@ interface Event {
   time: string;
   address: string;
   background_image_url: string;
-  map_image_url: string;
   target_date: string;
 }
 
@@ -23,6 +22,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -42,8 +42,7 @@ const Admin = () => {
   const fetchEvents = async () => {
     const { data, error } = await supabase
       .from('events')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
 
     if (error) {
       toast({
@@ -64,6 +63,43 @@ const Admin = () => {
     navigate('/auth');
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0] || !selectedEvent) return;
+    
+    const file = e.target.files[0];
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${selectedEvent.id}-${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('event-images')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(fileName);
+
+      setSelectedEvent({ ...selectedEvent, background_image_url: publicUrl });
+      
+      toast({
+        title: 'Success',
+        description: 'Image uploaded successfully',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedEvent) return;
@@ -78,7 +114,6 @@ const Admin = () => {
         time: selectedEvent.time,
         address: selectedEvent.address,
         background_image_url: selectedEvent.background_image_url,
-        map_image_url: selectedEvent.map_image_url,
         target_date: selectedEvent.target_date,
       })
       .eq('id', selectedEvent.id);
@@ -198,31 +233,23 @@ const Admin = () => {
 
             <div>
               <label className="text-[#1A1A1A] text-sm font-normal uppercase mb-2 block">
-                Background Image URL
+                Background Image
               </label>
+              {selectedEvent.background_image_url && (
+                <img 
+                  src={selectedEvent.background_image_url} 
+                  alt="Current background" 
+                  className="w-full h-32 object-cover mb-2 rounded"
+                />
+              )}
               <Input
-                value={selectedEvent.background_image_url}
-                onChange={(e) =>
-                  setSelectedEvent({
-                    ...selectedEvent,
-                    background_image_url: e.target.value,
-                  })
-                }
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
                 className="border-[#1A1A1A]"
               />
-            </div>
-
-            <div>
-              <label className="text-[#1A1A1A] text-sm font-normal uppercase mb-2 block">
-                Map Image URL
-              </label>
-              <Input
-                value={selectedEvent.map_image_url}
-                onChange={(e) =>
-                  setSelectedEvent({ ...selectedEvent, map_image_url: e.target.value })
-                }
-                className="border-[#1A1A1A]"
-              />
+              {uploading && <p className="text-sm text-[#1A1A1A] mt-1">Uploading...</p>}
             </div>
 
             <div>

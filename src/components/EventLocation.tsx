@@ -2,15 +2,14 @@ import React from 'react';
 
 interface EventLocationProps {
   address: string;
-  mapImageUrl: string;
   onGetDirections: () => void;
 }
 
 export const EventLocation: React.FC<EventLocationProps> = ({ 
   address, 
-  mapImageUrl, 
   onGetDirections 
 }) => {
+  const encodedAddress = encodeURIComponent(address);
   return (
     <section className="flex flex-col items-start gap-6 self-stretch relative">
       <div className="flex flex-col items-start gap-5 self-stretch relative">
@@ -30,10 +29,11 @@ export const EventLocation: React.FC<EventLocationProps> = ({
           GET DIRECTIONS
         </button>
       </div>
-      <img
-        src={mapImageUrl}
-        alt="Google map showing event location"
-        className="h-[214px] self-stretch relative w-full object-cover max-sm:h-[180px]"
+      <iframe
+        src={`https://www.google.com/maps?q=${encodedAddress}&output=embed`}
+        className="h-[214px] self-stretch relative w-full max-sm:h-[180px] border-0"
+        loading="lazy"
+        title="Event location map"
       />
     </section>
   );

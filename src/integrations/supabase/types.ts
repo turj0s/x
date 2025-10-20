@@ -18,44 +18,35 @@ export type Database = {
         Row: {
           address: string
           background_image_url: string
-          created_at: string
           creator: string
           date: string
           description: string
           id: string
-          map_image_url: string
           target_date: string
           time: string
           title: string
-          updated_at: string
         }
         Insert: {
           address: string
           background_image_url: string
-          created_at?: string
           creator: string
           date: string
           description: string
           id?: string
-          map_image_url: string
           target_date: string
           time: string
           title: string
-          updated_at?: string
         }
         Update: {
           address?: string
           background_image_url?: string
-          created_at?: string
           creator?: string
           date?: string
           description?: string
           id?: string
-          map_image_url?: string
           target_date?: string
           time?: string
           title?: string
-          updated_at?: string
         }
         Relationships: []
       }
