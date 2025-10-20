@@ -59,7 +59,7 @@ export const EventDetailPage: React.FC = () => {
   return <>
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-md:flex-col max-md:h-auto">
-        <div className="flex flex-col justify-end items-start absolute h-screen pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 right-[540px] top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]" style={{
+        <div className="flex flex-col justify-end items-start fixed h-screen w-[calc(100%-540px)] pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]" style={{
         backgroundImage: `url("${event.background_image_url}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
@@ -67,8 +67,8 @@ export const EventDetailPage: React.FC = () => {
           <EventCountdown targetDate={new Date(event.target_date)} />
         </div>
         
-        <aside className="flex w-[540px] flex-col justify-between items-start absolute h-screen box-border p-10 right-0 top-0 bg-white max-md:relative max-md:w-full max-md:h-auto max-md:p-[30px] max-md:right-auto max-md:top-0 max-sm:p-5">
-          <div className="flex w-[455px] flex-col items-start gap-10 relative max-md:w-full opacity-0 animate-fade-in [animation-delay:200ms]">
+        <aside className="flex w-[540px] flex-col justify-start items-start fixed h-screen box-border right-0 top-0 bg-white overflow-y-auto max-md:relative max-md:w-full max-md:h-auto max-md:right-auto max-md:top-0 max-md:overflow-y-visible">
+          <div className="flex w-full flex-col items-start gap-10 relative p-10 pb-24 max-md:w-full max-md:p-[30px] max-md:pb-[30px] max-sm:p-5 max-sm:pb-5 opacity-0 animate-fade-in [animation-delay:200ms]">
             <div className="flex flex-col items-start gap-9 self-stretch relative">
               <EventMeta date={event.date} time={event.time} />
               <EventHeader title={event.title} creator={event.creator} />
@@ -76,10 +76,12 @@ export const EventDetailPage: React.FC = () => {
             
             <EventDescription description={event.description} />
             
-          <EventLocation address={event.address} onGetDirections={handleGetDirections} />
+            <EventLocation address={event.address} onGetDirections={handleGetDirections} />
           </div>
           
-          <EventRegistration onRegister={handleRegister} isRegistered={isRegistered} className="opacity-0 animate-fade-in [animation-delay:400ms]" />
+          <div className="sticky bottom-0 left-0 right-0 bg-white p-10 pt-6 border-t border-border max-md:relative max-md:p-[30px] max-md:pt-6 max-md:border-t-0 max-sm:p-5 max-sm:pt-5">
+            <EventRegistration onRegister={handleRegister} isRegistered={isRegistered} className="opacity-0 animate-fade-in [animation-delay:400ms]" />
+          </div>
         </aside>
       </main>
     </>;
