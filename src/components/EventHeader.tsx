@@ -9,7 +9,7 @@ export const EventHeader: React.FC<EventHeaderProps> = ({ title, creator }) => {
   return (
     <div className="flex flex-col items-start gap-9 self-stretch relative">
       <header>
-        <h1 className="self-stretch text-[#1A1A1A] text-[56px] font-normal leading-[54.88px] tracking-[-2.24px] relative max-md:text-[42px] max-md:tracking-[-1.68px] max-sm:text-[32px] max-sm:tracking-[-1.28px]">
+        <h1 className="self-stretch text-[#1A1A1A] text-[56px] font-medium leading-[54.88px] tracking-[-2.24px] relative max-md:text-[42px] max-md:tracking-[-1.68px] max-sm:text-[32px] max-sm:tracking-[-1.28px]">
           {title}
         </h1>
       </header>
