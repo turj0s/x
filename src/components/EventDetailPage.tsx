@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { EventCountdown } from './EventCountdown';
 import { EventMeta } from './EventMeta';
 import { EventHeader } from './EventHeader';
@@ -6,8 +7,41 @@ import { EventDescription } from './EventDescription';
 import { EventLocation } from './EventLocation';
 import { EventRegistration } from './EventRegistration';
 
+interface Event {
+  id: string;
+  title: string;
+  creator: string;
+  description: string;
+  date: string;
+  time: string;
+  address: string;
+  background_image_url: string;
+  map_image_url: string;
+  target_date: string;
+}
+
 export const EventDetailPage: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState(false);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvent();
+  }, []);
+
+  const fetchEvent = async () => {
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!error && data) {
+      setEvent(data);
+    }
+    setLoading(false);
+  };
 
   const handleRegister = () => {
     if (!isRegistered) {
@@ -23,6 +57,22 @@ export const EventDetailPage: React.FC = () => {
     window.open('https://maps.google.com', '_blank');
   };
 
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white">
+        <div className="text-[#1A1A1A] text-2xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!event) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white">
+        <div className="text-[#1A1A1A] text-2xl">No event found</div>
+      </div>
+    );
+  }
+
   return (
     <>
       <link
@@ -33,36 +83,36 @@ export const EventDetailPage: React.FC = () => {
         <div 
           className="flex flex-col justify-end items-start absolute h-screen pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 right-[540px] top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]"
           style={{
-            backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80")',
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("${event.background_image_url}")`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
           role="img"
           aria-label="Event background image"
         >
-          <EventCountdown />
+          <EventCountdown targetDate={new Date(event.target_date)} />
         </div>
         
         <aside className="flex w-[540px] flex-col justify-between items-start absolute h-screen box-border p-10 right-0 top-0 bg-white max-md:relative max-md:w-full max-md:h-auto max-md:p-[30px] max-md:right-auto max-md:top-0 max-sm:p-5">
           <div className="flex w-[455px] flex-col items-start gap-10 relative max-md:w-full opacity-0 animate-fade-in [animation-delay:200ms]">
             <div className="flex flex-col items-start gap-9 self-stretch relative">
               <EventMeta 
-                date="THURSDAY, OCTOBER 30"
-                time="16:30 - 18:30 CET"
+                date={event.date}
+                time={event.time}
               />
               <EventHeader 
-                title="Cocktails with a Side of Sounds"
-                creator="EBBA STOPPELBURG"
+                title={event.title}
+                creator={event.creator}
               />
             </div>
             
             <EventDescription 
-              description="Experience the perfect blend of lakeside serenity, culture, and local charm. Explore stunning waterfronts, discover top wineries and galleries, and savour local dining—your ultimate destination for relaxation, discovery, and adventure."
+              description={event.description}
             />
             
             <EventLocation 
-              address="ADDRESS GOES HERE"
-              mapImageUrl="https://api.builder.io/api/v1/image/assets/TEMP/332f98a4dad5cb2efedd96ff4032a25b1c4d8e3a?width=910"
+              address={event.address}
+              mapImageUrl={event.map_image_url}
               onGetDirections={handleGetDirections}
             />
           </div>
