@@ -3,14 +3,16 @@ import React from 'react';
 interface EventRegistrationProps {
   onRegister: () => void;
   isRegistered?: boolean;
+  className?: string;
 }
 
 export const EventRegistration: React.FC<EventRegistrationProps> = ({ 
   onRegister, 
-  isRegistered = false 
+  isRegistered = false,
+  className = ""
 }) => {
   return (
-    <div className="flex items-center gap-[-1px] self-stretch relative">
+    <div className={`flex items-center gap-[-1px] self-stretch relative ${className}`}>
       <button 
         onClick={onRegister}
         disabled={isRegistered}

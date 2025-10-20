@@ -44,7 +44,7 @@ export const EventDetailPage: React.FC = () => {
         </div>
         
         <aside className="flex w-[540px] flex-col justify-between items-start absolute h-screen box-border p-10 right-0 top-0 bg-white max-md:relative max-md:w-full max-md:h-auto max-md:p-[30px] max-md:right-auto max-md:top-0 max-sm:p-5">
-          <div className="flex w-[455px] flex-col items-start gap-10 relative max-md:w-full">
+          <div className="flex w-[455px] flex-col items-start gap-10 relative max-md:w-full opacity-0 animate-fade-in [animation-delay:200ms]">
             <div className="flex flex-col items-start gap-9 self-stretch relative">
               <EventMeta 
                 date="THURSDAY, OCTOBER 30"
@@ -70,6 +70,7 @@ export const EventDetailPage: React.FC = () => {
           <EventRegistration 
             onRegister={handleRegister}
             isRegistered={isRegistered}
+            className="opacity-0 animate-fade-in [animation-delay:400ms]"
           />
         </aside>
       </main>
