@@ -59,7 +59,7 @@ export const EventDetailPage: React.FC = () => {
   return <>
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-md:flex-col max-md:h-auto">
-        <div className="flex flex-col justify-end items-start fixed h-screen w-[calc(100%-540px)] pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 top-0 animate-scale-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]" style={{
+        <div className="flex flex-col justify-end items-start fixed h-screen w-[calc(100%-540px)] pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 top-0 animate-fade-in animate-scale-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]" style={{
         backgroundImage: `url("${event.background_image_url}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
