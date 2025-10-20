@@ -64,7 +64,7 @@ export const EventDetailPage: React.FC = () => {
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }} role="img" aria-label="Event background image">
-          <EventCountdown targetDate={new Date(event.target_date)} />
+          <EventCountdown targetDate={( /^\d{4}-\d{2}-\d{2}$/.test(event.date) && /^\d{2}:\d{2}(:\d{2})?$/.test(event.time) ) ? new Date(`${event.date}T${event.time.length === 5 ? `${event.time}:00` : event.time}`) : new Date(event.target_date)} />
         </div>
         
         <aside className="flex w-[540px] flex-col justify-start items-start fixed h-screen box-border right-0 top-0 bg-white overflow-y-auto max-md:relative max-md:w-full max-md:h-auto max-md:right-auto max-md:top-0 max-md:overflow-y-visible">
