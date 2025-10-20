@@ -8,7 +8,7 @@ interface EventMetaProps {
 export const EventMeta: React.FC<EventMetaProps> = ({ date, time }) => {
   return (
     <div className="flex items-start gap-[-1px] relative max-sm:flex-col max-sm:gap-px">
-      <div className="flex justify-center items-center gap-2.5 relative bg-[#1A1A1A] p-2 max-sm:w-full">
+      <div className="flex justify-center items-center gap-2.5 relative bg-[#1A1A1A] px-2 h-[24px] max-sm:w-full">
         <time className="text-white text-[11px] font-normal uppercase relative">
           {date}
         </time>
