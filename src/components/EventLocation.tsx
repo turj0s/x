@@ -24,7 +24,7 @@ export const EventLocation: React.FC<EventLocationProps> = ({
           {address}
         </address>
         <a 
-          href={`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`}
+          href={`https://maps.google.com/?q=${encodedAddress}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer text-left hover:opacity-70 transition-opacity flex items-center gap-2 no-underline"
