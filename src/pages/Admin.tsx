@@ -104,6 +104,11 @@ const Admin = () => {
     e.preventDefault();
     if (!selectedEvent) return;
 
+    // Convert datetime-local string to ISO timestamp
+    const targetDateISO = selectedEvent.target_date.includes('T') 
+      ? new Date(selectedEvent.target_date).toISOString()
+      : selectedEvent.target_date;
+
     const { error } = await supabase
       .from('events')
       .update({
@@ -114,7 +119,7 @@ const Admin = () => {
         time: selectedEvent.time,
         address: selectedEvent.address,
         background_image_url: selectedEvent.background_image_url,
-        target_date: selectedEvent.target_date,
+        target_date: targetDateISO,
       })
       .eq('id', selectedEvent.id);
 
