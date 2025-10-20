@@ -77,9 +77,9 @@ export const EventDetailPage: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet"
       />
-      <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-md:flex-col max-md:h-auto">
+      <main className="flex h-screen w-full relative bg-white mx-auto my-0 max-md:flex-col max-md:h-auto">
         <div 
-          className="flex flex-col justify-end items-start absolute h-screen pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 right-[540px] top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]"
+          className="flex flex-col justify-end items-start fixed h-screen w-[calc(100%-540px)] pl-[49px] pr-12 pb-12 left-0 top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pb-5 max-md:px-5 max-sm:h-[300px] max-sm:pb-[15px] max-sm:px-[15px]"
           style={{
             backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("${event.background_image_url}")`,
             backgroundSize: 'cover',
@@ -91,34 +91,38 @@ export const EventDetailPage: React.FC = () => {
           <EventCountdown targetDate={new Date(event.target_date)} />
         </div>
         
-        <aside className="flex w-[540px] flex-col justify-between items-start absolute h-screen box-border p-10 right-0 top-0 bg-white max-md:relative max-md:w-full max-md:h-auto max-md:p-[30px] max-md:right-auto max-md:top-0 max-sm:p-5">
-          <div className="flex w-[455px] flex-col items-start gap-10 relative max-md:w-full opacity-0 animate-fade-in [animation-delay:200ms]">
-            <div className="flex flex-col items-start gap-9 self-stretch relative">
-              <EventMeta 
-                date={event.date}
-                time={event.time}
+        <aside className="flex w-[540px] flex-col ml-auto h-screen box-border bg-white max-md:w-full max-md:h-auto max-md:ml-0">
+          <div className="flex-1 overflow-y-auto p-10 max-md:p-[30px] max-sm:p-5">
+            <div className="flex w-full flex-col items-start gap-10 opacity-0 animate-fade-in [animation-delay:200ms]">
+              <div className="flex flex-col items-start gap-9 self-stretch relative">
+                <EventMeta 
+                  date={event.date}
+                  time={event.time}
+                />
+                <EventHeader 
+                  title={event.title}
+                  creator={event.creator}
+                />
+              </div>
+              
+              <EventDescription 
+                description={event.description}
               />
-              <EventHeader 
-                title={event.title}
-                creator={event.creator}
+              
+              <EventLocation 
+                address={event.address}
+                onGetDirections={handleGetDirections}
               />
             </div>
-            
-            <EventDescription 
-              description={event.description}
-            />
-            
-          <EventLocation 
-            address={event.address}
-            onGetDirections={handleGetDirections}
-          />
           </div>
           
-          <EventRegistration 
-            onRegister={handleRegister}
-            isRegistered={isRegistered}
-            className="opacity-0 animate-fade-in [animation-delay:400ms]"
-          />
+          <div className="sticky bottom-0 bg-white p-10 border-t border-[#1A1A1A]/10 max-md:p-[30px] max-sm:p-5">
+            <EventRegistration 
+              onRegister={handleRegister}
+              isRegistered={isRegistered}
+              className="opacity-0 animate-fade-in [animation-delay:400ms]"
+            />
+          </div>
         </aside>
       </main>
     </>
