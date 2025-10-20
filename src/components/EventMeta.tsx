@@ -13,7 +13,7 @@ export const EventMeta: React.FC<EventMetaProps> = ({ date, time }) => {
           {date}
         </time>
       </div>
-      <div className="flex justify-center items-center gap-2.5 border relative p-2 border-solid border-[#1A1A1A] max-sm:w-full">
+      <div className="flex justify-center items-center gap-2.5 border relative px-2 h-[24px] border-solid border-[#1A1A1A] max-sm:w-full">
         <time className="text-[#1A1A1A] text-[11px] font-normal uppercase relative">
           {time}
         </time>
