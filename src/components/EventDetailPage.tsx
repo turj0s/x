@@ -31,7 +31,7 @@ export const EventDetailPage: React.FC = () => {
       />
       <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-md:flex-col max-md:h-auto">
         <div 
-          className="flex flex-col justify-end items-start absolute h-screen pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 right-[540px] top-0 max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]"
+          className="flex flex-col justify-end items-start absolute h-screen pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 right-[540px] top-0 animate-fade-zoom-in max-md:relative max-md:w-full max-md:h-[400px] max-md:bg-cover max-md:bg-center max-md:pt-80 max-md:pb-5 max-md:px-5 max-md:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-[15px] max-sm:px-[15px]"
           style={{
             backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80")',
             backgroundSize: 'cover',
