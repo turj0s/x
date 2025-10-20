@@ -41,7 +41,7 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-[0.5px] absolute w-[409px] h-[49px] left-[49px] top-[863px] max-md:static max-md:w-auto max-md:justify-center max-sm:flex-wrap max-sm:gap-1">
+    <div className="flex items-center gap-[0.5px] w-[409px] h-[49px] max-md:static max-md:w-auto max-md:justify-center max-sm:flex-wrap max-sm:gap-1">
       <div className="flex justify-center items-center gap-[5px] relative bg-white px-[7px] py-2.5 max-sm:px-[5px] max-sm:py-2">
         <div className="text-[#1A1A1A] text-[42px] font-bold tracking-[-1.68px] relative max-md:text-[32px] max-md:tracking-[-1.28px] max-sm:text-2xl max-sm:tracking-[-0.96px]">
           {formatTime(timeLeft.days, 'D')}
