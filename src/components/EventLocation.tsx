@@ -23,13 +23,15 @@ export const EventLocation: React.FC<EventLocationProps> = ({
         <address className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase opacity-50 relative not-italic">
           {address}
         </address>
-        <button 
-          onClick={onGetDirections}
-          className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent border-0 cursor-pointer p-0 text-left hover:opacity-70 transition-opacity flex items-center gap-2"
+        <a 
+          href={`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer text-left hover:opacity-70 transition-opacity flex items-center gap-2 no-underline"
         >
           GET DIRECTIONS
           <ArrowRight className="w-3 h-3" />
-        </button>
+        </a>
       </div>
       <iframe
         src={`https://www.google.com/maps?q=${encodedAddress}&output=embed`}
