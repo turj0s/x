@@ -31,11 +31,11 @@ const EventCard = ({
         style={{ backgroundImage: `url(${event.background_image_url})` }}
       ></div>
       <div className="absolute top-4 left-4 flex flex-col gap-0">
-        <div className="bg-white border border-black px-3 h-[23px] flex items-center">
+        <div className="bg-white border border-black px-3 py-1 flex items-center">
           <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
         </div>
-        <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-          <div className="text-[11px] leading-none">{event.time}</div>
+        <div className="bg-white border border-t-0 border-black px-3 py-1 flex items-center">
+          <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
       </div>
       <h3 className="text-base font-medium">{event.title}</h3>
