@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Calendar } from '@/components/ui/calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import arrowDown from '@/assets/arrow-down.png';
 
 const EventCard = ({ date, time }: { date: string; time: string }) => (
   <div className="relative">
@@ -79,13 +80,9 @@ const Discover = () => {
           </svg>
           
           {/* Static down arrow in center */}
-          <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
-            <g transform="translate(100, 100)">
-              <line x1="0" y1="-20" x2="0" y2="20" stroke="black" strokeWidth="4" strokeLinecap="round" />
-              <line x1="0" y1="20" x2="-12" y2="8" stroke="black" strokeWidth="4" strokeLinecap="round" />
-              <line x1="0" y1="20" x2="12" y2="8" stroke="black" strokeWidth="4" strokeLinecap="round" />
-            </g>
-          </svg>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <img src={arrowDown} alt="Arrow down" className="w-12 h-12" />
+          </div>
         </div>
 
         <div className="max-w-4xl mx-auto text-center">
