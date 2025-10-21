@@ -12,6 +12,7 @@ interface Event {
   date: string;
   time: string;
   background_image_url: string;
+  target_date: string;
 }
 
 const EventCard = ({
@@ -57,7 +58,7 @@ const Discover = () => {
     try {
       const { data, error } = await supabase
         .from('events')
-        .select('id, title, date, time, background_image_url')
+        .select('id, title, date, time, background_image_url, target_date')
         .order('target_date', { ascending: true });
 
       if (error) throw error;
@@ -68,6 +69,20 @@ const Discover = () => {
       setLoading(false);
     }
   };
+
+  // Filter events based on selected date
+  const filteredEvents = events.filter((event) => {
+    if (!date) return true;
+    
+    const eventDate = new Date(event.target_date);
+    const selectedDate = new Date(date);
+    
+    return (
+      eventDate.getFullYear() === selectedDate.getFullYear() &&
+      eventDate.getMonth() === selectedDate.getMonth() &&
+      eventDate.getDate() === selectedDate.getDate()
+    );
+  });
   const scrollToEvents = () => {
     const eventsSection = document.getElementById('events-section');
     eventsSection?.scrollIntoView({
@@ -150,10 +165,12 @@ const Discover = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
-              ) : events.length === 0 ? (
-                <div className="col-span-full text-center py-12">No events found</div>
+              ) : filteredEvents.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  {date ? `No events found for ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}` : 'No events found'}
+                </div>
               ) : (
-                events.map((event) => (
+                filteredEvents.map((event) => (
                   <EventCard key={event.id} event={event} />
                 ))
               )}
