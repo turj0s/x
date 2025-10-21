@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from './Navbar';
 import { EventCountdown } from './EventCountdown';
@@ -19,17 +20,22 @@ interface Event {
   target_date: string;
 }
 export const EventDetailPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [isRegistered, setIsRegistered] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     fetchEvent();
-  }, []);
+  }, [searchParams]);
+  
   const fetchEvent = async () => {
-    const {
-      data,
-      error
-    } = await supabase.from('events').select('*').limit(1).maybeSingle();
+    const eventId = searchParams.get('event');
+    
+    const { data, error } = eventId
+      ? await supabase.from('events').select('*').eq('id', eventId).single()
+      : await supabase.from('events').select('*').limit(1).maybeSingle();
+    
     if (!error && data) {
       setEvent(data);
     }
