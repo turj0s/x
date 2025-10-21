@@ -72,7 +72,7 @@ const Discover = () => {
       {/* Hero Section */}
       <section className="pt-48 pb-24 px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-7xl font-medium mb-6 inline-flex flex-col items-center">
+          <h1 className="text-7xl font-medium mb-10 inline-flex flex-col items-center">
             <div className="flex items-center">
               <span className="border-2 border-black px-6 py-4">Discover</span>
               <span className="bg-[#ff6bff] border-2 border-l-0 border-black px-6 py-4 rounded-[40px]">events</span>
