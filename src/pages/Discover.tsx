@@ -9,10 +9,10 @@ const EventCard = ({ date, time }: { date: string; time: string }) => (
   <div className="relative">
     <div className="aspect-[4/3] bg-gray-300 mb-3"></div>
     <div className="absolute top-4 left-4 flex flex-col gap-0">
-      <div className="bg-white border-2 border-black px-3 py-2">
+      <div className="bg-white border border-black px-3 py-2">
         <div className="text-[11px] font-medium uppercase">{date}</div>
       </div>
-      <div className="bg-white border-2 border-t-0 border-black px-3 py-2">
+      <div className="bg-white border border-t-0 border-black px-3 py-2">
         <div className="text-[11px]">{time}</div>
       </div>
     </div>
