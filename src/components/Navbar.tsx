@@ -5,12 +5,9 @@ export const Navbar: React.FC = () => {
   return (
     <nav className="fixed top-8 left-8 z-50 flex items-center gap-0">
       {/* Logo */}
-      <Link 
-        to="/" 
-        className="bg-black text-white p-[10px] text-[11px] font-medium uppercase border border-black hover:bg-gray-900 transition-colors leading-none"
-      >
+      <div className="bg-black text-white p-[10px] text-[11px] font-medium uppercase border border-black leading-none">
         GW EVENT PLANNER
-      </Link>
+      </div>
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center">
