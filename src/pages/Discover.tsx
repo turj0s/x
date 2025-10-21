@@ -1,29 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Calendar } from '@/components/ui/calendar';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import arrowDown from '@/assets/arrow-down.png';
 import badgeImage from '@/assets/badge.png';
-const EventCard = ({
-  date,
-  time
-}: {
+
+interface Event {
+  id: string;
+  title: string;
   date: string;
   time: string;
-}) => <div className="relative">
-    <div className="aspect-[4/3] bg-gray-300 mb-3"></div>
-    <div className="absolute top-4 left-4 flex flex-col gap-0">
-      <div className="bg-white border border-black px-3 h-[23px] flex items-center">
-        <div className="text-[11px] font-medium uppercase leading-none">{date}</div>
+  background_image_url: string;
+}
+
+const EventCard = ({
+  event
+}: {
+  event: Event;
+}) => {
+  const navigate = useNavigate();
+  
+  return (
+    <div 
+      className="relative cursor-pointer hover:opacity-90 transition-opacity"
+      onClick={() => navigate(`/?event=${event.id}`)}
+    >
+      <div 
+        className="aspect-[4/3] bg-gray-300 mb-3 bg-cover bg-center"
+        style={{ backgroundImage: `url(${event.background_image_url})` }}
+      ></div>
+      <div className="absolute top-4 left-4 flex flex-col gap-0">
+        <div className="bg-white border border-black px-3 h-[23px] flex items-center">
+          <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
+        </div>
+        <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
+          <div className="text-[11px] leading-none">{event.time}</div>
+        </div>
       </div>
-      <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-        <div className="text-[11px] leading-none">{time}</div>
-      </div>
+      <h3 className="text-base font-medium">{event.title}</h3>
     </div>
-    <h3 className="text-base font-medium">Event name</h3>
-  </div>;
+  );
+};
 const Discover = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('events')
+        .select('id, title, date, time, background_image_url')
+        .order('target_date', { ascending: true });
+
+      if (error) throw error;
+      setEvents(data || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const scrollToEvents = () => {
     const eventsSection = document.getElementById('events-section');
     eventsSection?.scrollIntoView({
@@ -104,10 +146,15 @@ const Discover = () => {
 
             {/* Event Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <EventCard date="THURSDAY, OCTOBER 30" time="16:30 - 18:30 CET" />
-              <EventCard date="THURSDAY, OCTOBER 30" time="16:30 - 18:30 CET" />
-              <EventCard date="THURSDAY, OCTOBER 30" time="16:30 - 18:30 CET" />
-              <EventCard date="THURSDAY, OCTOBER 30" time="16:30 - 18:30 CET" />
+              {loading ? (
+                <div className="col-span-2 text-center py-12">Loading events...</div>
+              ) : events.length === 0 ? (
+                <div className="col-span-2 text-center py-12">No events found</div>
+              ) : (
+                events.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))
+              )}
             </div>
           </div>
         </div>
