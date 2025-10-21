@@ -63,7 +63,7 @@ const Discover = () => {
             {/* Circular text "BROWSE" repeated */}
             <text className="text-[16px] font-bold uppercase" fill="black">
               <textPath href="#circlePath" startOffset="0%">
-                BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE
+                BROWSE   BROWSE   BROWSE   BROWSE   BROWSE
               </textPath>
             </text>
           </svg>
