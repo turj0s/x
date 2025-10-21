@@ -3,26 +3,7 @@ import { Navbar } from '@/components/Navbar';
 import { Calendar } from '@/components/ui/calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import arrowDown from '@/assets/arrow-down.png';
-
-function buildScallopedPath(
-  cx: number,
-  cy: number,
-  R: number,
-  r: number,
-  lobes: number,
-  samples = 256
-): string {
-  let d = '';
-  for (let i = 0; i <= samples; i++) {
-    const t = (i / samples) * Math.PI * 2;
-    const radius = R + r * Math.sin(lobes * t);
-    const x = cx + radius * Math.cos(t);
-    const y = cy + radius * Math.sin(t);
-    d += i === 0 ? `M ${x.toFixed(3)} ${y.toFixed(3)}` : ` L ${x.toFixed(3)} ${y.toFixed(3)}`;
-  }
-  d += ' Z';
-  return d;
-}
+import badgeImage from '@/assets/badge.png';
 
 const EventCard = ({ date, time }: { date: string; time: string }) => (
   <div className="relative">
@@ -51,42 +32,38 @@ const Discover = () => {
       <section className="pt-32 pb-16 px-8 relative">
         {/* Decorative rotating badge */}
         <div 
-          className="absolute top-20 right-20 w-48 h-48 cursor-pointer"
+          className="absolute top-20 right-20 w-48 h-48 cursor-pointer relative"
           onClick={scrollToEvents}
         >
-          {/* Rotating badge */}
-          <svg viewBox="0 0 200 200" className="w-full h-full animate-[spin_20s_linear_infinite]">
-            {/* Scalloped edge circle */}
-            <defs>
-              <path
-                id="circlePath"
-                d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
-              />
-            </defs>
+          {/* Rotating badge background */}
+          <div className="w-full h-full animate-[spin_20s_linear_infinite]">
+            <img src={badgeImage} alt="Badge" className="w-full h-full" />
             
-            {/* Scalloped badge smooth sine-edge */}
-            <path
-              d={buildScallopedPath(100, 100, 68, 12, 16, 256)}
-              fill="#ff6bff"
-            />
-            
-            {/* Circular text "BROWSE" repeated around full circle */}
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
-            </text>
-          </svg>
+            {/* Circular text "BROWSE" repeated around badge */}
+            <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
+              <defs>
+                <path
+                  id="circlePath"
+                  d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
+                />
+              </defs>
+              <text className="text-[16px] font-bold uppercase" fill="black">
+                <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
+              </text>
+              <text className="text-[16px] font-bold uppercase" fill="black">
+                <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
+              </text>
+              <text className="text-[16px] font-bold uppercase" fill="black">
+                <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
+              </text>
+              <text className="text-[16px] font-bold uppercase" fill="black">
+                <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
+              </text>
+              <text className="text-[16px] font-bold uppercase" fill="black">
+                <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
+              </text>
+            </svg>
+          </div>
           
           {/* Static down arrow in center */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
