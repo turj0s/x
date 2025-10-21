@@ -1,26 +1,122 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
+import { useToast } from '@/hooks/use-toast';
 
 interface EventRegistrationProps {
+  eventId: string;
   onRegister: () => void;
-  isRegistered?: boolean;
+  isRegistered: boolean;
   className?: string;
 }
 
 export const EventRegistration: React.FC<EventRegistrationProps> = ({ 
+  eventId,
   onRegister, 
-  isRegistered = false,
+  isRegistered: initialIsRegistered,
   className = ""
 }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isRegistered, setIsRegistered] = useState(initialIsRegistered);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkRegistration(session.user.id);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkRegistration(session.user.id);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [eventId]);
+
+  const checkRegistration = async (userId: string) => {
+    const { data } = await supabase
+      .from('event_registrations')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('event_id', eventId)
+      .maybeSingle();
+    
+    setIsRegistered(!!data);
+  };
+
+  const handleRegister = async () => {
+    if (!user) {
+      toast({
+        title: 'Sign in required',
+        description: 'Please sign in to register for events',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      if (isRegistered) {
+        // Unregister
+        const { error } = await supabase
+          .from('event_registrations')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('event_id', eventId);
+
+        if (error) throw error;
+
+        setIsRegistered(false);
+        toast({
+          title: 'Unregistered',
+          description: 'You have been unregistered from this event'
+        });
+      } else {
+        // Register
+        const { error } = await supabase
+          .from('event_registrations')
+          .insert({
+            user_id: user.id,
+            event_id: eventId
+          });
+
+        if (error) throw error;
+
+        setIsRegistered(true);
+        onRegister();
+        toast({
+          title: 'Registered!',
+          description: 'You have successfully registered for this event'
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={`flex items-center gap-[-1px] self-stretch relative ${className}`}>
       <button 
-        onClick={onRegister}
-        disabled={isRegistered}
+        onClick={handleRegister}
+        disabled={loading}
         className="flex h-[50px] justify-center items-center gap-2.5 flex-[1_0_0] border relative bg-[#1A1A1A] px-2.5 py-3.5 border-solid border-[#1A1A1A] hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        aria-label={isRegistered ? "Already registered for event" : "Register for event"}
+        aria-label={isRegistered ? "Unregister from event" : "Register for event"}
       >
         <span className="text-white text-[13px] font-normal uppercase relative">
-          {isRegistered ? "REGISTERED" : "REGISTER"}
+          {loading ? "LOADING..." : isRegistered ? "UNREGISTER" : "REGISTER"}
         </span>
       </button>
       <div className="flex w-[50px] h-[50px] justify-center items-center border relative bg-white rounded-[99px] border-solid border-[#1A1A1A]">

@@ -1,0 +1,183 @@
+import React, { useState, useEffect } from 'react';
+import { Navbar } from '@/components/Navbar';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
+
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  background_image_url: string;
+}
+
+const EventCard = ({ event }: { event: Event }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <div 
+      className="relative cursor-pointer group"
+      onClick={() => navigate(`/event/${event.id}`)}
+    >
+      <div className="overflow-hidden mb-3">
+        <div 
+          className="aspect-[4/3] bg-gray-300 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
+          style={{ backgroundImage: `url(${event.background_image_url})` }}
+        ></div>
+      </div>
+      <div className="absolute top-4 left-4 flex flex-col gap-0">
+        <div className="bg-white border border-black px-3 h-[23px] flex items-center">
+          <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
+        </div>
+        <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
+          <div className="text-[11px] font-medium leading-none">{event.time}</div>
+        </div>
+      </div>
+      <h3 className="text-base font-medium">{event.title}</h3>
+    </div>
+  );
+};
+
+const MyEvents = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [createdEvents, setCreatedEvents] = useState<Event[]>([]);
+  const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'created' | 'registered'>('created');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate('/');
+        return;
+      }
+      setUser(session.user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate('/');
+        return;
+      }
+      setUser(session.user);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (user) {
+      fetchMyEvents();
+    }
+  }, [user]);
+
+  const fetchMyEvents = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      // Fetch created events
+      const { data: created, error: createdError } = await supabase
+        .from('events')
+        .select('id, title, date, time, background_image_url')
+        .eq('created_by', user.id)
+        .order('target_date', { ascending: true });
+
+      if (createdError) throw createdError;
+      setCreatedEvents(created || []);
+
+      // Fetch registered events
+      const { data: registrations, error: regError } = await supabase
+        .from('event_registrations')
+        .select(`
+          event_id,
+          events (
+            id,
+            title,
+            date,
+            time,
+            background_image_url
+          )
+        `)
+        .eq('user_id', user.id);
+
+      if (regError) throw regError;
+      
+      const registeredEventsData = registrations
+        ?.map(r => r.events)
+        .filter(Boolean) as Event[] || [];
+      
+      setRegisteredEvents(registeredEventsData);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayedEvents = activeTab === 'created' ? createdEvents : registeredEvents;
+
+  return (
+    <>
+      <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        
+        <div className="pt-32 pb-20 px-8">
+          <div>
+            <h1 className="text-[64px] font-medium leading-tight mb-8">
+              My Events
+            </h1>
+
+            {/* Tabs */}
+            <div className="flex gap-0 mb-12">
+              <button
+                onClick={() => setActiveTab('created')}
+                className={`px-6 py-3 text-sm font-medium uppercase border border-black transition-colors ${
+                  activeTab === 'created'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black hover:bg-gray-50'
+                }`}
+              >
+                Created ({createdEvents.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('registered')}
+                className={`px-6 py-3 text-sm font-medium uppercase border border-l-0 border-black transition-colors ${
+                  activeTab === 'registered'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black hover:bg-gray-50'
+                }`}
+              >
+                Registered ({registeredEvents.length})
+              </button>
+            </div>
+
+            {/* Events Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+              {loading ? (
+                <div className="col-span-full text-center py-12">Loading events...</div>
+              ) : displayedEvents.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  {activeTab === 'created' 
+                    ? 'You haven\'t created any events yet' 
+                    : 'You haven\'t registered for any events yet'}
+                </div>
+              ) : (
+                displayedEvents.map((event) => (
+                  <EventCard key={event.id} event={event} />
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default MyEvents;
