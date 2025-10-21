@@ -44,22 +44,25 @@ const Discover = () => {
               />
             </defs>
             
-            {/* Background circle with scallops */}
-            {[...Array(24)].map((_, i) => {
-              const angle = (i * 360) / 24;
-              const x = 100 + 85 * Math.cos((angle * Math.PI) / 180);
-              const y = 100 + 85 * Math.sin((angle * Math.PI) / 180);
-              return (
-                <circle
-                  key={i}
-                  cx={x}
-                  cy={y}
-                  r="20"
-                  fill="#ff6bff"
-                />
-              );
-            })}
-            <circle cx="100" cy="100" r="75" fill="#ff6bff" />
+            {/* Scalloped badge shape with overlapping circles */}
+            <g>
+              {[...Array(16)].map((_, i) => {
+                const angle = (i * 360) / 16 - 90;
+                const radius = 80;
+                const x = 100 + radius * Math.cos((angle * Math.PI) / 180);
+                const y = 100 + radius * Math.sin((angle * Math.PI) / 180);
+                return (
+                  <circle
+                    key={i}
+                    cx={x}
+                    cy={y}
+                    r="16"
+                    fill="#ff6bff"
+                  />
+                );
+              })}
+              <circle cx="100" cy="100" r="68" fill="#ff6bff" />
+            </g>
             
             {/* Circular text "BROWSE" repeated around full circle */}
             <text className="text-[16px] font-bold uppercase" fill="black">
