@@ -72,12 +72,15 @@ const Discover = () => {
         </div>
 
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-normal mb-6 flex flex-wrap justify-center items-center gap-x-4">
-            <span className="border-2 border-black px-4 py-2">Discover</span>
-            <span className="bg-[#ff6bff] border-2 border-black px-4 py-2 rounded-3xl">events</span>
-            <br />
-            <span className="border-2 border-black px-4 py-2">near</span>
-            <span className="border-2 border-black px-4 py-2">you</span>
+          <h1 className="text-6xl font-normal mb-6 inline-flex flex-col items-center gap-0">
+            <div className="flex items-center gap-0">
+              <span className="border-2 border-black px-6 py-4">Discover</span>
+              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px]">events</span>
+            </div>
+            <div className="flex items-center gap-0">
+              <span className="border-2 border-black border-t-0 px-6 py-4">near</span>
+              <span className="border-2 border-black border-t-0 border-l-0 px-6 py-4">you</span>
+            </div>
           </h1>
           <p className="text-base text-gray-700 max-w-2xl mx-auto">
             Explore popular events near you, browse by category, or check out some of the great community calendars.
