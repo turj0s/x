@@ -4,6 +4,26 @@ import { Calendar } from '@/components/ui/calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import arrowDown from '@/assets/arrow-down.png';
 
+function buildScallopedPath(
+  cx: number,
+  cy: number,
+  R: number,
+  r: number,
+  lobes: number,
+  samples = 256
+): string {
+  let d = '';
+  for (let i = 0; i <= samples; i++) {
+    const t = (i / samples) * Math.PI * 2;
+    const radius = R + r * Math.sin(lobes * t);
+    const x = cx + radius * Math.cos(t);
+    const y = cy + radius * Math.sin(t);
+    d += i === 0 ? `M ${x.toFixed(3)} ${y.toFixed(3)}` : ` L ${x.toFixed(3)} ${y.toFixed(3)}`;
+  }
+  d += ' Z';
+  return d;
+}
+
 const EventCard = ({ date, time }: { date: string; time: string }) => (
   <div className="relative">
     <div className="aspect-[4/3] bg-gray-300 mb-3"></div>
@@ -44,25 +64,11 @@ const Discover = () => {
               />
             </defs>
             
-            {/* Scalloped badge shape with overlapping circles */}
-            <g>
-              {[...Array(16)].map((_, i) => {
-                const angle = (i * 360) / 16 - 90;
-                const radius = 80;
-                const x = 100 + radius * Math.cos((angle * Math.PI) / 180);
-                const y = 100 + radius * Math.sin((angle * Math.PI) / 180);
-                return (
-                  <circle
-                    key={i}
-                    cx={x}
-                    cy={y}
-                    r="16"
-                    fill="#ff6bff"
-                  />
-                );
-              })}
-              <circle cx="100" cy="100" r="68" fill="#ff6bff" />
-            </g>
+            {/* Scalloped badge smooth sine-edge */}
+            <path
+              d={buildScallopedPath(100, 100, 68, 12, 16, 256)}
+              fill="#ff6bff"
+            />
             
             {/* Circular text "BROWSE" repeated around full circle */}
             <text className="text-[16px] font-bold uppercase" fill="black">
