@@ -17,27 +17,61 @@ const EventCard = ({ date, time }: { date: string; time: string }) => (
 const Discover = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
 
+  const scrollToEvents = () => {
+    const eventsSection = document.getElementById('events-section');
+    eventsSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-8 relative">
-        {/* Decorative flower */}
-        <div className="absolute top-20 right-20 w-32 h-32">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="50" r="45" fill="#ff6bff" />
-            {[...Array(20)].map((_, i) => (
-              <circle
-                key={i}
-                cx={50 + 40 * Math.cos((i * Math.PI * 2) / 20)}
-                cy={50 + 40 * Math.sin((i * Math.PI * 2) / 20)}
-                r="8"
-                fill="#ff6bff"
+        {/* Decorative rotating badge */}
+        <div 
+          className="absolute top-20 right-20 w-48 h-48 cursor-pointer animate-[spin_20s_linear_infinite] hover:animate-[spin_10s_linear_infinite] transition-all"
+          onClick={scrollToEvents}
+        >
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            {/* Scalloped edge circle */}
+            <defs>
+              <path
+                id="circlePath"
+                d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0"
               />
-            ))}
-            <line x1="50" y1="35" x2="50" y2="65" stroke="black" strokeWidth="2" />
-            <line x1="50" y1="50" x2="62" y2="45" stroke="black" strokeWidth="2" />
+            </defs>
+            
+            {/* Background circle with scallops */}
+            {[...Array(24)].map((_, i) => {
+              const angle = (i * 360) / 24;
+              const x = 100 + 85 * Math.cos((angle * Math.PI) / 180);
+              const y = 100 + 85 * Math.sin((angle * Math.PI) / 180);
+              return (
+                <circle
+                  key={i}
+                  cx={x}
+                  cy={y}
+                  r="18"
+                  fill="#ff6bff"
+                />
+              );
+            })}
+            <circle cx="100" cy="100" r="75" fill="#ff6bff" />
+            
+            {/* Circular text "BROWSE" repeated */}
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="0%">
+                BROWSE BROWSE BROWSE BROWSE
+              </textPath>
+            </text>
+            
+            {/* Down arrow in center */}
+            <g transform="translate(100, 100)">
+              <line x1="0" y1="-20" x2="0" y2="20" stroke="black" strokeWidth="4" strokeLinecap="round" />
+              <line x1="0" y1="20" x2="-12" y2="8" stroke="black" strokeWidth="4" strokeLinecap="round" />
+              <line x1="0" y1="20" x2="12" y2="8" stroke="black" strokeWidth="4" strokeLinecap="round" />
+            </g>
           </svg>
         </div>
 
@@ -56,7 +90,7 @@ const Discover = () => {
       </section>
 
       {/* Events Section */}
-      <section className="px-8 pb-16">
+      <section id="events-section" className="px-8 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <h2 className="text-4xl font-normal">Browsing events in</h2>
