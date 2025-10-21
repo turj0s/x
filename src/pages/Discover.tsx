@@ -28,49 +28,49 @@ const Discover = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-8 relative">
-        {/* Decorative rotating badge */}
-        <div 
-          className="absolute top-8 right-8 w-48 h-48 cursor-pointer relative"
-          onClick={scrollToEvents}
-        >
-          {/* Rotating badge background */}
-          <div className="w-full h-full animate-[spin_20s_linear_infinite]">
-            <img src={badgeImage} alt="Badge" className="w-full h-full" />
-            
-            {/* Circular text "BROWSE" repeated around badge */}
-            <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
-              <defs>
-                <path
-                  id="circlePath"
-                  d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
-                />
-              </defs>
-              <text className="text-[16px] font-bold uppercase" fill="black">
-                <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
-              </text>
-              <text className="text-[16px] font-bold uppercase" fill="black">
-                <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
-              </text>
-              <text className="text-[16px] font-bold uppercase" fill="black">
-                <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
-              </text>
-              <text className="text-[16px] font-bold uppercase" fill="black">
-                <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
-              </text>
-              <text className="text-[16px] font-bold uppercase" fill="black">
-                <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
-              </text>
-            </svg>
-          </div>
+      {/* Decorative rotating badge - fixed to viewport */}
+      <div 
+        className="fixed top-8 right-8 w-48 h-48 cursor-pointer z-40"
+        onClick={scrollToEvents}
+      >
+        {/* Rotating badge background */}
+        <div className="w-full h-full animate-[spin_20s_linear_infinite]">
+          <img src={badgeImage} alt="Badge" className="w-full h-full" />
           
-          {/* Static down arrow in center */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <img src={arrowDown} alt="Arrow down" className="w-12 h-12" />
-          </div>
+          {/* Circular text "BROWSE" repeated around badge */}
+          <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
+            <defs>
+              <path
+                id="circlePath"
+                d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
+              />
+            </defs>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
+            </text>
+          </svg>
         </div>
-
+        
+        {/* Static down arrow in center */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <img src={arrowDown} alt="Arrow down" className="w-12 h-12" />
+        </div>
+      </div>
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-7xl font-medium mb-6 inline-flex flex-col items-center">
             <div className="flex items-center">
