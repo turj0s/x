@@ -60,11 +60,21 @@ const Discover = () => {
             })}
             <circle cx="100" cy="100" r="75" fill="#ff6bff" />
             
-            {/* Circular text "BROWSE" repeated */}
+            {/* Circular text "BROWSE" repeated around full circle */}
             <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="0%">
-                BROWSE   BROWSE   BROWSE   BROWSE   BROWSE
-              </textPath>
+              <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
+            </text>
+            <text className="text-[16px] font-bold uppercase" fill="black">
+              <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
             </text>
           </svg>
           
