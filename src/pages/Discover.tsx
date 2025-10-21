@@ -72,14 +72,14 @@ const Discover = () => {
         </div>
 
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl font-medium mb-6 inline-flex flex-col items-center gap-0">
-            <div className="flex items-center gap-0">
+          <h1 className="text-7xl font-medium mb-6 inline-flex flex-col items-center">
+            <div className="flex items-center">
               <span className="border-2 border-black px-6 py-4">Discover</span>
-              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px]">events</span>
+              <span className="bg-[#ff6bff] border-2 border-l-0 border-black px-6 py-4 rounded-[40px]">events</span>
             </div>
-            <div className="flex items-center gap-0">
+            <div className="flex items-center -mt-[2px]">
               <span className="border-2 border-black px-6 py-4">near</span>
-              <span className="border-2 border-black border-l-0 px-6 py-4">you</span>
+              <span className="border-2 border-l-0 border-black px-6 py-4">you</span>
             </div>
           </h1>
           <p className="text-base text-gray-700 max-w-2xl mx-auto">
