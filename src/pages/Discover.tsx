@@ -54,7 +54,7 @@ const Discover = () => {
                   key={i}
                   cx={x}
                   cy={y}
-                  r="18"
+                  r="20"
                   fill="#ff6bff"
                 />
               );
