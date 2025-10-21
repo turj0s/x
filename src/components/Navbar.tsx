@@ -7,7 +7,7 @@ export const Navbar: React.FC = () => {
       {/* Logo */}
       <Link 
         to="/" 
-        className="bg-black text-white px-6 py-3 text-sm font-medium uppercase border border-black hover:bg-gray-900 transition-colors"
+        className="bg-black text-white p-[10px] text-[11px] font-medium uppercase border border-black hover:bg-gray-900 transition-colors leading-none"
       >
         GW EVENT PLANNER
       </Link>
@@ -16,19 +16,19 @@ export const Navbar: React.FC = () => {
       <div className="hidden md:flex items-center">
         <Link 
           to="/discover" 
-          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border border-black hover:bg-gray-50 transition-colors"
+          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border border-black hover:bg-gray-50 transition-colors leading-none"
         >
           DISCOVER
         </Link>
         <Link 
           to="/create-event" 
-          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors"
+          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors leading-none"
         >
           CREATE EVENT
         </Link>
         <Link 
           to="/auth" 
-          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors"
+          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors leading-none"
         >
           SIGN IN
         </Link>
@@ -38,19 +38,19 @@ export const Navbar: React.FC = () => {
       <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
         <Link 
           to="/discover" 
-          className="px-6 py-3 text-sm font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap"
+          className="p-[10px] text-[11px] font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
         >
           DISCOVER
         </Link>
         <Link 
           to="/create-event" 
-          className="px-6 py-3 text-sm font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap"
+          className="p-[10px] text-[11px] font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
         >
           CREATE EVENT
         </Link>
         <Link 
           to="/auth" 
-          className="px-6 py-3 text-sm font-medium uppercase hover:bg-gray-50 transition-colors whitespace-nowrap"
+          className="p-[10px] text-[11px] font-medium uppercase hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
         >
           SIGN IN
         </Link>
