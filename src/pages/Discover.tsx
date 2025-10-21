@@ -32,7 +32,7 @@ const Discover = () => {
       <section className="pt-32 pb-16 px-8 relative">
         {/* Decorative rotating badge */}
         <div 
-          className="absolute top-20 right-20 w-48 h-48 cursor-pointer relative"
+          className="absolute top-8 right-8 w-48 h-48 cursor-pointer relative"
           onClick={scrollToEvents}
         >
           {/* Rotating badge background */}
