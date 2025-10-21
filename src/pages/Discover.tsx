@@ -70,7 +70,7 @@ const Discover = () => {
       </div>
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-8">
+      <section className="pt-48 pb-24 px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-7xl font-medium mb-6 inline-flex flex-col items-center">
             <div className="flex items-center">
@@ -89,7 +89,7 @@ const Discover = () => {
       </section>
 
       {/* Events Section */}
-      <section id="events-section" className="px-8 pb-16">
+      <section id="events-section" className="px-8 pb-16 pt-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <h2 className="text-4xl font-normal">Browsing events in</h2>
