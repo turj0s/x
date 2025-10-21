@@ -13,21 +13,24 @@ export const Navbar: React.FC = () => {
       <div className="hidden md:flex items-center">
         <Link 
           to="/discover" 
-          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border border-black hover:bg-gray-50 transition-colors leading-none"
+          className="relative overflow-hidden bg-white text-black p-[10px] text-[11px] font-medium uppercase border border-black leading-none group"
         >
-          DISCOVER
+          <span className="relative z-10">DISCOVER</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
         <Link 
           to="/create-event" 
-          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors leading-none"
+          className="relative overflow-hidden bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
         >
-          CREATE EVENT
+          <span className="relative z-10">CREATE EVENT</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
         <Link 
           to="/auth" 
-          className="bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors leading-none"
+          className="relative overflow-hidden bg-white text-black p-[10px] text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
         >
-          SIGN IN
+          <span className="relative z-10">SIGN IN</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
       </div>
 
@@ -35,21 +38,24 @@ export const Navbar: React.FC = () => {
       <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
         <Link 
           to="/discover" 
-          className="p-[10px] text-[11px] font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
+          className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
         >
-          DISCOVER
+          <span className="relative z-10">DISCOVER</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
         <Link 
           to="/create-event" 
-          className="p-[10px] text-[11px] font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
+          className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
         >
-          CREATE EVENT
+          <span className="relative z-10">CREATE EVENT</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
         <Link 
           to="/auth" 
-          className="p-[10px] text-[11px] font-medium uppercase hover:bg-gray-50 transition-colors whitespace-nowrap leading-none"
+          className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group"
         >
-          SIGN IN
+          <span className="relative z-10">SIGN IN</span>
+          <span className="absolute inset-0 bg-[#E19FF5] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
       </div>
     </nav>
