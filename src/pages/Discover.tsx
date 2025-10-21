@@ -118,7 +118,6 @@ const Discover = () => {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="border border-black"
               />
             </div>
 
