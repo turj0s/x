@@ -25,7 +25,7 @@ const EventCard = ({
   return (
     <div 
       className="relative cursor-pointer group"
-      onClick={() => navigate(`/?event=${event.id}`)}
+      onClick={() => navigate(`/event/${event.id}`)}
     >
       <div className="overflow-hidden mb-3">
         <div 
