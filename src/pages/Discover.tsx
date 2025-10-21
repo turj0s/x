@@ -30,15 +30,16 @@ const Discover = () => {
       <section className="pt-32 pb-16 px-8 relative">
         {/* Decorative rotating badge */}
         <div 
-          className="absolute top-20 right-20 w-48 h-48 cursor-pointer animate-[spin_20s_linear_infinite] hover:animate-[spin_10s_linear_infinite] transition-all"
+          className="absolute top-20 right-20 w-48 h-48 cursor-pointer"
           onClick={scrollToEvents}
         >
-          <svg viewBox="0 0 200 200" className="w-full h-full">
+          {/* Rotating badge */}
+          <svg viewBox="0 0 200 200" className="w-full h-full animate-[spin_20s_linear_infinite]">
             {/* Scalloped edge circle */}
             <defs>
               <path
                 id="circlePath"
-                d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0"
+                d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
               />
             </defs>
             
@@ -62,11 +63,13 @@ const Discover = () => {
             {/* Circular text "BROWSE" repeated */}
             <text className="text-[16px] font-bold uppercase" fill="black">
               <textPath href="#circlePath" startOffset="0%">
-                BROWSE BROWSE BROWSE BROWSE
+                BROWSE BROWSE BROWSE BROWSE BROWSE BROWSE
               </textPath>
             </text>
-            
-            {/* Down arrow in center */}
+          </svg>
+          
+          {/* Static down arrow in center */}
+          <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
             <g transform="translate(100, 100)">
               <line x1="0" y1="-20" x2="0" y2="20" stroke="black" strokeWidth="4" strokeLinecap="round" />
               <line x1="0" y1="20" x2="-12" y2="8" stroke="black" strokeWidth="4" strokeLinecap="round" />
