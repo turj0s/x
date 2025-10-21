@@ -133,7 +133,7 @@ const Discover = () => {
 
       {/* Events Section */}
       <section id="events-section" className="px-8 pb-16 pt-12">
-        <div className="max-w-7xl mx-auto">
+        <div>
           <div className="flex items-center gap-4 mb-8">
             <h2 className="text-4xl font-normal">Browsing events in</h2>
             <span className="text-4xl font-normal border-2 border-black px-4 py-2">Malmö</span>
@@ -147,11 +147,11 @@ const Discover = () => {
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
               {loading ? (
-                <div className="col-span-2 text-center py-12">Loading events...</div>
+                <div className="col-span-full text-center py-12">Loading events...</div>
               ) : events.length === 0 ? (
-                <div className="col-span-2 text-center py-12">No events found</div>
+                <div className="col-span-full text-center py-12">No events found</div>
               ) : (
                 events.map((event) => (
                   <EventCard key={event.id} event={event} />
