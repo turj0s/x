@@ -4,9 +4,13 @@ import { Calendar } from '@/components/ui/calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import arrowDown from '@/assets/arrow-down.png';
 import badgeImage from '@/assets/badge.png';
-
-const EventCard = ({ date, time }: { date: string; time: string }) => (
-  <div className="relative">
+const EventCard = ({
+  date,
+  time
+}: {
+  date: string;
+  time: string;
+}) => <div className="relative">
     <div className="aspect-[4/3] bg-gray-300 mb-3"></div>
     <div className="absolute top-4 left-4 flex flex-col gap-0">
       <div className="bg-white border border-black px-3 h-[23px] flex items-center">
@@ -17,26 +21,20 @@ const EventCard = ({ date, time }: { date: string; time: string }) => (
       </div>
     </div>
     <h3 className="text-base font-medium">Event name</h3>
-  </div>
-);
-
+  </div>;
 const Discover = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-
   const scrollToEvents = () => {
     const eventsSection = document.getElementById('events-section');
-    eventsSection?.scrollIntoView({ behavior: 'smooth' });
+    eventsSection?.scrollIntoView({
+      behavior: 'smooth'
+    });
   };
-
-  return (
-    <div className="min-h-screen bg-white">
+  return <div className="min-h-screen bg-white">
       <Navbar />
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div 
-        className="fixed top-8 right-8 w-48 h-48 cursor-pointer z-40"
-        onClick={scrollToEvents}
-      >
+      <div className="fixed top-8 right-8 w-48 h-48 cursor-pointer z-40" onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
@@ -44,10 +42,7 @@ const Discover = () => {
           {/* Circular text "BROWSE" repeated around badge */}
           <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
             <defs>
-              <path
-                id="circlePath"
-                d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140"
-              />
+              <path id="circlePath" d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140" />
             </defs>
             <text className="text-[16px] font-bold uppercase" fill="black">
               <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
@@ -103,11 +98,8 @@ const Discover = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12">
             {/* Calendar */}
             <div>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-              />
+              
+              <Calendar mode="single" selected={date} onSelect={setDate} />
             </div>
 
             {/* Event Grid */}
@@ -120,8 +112,6 @@ const Discover = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Discover;
