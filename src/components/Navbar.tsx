@@ -3,77 +3,57 @@ import { Link } from 'react-router-dom';
 
 export const Navbar: React.FC = () => {
   return (
-    <nav className="fixed top-0 left-0 w-full bg-background border-b border-border z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <span className="text-xl font-medium text-foreground">GW Event planner</span>
-          </Link>
+    <nav className="fixed top-8 left-8 z-50 flex items-center gap-0">
+      {/* Logo */}
+      <Link 
+        to="/" 
+        className="bg-black text-white px-6 py-3 text-sm font-medium uppercase border border-black hover:bg-gray-900 transition-colors"
+      >
+        GW EVENT PLANNER
+      </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link 
-              to="/discover" 
-              className="text-sm font-normal text-foreground hover:text-primary transition-colors"
-            >
-              discover
-            </Link>
-            <Link 
-              to="/create-event" 
-              className="text-sm font-normal text-foreground hover:text-primary transition-colors"
-            >
-              create event
-            </Link>
-            <Link 
-              to="/auth" 
-              className="text-sm font-normal text-foreground hover:text-primary transition-colors"
-            >
-              sign in
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button className="md:hidden p-2">
-            <svg 
-              className="w-6 h-6 text-foreground" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 6h16M4 12h16M4 18h16" 
-              />
-            </svg>
-          </button>
-        </div>
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex items-center">
+        <Link 
+          to="/discover" 
+          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border border-black hover:bg-gray-50 transition-colors"
+        >
+          DISCOVER
+        </Link>
+        <Link 
+          to="/create-event" 
+          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors"
+        >
+          CREATE EVENT
+        </Link>
+        <Link 
+          to="/auth" 
+          className="bg-white text-black px-6 py-3 text-sm font-medium uppercase border-l-0 border border-black hover:bg-gray-50 transition-colors"
+        >
+          SIGN IN
+        </Link>
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden border-t border-border">
-        <div className="px-4 py-4 space-y-3">
-          <Link 
-            to="/discover" 
-            className="block text-sm font-normal text-foreground hover:text-primary transition-colors"
-          >
-            discover
-          </Link>
-          <Link 
-            to="/create-event" 
-            className="block text-sm font-normal text-foreground hover:text-primary transition-colors"
-          >
-            create event
-          </Link>
-          <Link 
-            to="/auth" 
-            className="block text-sm font-normal text-foreground hover:text-primary transition-colors"
-          >
-            sign in
-          </Link>
-        </div>
+      <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
+        <Link 
+          to="/discover" 
+          className="px-6 py-3 text-sm font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap"
+        >
+          DISCOVER
+        </Link>
+        <Link 
+          to="/create-event" 
+          className="px-6 py-3 text-sm font-medium uppercase border-b border-black hover:bg-gray-50 transition-colors whitespace-nowrap"
+        >
+          CREATE EVENT
+        </Link>
+        <Link 
+          to="/auth" 
+          className="px-6 py-3 text-sm font-medium uppercase hover:bg-gray-50 transition-colors whitespace-nowrap"
+        >
+          SIGN IN
+        </Link>
       </div>
     </nav>
   );
