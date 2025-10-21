@@ -12,7 +12,7 @@ export const Navbar: React.FC = () => {
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center">
         <Link 
-          to="/discover" 
+          to="/" 
           className="relative overflow-hidden bg-white text-black p-[10px] text-[11px] font-medium uppercase border border-black leading-none group"
         >
           <span className="relative z-10">DISCOVER</span>
@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile Navigation */}
       <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
         <Link 
-          to="/discover" 
+          to="/" 
           className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
         >
           <span className="relative z-10">DISCOVER</span>
