@@ -67,12 +67,12 @@ export const AuthSheet: React.FC<AuthSheetProps> = ({ isOpen, onClose }) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 z-50 animate-fade-in"
+        className="fixed inset-0 bg-black/50 z-[100] animate-fade-in"
         onClick={onClose}
       />
       
       {/* Sheet */}
-      <div className={`fixed right-0 top-0 h-full w-full max-w-md bg-[#1A1A1A] z-50 shadow-2xl transition-transform duration-300 ${isOpen ? 'animate-slide-in-right' : ''}`}>
+      <div className={`fixed right-0 top-0 h-full w-full max-w-md bg-[#1A1A1A] z-[101] shadow-2xl transition-transform duration-300 ${isOpen ? 'animate-slide-in-right' : ''}`}>
         {/* Close button */}
         <button
           onClick={onClose}
