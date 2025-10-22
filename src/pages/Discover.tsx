@@ -93,7 +93,7 @@ const Discover = () => {
       <Navbar />
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="fixed top-8 right-8 w-48 h-48 cursor-pointer z-40" onClick={scrollToEvents}>
+      <div className="fixed top-8 right-8 w-[172px] h-[172px] cursor-pointer z-40" onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
