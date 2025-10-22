@@ -144,7 +144,7 @@ const Discover = () => {
               <span className="border-2 border-l-0 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>you</span>
             </div>
           </h1>
-          <p className="text-base text-gray-700 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
+          <p className="text-[18px] text-black max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
             Explore popular events near you, browse by category, or check out some of the great community calendars.
           </p>
         </div>
