@@ -51,10 +51,25 @@ const Discover = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userCountry, setUserCountry] = useState<string>('your location');
 
   useEffect(() => {
     fetchEvents();
+    detectUserCountry();
   }, []);
+
+  const detectUserCountry = async () => {
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+      const data = await response.json();
+      if (data.country_name) {
+        setUserCountry(data.country_name);
+      }
+    } catch (error) {
+      console.error('Error detecting country:', error);
+      // Keep default value on error
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -155,7 +170,7 @@ const Discover = () => {
         <div>
           <div className="flex items-center gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-4xl font-normal">Browsing events in</h2>
-            <span className="text-4xl font-normal border-2 border-black px-4 py-2">Malmö</span>
+            <span className="text-4xl font-normal border-2 border-black px-4 py-2">{userCountry}</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12 mt-16">
