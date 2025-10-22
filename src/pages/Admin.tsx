@@ -5,6 +5,40 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+
+// Input validation schema
+const eventSchema = z.object({
+  title: z.string()
+    .trim()
+    .min(1, 'Title is required')
+    .max(200, 'Title must be less than 200 characters'),
+  creator: z.string()
+    .trim()
+    .min(1, 'Creator is required')
+    .max(100, 'Creator must be less than 100 characters'),
+  description: z.string()
+    .trim()
+    .min(1, 'Description is required')
+    .max(2000, 'Description must be less than 2000 characters'),
+  date: z.string()
+    .trim()
+    .min(1, 'Date is required')
+    .max(50, 'Date must be less than 50 characters'),
+  time: z.string()
+    .trim()
+    .min(1, 'Time is required')
+    .max(50, 'Time must be less than 50 characters'),
+  address: z.string()
+    .trim()
+    .min(1, 'Address is required')
+    .max(300, 'Address must be less than 300 characters'),
+  target_date: z.string()
+    .refine((val) => {
+      const date = new Date(val);
+      return !isNaN(date.getTime());
+    }, 'Invalid date format'),
+});
 
 interface Event {
   id: string;
@@ -23,20 +57,42 @@ const Admin = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
     checkAuth();
-    fetchEvents();
   }, []);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       navigate('/auth');
+      return;
     }
+
+    // Check if user has admin role
+    const { data: roles, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .eq('role', 'admin')
+      .single();
+
+    if (error || !roles) {
+      toast({
+        title: 'Access Denied',
+        description: 'You do not have admin privileges',
+        variant: 'destructive',
+      });
+      navigate('/');
+      return;
+    }
+
+    setIsAdmin(true);
     setLoading(false);
+    fetchEvents();
   };
 
   const fetchEvents = async () => {
@@ -67,11 +123,37 @@ const Admin = () => {
     if (!e.target.files || !e.target.files[0] || !selectedEvent) return;
     
     const file = e.target.files[0];
+    
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      toast({
+        title: 'Invalid file type',
+        description: 'Please upload a JPG, PNG, GIF, or WebP image',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: 'File too large',
+        description: 'Image must be less than 5MB',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setUploading(true);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
       const fileExt = file.name.split('.').pop();
-      const fileName = `${selectedEvent.id}-${Date.now()}.${fileExt}`;
+      // Organize uploads by user_id as required by storage policies
+      const fileName = `${session.user.id}/${selectedEvent.id}-${Date.now()}.${fileExt}`;
       
       const { error: uploadError } = await supabase.storage
         .from('event-images')
@@ -109,15 +191,37 @@ const Admin = () => {
       ? new Date(selectedEvent.target_date).toISOString()
       : selectedEvent.target_date;
 
-    const { error } = await supabase
-      .from('events')
-      .update({
+    // Validate event data
+    try {
+      eventSchema.parse({
         title: selectedEvent.title,
         creator: selectedEvent.creator,
         description: selectedEvent.description,
         date: selectedEvent.date,
         time: selectedEvent.time,
         address: selectedEvent.address,
+        target_date: targetDateISO,
+      });
+    } catch (validationError) {
+      if (validationError instanceof z.ZodError) {
+        toast({
+          title: 'Validation Error',
+          description: validationError.errors[0].message,
+          variant: 'destructive',
+        });
+        return;
+      }
+    }
+
+    const { error } = await supabase
+      .from('events')
+      .update({
+        title: selectedEvent.title.trim(),
+        creator: selectedEvent.creator.trim(),
+        description: selectedEvent.description.trim(),
+        date: selectedEvent.date.trim(),
+        time: selectedEvent.time.trim(),
+        address: selectedEvent.address.trim(),
         background_image_url: selectedEvent.background_image_url,
         target_date: targetDateISO,
       })
@@ -140,6 +244,10 @@ const Admin = () => {
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return null;
   }
 
   return (
