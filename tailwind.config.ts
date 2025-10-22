@@ -83,6 +83,14 @@ export default {
             height: "0",
           },
         },
+        "zoom-in": {
+          "0%": {
+            transform: "scale(1.15)"
+          },
+          "100%": {
+            transform: "scale(1)"
+          }
+        },
         "fade-zoom-in": {
           "0%": {
             opacity: "0",
