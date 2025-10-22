@@ -162,7 +162,7 @@ const Discover = () => {
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
               ) : filteredEvents.length === 0 ? (
