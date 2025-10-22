@@ -13,6 +13,7 @@ interface Event {
   time: string;
   background_image_url: string;
   target_date: string;
+  address: string;
 }
 
 const EventCard = ({
@@ -42,6 +43,7 @@ const EventCard = ({
         </div>
       </div>
       <h3 className="text-xl font-medium">{event.title}</h3>
+      <p className="text-sm text-gray-500 mt-1">{event.address}</p>
     </div>
   );
 };
@@ -58,7 +60,7 @@ const Discover = () => {
     try {
       const { data, error } = await supabase
         .from('events')
-        .select('id, title, date, time, background_image_url, target_date')
+        .select('id, title, date, time, background_image_url, target_date, address')
         .order('target_date', { ascending: true });
 
       if (error) throw error;
