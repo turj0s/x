@@ -135,7 +135,7 @@ const Discover = () => {
           <h1 className="text-7xl font-medium mb-10 inline-flex flex-col items-center">
             <div className="flex items-center">
               <span className="border-2 border-black px-6 py-4">Discover</span>
-              <span className="bg-[#ff6bff] border-2 border-l-0 border-black px-6 py-4 rounded-[40px]">events</span>
+              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px] -ml-[2px]">events</span>
             </div>
             <div className="flex items-center -mt-[2px]">
               <span className="border-2 border-black px-6 py-4">near</span>
