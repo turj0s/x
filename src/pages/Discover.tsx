@@ -134,17 +134,17 @@ const Discover = () => {
       {/* Hero Section */}
       <section className="pt-48 pb-24 px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-7xl font-medium mb-10 inline-flex flex-col items-center animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+          <h1 className="text-7xl font-medium mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
-              <span className="border-2 border-black px-6 py-4">Discover</span>
-              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px] -ml-[2px]">events</span>
+              <span className="border-2 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Discover</span>
+              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px] -ml-[2px] animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>events</span>
             </div>
             <div className="flex items-center -mt-[2px]">
-              <span className="border-2 border-black px-6 py-4">near</span>
-              <span className="border-2 border-l-0 border-black px-6 py-4">you</span>
+              <span className="border-2 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>near</span>
+              <span className="border-2 border-l-0 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>you</span>
             </div>
           </h1>
-          <p className="text-base text-gray-700 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>
+          <p className="text-base text-gray-700 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
             Explore popular events near you, browse by category, or check out some of the great community calendars.
           </p>
         </div>
@@ -153,14 +153,14 @@ const Discover = () => {
       {/* Events Section */}
       <section id="events-section" className="px-8 pb-16 pt-12">
         <div>
-          <div className="flex items-center gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
+          <div className="flex items-center gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-4xl font-normal">Browsing events in</h2>
             <span className="text-4xl font-normal border-2 border-black px-4 py-2">Malmö</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12">
             {/* Calendar */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
+            <div className="animate-fade-in" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
               
               <Calendar mode="single" selected={date} onSelect={setDate} />
             </div>
@@ -178,7 +178,7 @@ const Discover = () => {
                   <div 
                     key={event.id} 
                     className="animate-fade-in" 
-                    style={{ animationDelay: `${0.8 + (index * 0.1)}s`, animationFillMode: 'both' }}
+                    style={{ animationDelay: `${1.0 + (index * 0.1)}s`, animationFillMode: 'both' }}
                   >
                     <EventCard event={event} />
                   </div>
