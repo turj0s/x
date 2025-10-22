@@ -67,7 +67,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = ({ isOpen, onClose }) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 z-[100] animate-fade-in"
+        className="fixed inset-0 bg-black opacity-50 z-[100]"
         onClick={onClose}
       />
       
