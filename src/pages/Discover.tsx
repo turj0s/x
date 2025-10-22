@@ -160,7 +160,7 @@ const Discover = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12 mt-16">
             {/* Calendar */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
+            <div className="animate-fade-in sticky top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
               
               <Calendar mode="single" selected={date} onSelect={setDate} />
             </div>
