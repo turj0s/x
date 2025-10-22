@@ -47,7 +47,7 @@ export type Database = {
         Row: {
           address: string
           background_image_url: string
-          created_by: string | null
+          created_by: string
           creator: string
           date: string
           description: string
@@ -59,7 +59,7 @@ export type Database = {
         Insert: {
           address: string
           background_image_url: string
-          created_by?: string | null
+          created_by?: string
           creator: string
           date: string
           description: string
@@ -71,7 +71,7 @@ export type Database = {
         Update: {
           address?: string
           background_image_url?: string
-          created_by?: string | null
+          created_by?: string
           creator?: string
           date?: string
           description?: string
