@@ -72,7 +72,7 @@ export const EventDetailPage: React.FC = () => {
             backgroundPosition: 'center'
           }}></div>
           <div className="relative z-10 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>
-            <EventCountdown targetDate={( /^\d{4}-\d{2}-\d{2}$/.test(event.date) && /^\d{2}:\d{2}(:\d{2})?$/.test(event.time) ) ? new Date(`${event.date}T${event.time.length === 5 ? `${event.time}:00` : event.time}`) : new Date(event.target_date)} />
+            <EventCountdown targetDate={new Date(event.target_date)} />
           </div>
         </div>
         
