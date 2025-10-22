@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
 interface AuthSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -63,16 +63,16 @@ export const AuthSheet: React.FC<AuthSheetProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black opacity-50 z-[100]"
+        className="fixed inset-0 bg-black opacity-50 z-[1000]"
         onClick={onClose}
       />
       
       {/* Sheet */}
-      <div className={`fixed right-0 top-0 h-full w-full max-w-md bg-[#1A1A1A] z-[101] shadow-2xl transition-transform duration-300 ${isOpen ? 'animate-slide-in-right' : ''}`}>
+      <div className={`fixed right-0 top-0 h-full w-full max-w-md bg-[#1A1A1A] z-[1001] shadow-2xl transition-transform duration-300 ${isOpen ? 'animate-slide-in-right' : ''}`}>
         {/* Close button */}
         <button
           onClick={onClose}
@@ -145,6 +145,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };
