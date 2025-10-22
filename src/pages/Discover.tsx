@@ -41,7 +41,7 @@ const EventCard = ({
           <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
       </div>
-      <h3 className="text-base font-medium">{event.title}</h3>
+      <h3 className="text-xl font-medium">{event.title}</h3>
     </div>
   );
 };
@@ -162,7 +162,7 @@ const Discover = () => {
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-16 gap-x-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
               ) : filteredEvents.length === 0 ? (
