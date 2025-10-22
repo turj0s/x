@@ -158,7 +158,7 @@ const Discover = () => {
             <span className="text-4xl font-normal border-2 border-black px-4 py-2">Malmö</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12 mt-16">
             {/* Calendar */}
             <div className="animate-fade-in" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
               
