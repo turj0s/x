@@ -85,7 +85,7 @@ export default {
         },
         "zoom-in": {
           "0%": {
-            transform: "scale(1.15)"
+            transform: "scale(1.05)"
           },
           "100%": {
             transform: "scale(1)"
