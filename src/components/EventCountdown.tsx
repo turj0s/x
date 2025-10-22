@@ -11,35 +11,26 @@ interface EventCountdownProps {
 export const EventCountdown: React.FC<EventCountdownProps> = ({
   targetDate = new Date(Date.now() + 132 * 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000 + 51 * 60 * 1000 + 2 * 1000)
 }) => {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 132,
-    hours: 12,
-    minutes: 51,
-    seconds: 2
-  });
+  const calculateTimeLeft = (target: Date): TimeLeft => {
+    const now = new Date().getTime();
+    const distance = target.getTime() - now;
+    
+    if (distance > 0) {
+      return {
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)),
+        minutes: Math.floor(distance % (1000 * 60 * 60) / (1000 * 60)),
+        seconds: Math.floor(distance % (1000 * 60) / 1000)
+      };
+    }
+    
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  };
+
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(targetDate));
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
-      if (distance > 0) {
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
-        const minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
-        const seconds = Math.floor(distance % (1000 * 60) / 1000);
-        setTimeLeft({
-          days,
-          hours,
-          minutes,
-          seconds
-        });
-      } else {
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0
-        });
-      }
+      setTimeLeft(calculateTimeLeft(targetDate));
     }, 1000);
     return () => clearInterval(timer);
   }, [targetDate]);
