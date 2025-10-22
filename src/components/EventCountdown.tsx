@@ -15,6 +15,14 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
     const now = new Date().getTime();
     const distance = target.getTime() - now;
     
+    console.log('Countdown Debug:', {
+      targetDate: target.toString(),
+      targetTime: target.getTime(),
+      currentTime: now,
+      distance: distance,
+      distanceInHours: distance / (1000 * 60 * 60)
+    });
+    
     if (distance > 0) {
       return {
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
