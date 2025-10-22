@@ -8,6 +8,7 @@ import { EventHeader } from './EventHeader';
 import { EventDescription } from './EventDescription';
 import { EventLocation } from './EventLocation';
 import { EventRegistration } from './EventRegistration';
+import { AuthSheet } from './AuthSheet';
 interface Event {
   id: string;
   title: string;
@@ -24,9 +25,11 @@ export const EventDetailPage: React.FC = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   
   useEffect(() => {
     fetchEvent();
+    checkRegistration();
   }, [id]);
   
   const fetchEvent = async () => {
@@ -39,12 +42,21 @@ export const EventDetailPage: React.FC = () => {
     }
     setLoading(false);
   };
-  const handleRegister = () => {
-    if (!isRegistered) {
-      setIsRegistered(true);
-      // Here you would typically make an API call to register the user
-      console.log('User registered for event');
-    }
+
+  const checkRegistration = async () => {
+    if (!id) return;
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const { data } = await supabase
+      .from('event_registrations')
+      .select('id')
+      .eq('user_id', session.user.id)
+      .eq('event_id', id)
+      .maybeSingle();
+    
+    setIsRegistered(!!data);
   };
   const handleGetDirections = () => {
     // Here you would typically open a maps application or navigate to directions
@@ -92,13 +104,15 @@ export const EventDetailPage: React.FC = () => {
             <div className="px-10 max-md:px-[30px] max-sm:px-5">
             <EventRegistration 
               eventId={event.id}
-              onRegister={handleRegister} 
-              isRegistered={isRegistered} 
+              onRegister={checkRegistration} 
+              isRegistered={isRegistered}
+              onAuthRequired={() => setIsAuthOpen(true)}
               className="opacity-0 animate-fade-in [animation-delay:400ms]" 
             />
             </div>
           </div>
         </aside>
       </main>
+      <AuthSheet isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>;
 };
