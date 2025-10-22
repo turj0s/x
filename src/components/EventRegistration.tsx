@@ -121,7 +121,7 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
         className="flex h-[50px] justify-center items-center gap-2.5 border relative bg-[#1A1A1A] px-2.5 py-3.5 border-solid border-[#1A1A1A] transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed w-[calc(100%-50px)] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF] z-10"
         aria-label={isRegistered ? "Unregister from event" : "Register for event"}
       >
-        <span className="text-white text-[13px] font-normal uppercase relative">
+        <span className="text-white text-[13px] font-normal uppercase relative transition-colors duration-300 group-hover:text-black">
           {loading ? "LOADING..." : isRegistered ? "UNREGISTER" : "REGISTER"}
         </span>
         <svg 
@@ -133,8 +133,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
           className="absolute right-[18px] opacity-0 transition-all duration-300 ease-in-out group-hover:opacity-100"
           aria-hidden="true"
         >
-          <path d="M0.857178 6H10.3929" stroke="white" strokeWidth="1.5" />
-          <path d="M6.39282 10L10.3928 6L6.39282 2" stroke="white" strokeWidth="1.5" />
+          <path d="M0.857178 6H10.3929" stroke="#1A1A1A" strokeWidth="1.5" />
+          <path d="M6.39282 10L10.3928 6L6.39282 2" stroke="#1A1A1A" strokeWidth="1.5" />
         </svg>
       </button>
       <div className="flex w-[50px] h-[50px] justify-center items-center border absolute right-0 bg-white rounded-[99px] border-solid border-[#1A1A1A] transition-all duration-300 ease-in-out group-hover:opacity-0 group-hover:scale-50 pointer-events-none z-0">
