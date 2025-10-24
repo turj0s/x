@@ -15,14 +15,6 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
     const now = new Date().getTime();
     const distance = target.getTime() - now;
     
-    console.log('Countdown Debug:', {
-      targetDate: target.toString(),
-      targetTime: target.getTime(),
-      currentTime: now,
-      distance: distance,
-      distanceInHours: distance / (1000 * 60 * 60)
-    });
-    
     if (distance > 0) {
       return {
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -35,6 +27,19 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
     return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   };
 
+  const getEventStatus = () => {
+    const now = new Date().getTime();
+    const target = targetDate.getTime();
+    const distance = target - now;
+    const oneHour = 1000 * 60 * 60;
+    
+    if (distance < -oneHour) return 'ended';
+    if (distance >= -oneHour && distance <= oneHour) return 'happening';
+    return 'upcoming';
+  };
+
+  const status = getEventStatus();
+
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => calculateTimeLeft(targetDate));
   useEffect(() => {
     const timer = setInterval(() => {
@@ -45,6 +50,22 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
   const formatTime = (value: number, unit: string) => {
     return `${value.toString().padStart(unit === 'D' ? 1 : 2, '0')}${unit}`;
   };
+  if (status === 'ended') {
+    return <div className="flex items-center justify-center relative bg-[#FF0000] px-6 py-4 animate-fade-in">
+        <div className="text-white text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
+          EVENT ENDED
+        </div>
+      </div>;
+  }
+
+  if (status === 'happening') {
+    return <div className="flex items-center justify-center relative bg-[#00FF00] px-6 py-4 animate-pulse">
+        <div className="text-[#1A1A1A] text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
+          HAPPENING NOW
+        </div>
+      </div>;
+  }
+
   return <div className="flex items-center gap-[2px] w-[409px] h-[49px] max-md:static max-md:w-auto max-md:justify-center max-sm:flex-wrap max-sm:gap-1">
       <div className="flex justify-center items-center gap-[5px] relative bg-white px-4 py-2.5 max-sm:px-3 max-sm:py-2 animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
         <div className="text-[#1A1A1A] text-[42px] font-medium tracking-[-1.68px] relative max-md:text-[32px] max-md:tracking-[-1.28px] max-sm:text-2xl max-sm:tracking-[-0.96px]">

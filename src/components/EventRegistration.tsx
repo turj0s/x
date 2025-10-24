@@ -9,6 +9,7 @@ interface EventRegistrationProps {
   isRegistered: boolean;
   className?: string;
   onAuthRequired?: () => void;
+  targetDate?: Date;
 }
 
 export const EventRegistration: React.FC<EventRegistrationProps> = ({ 
@@ -16,7 +17,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   onRegister, 
   isRegistered: initialIsRegistered,
   className = "",
-  onAuthRequired
+  onAuthRequired,
+  targetDate
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isRegistered, setIsRegistered] = useState(initialIsRegistered);
@@ -52,7 +54,31 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
     setIsRegistered(!!data);
   };
 
+  const getEventStatus = () => {
+    if (!targetDate) return 'upcoming';
+    const now = new Date().getTime();
+    const target = targetDate.getTime();
+    const distance = target - now;
+    const oneHour = 1000 * 60 * 60;
+    
+    if (distance < -oneHour) return 'ended';
+    if (distance >= -oneHour && distance <= oneHour) return 'happening';
+    return 'upcoming';
+  };
+
+  const eventStatus = getEventStatus();
+  const isPastEvent = eventStatus === 'ended';
+
   const handleRegister = async () => {
+    if (isPastEvent) {
+      toast({
+        title: 'Event has ended',
+        description: 'You cannot register for past events',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     if (!user) {
       if (onAuthRequired) {
         onAuthRequired();
@@ -117,12 +143,16 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
     <div className={`group flex items-center self-stretch relative overflow-hidden ${className}`}>
       <button 
         onClick={handleRegister}
-        disabled={loading}
-        className="flex h-[50px] justify-center items-center gap-2.5 border relative bg-[#1A1A1A] px-2.5 py-3.5 border-solid border-[#1A1A1A] transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed w-[calc(100%-50px)] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF] z-10"
-        aria-label={isRegistered ? "Unregister from event" : "Register for event"}
+        disabled={loading || isPastEvent}
+        className={`flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed w-[calc(100%-50px)] z-10 ${
+          isPastEvent 
+            ? 'bg-gray-400 border-gray-400 cursor-not-allowed' 
+            : 'bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF]'
+        }`}
+        aria-label={isPastEvent ? "Event has ended" : isRegistered ? "Unregister from event" : "Register for event"}
       >
-        <span className="text-white text-[13px] font-normal uppercase relative transition-colors duration-300 group-hover:text-black">
-          {loading ? "LOADING..." : isRegistered ? "UNREGISTER" : "REGISTER"}
+        <span className={`text-white text-[13px] font-normal uppercase relative transition-colors duration-300 ${!isPastEvent && 'group-hover:text-black'}`}>
+          {loading ? "LOADING..." : isPastEvent ? "EVENT ENDED" : isRegistered ? "UNREGISTER" : "REGISTER"}
         </span>
         <svg 
           width="12" 
@@ -137,7 +167,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
           <path d="M6.39282 10L10.3928 6L6.39282 2" stroke="#1A1A1A" strokeWidth="1.5" />
         </svg>
       </button>
-      <div className="flex w-[50px] h-[50px] justify-center items-center border absolute right-0 bg-white rounded-[99px] border-solid border-[#1A1A1A] transition-all duration-300 ease-in-out group-hover:opacity-0 group-hover:scale-50 pointer-events-none z-0">
+      {!isPastEvent && (
+        <div className="flex w-[50px] h-[50px] justify-center items-center border absolute right-0 bg-white rounded-[99px] border-solid border-[#1A1A1A] transition-all duration-300 ease-in-out group-hover:opacity-0 group-hover:scale-50 pointer-events-none z-0">
         <svg 
           width="12" 
           height="12" 
@@ -150,7 +181,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
           <path d="M0.857178 6H10.3929" stroke="#1A1A1A" strokeWidth="1.5" />
           <path d="M6.39282 10L10.3928 6L6.39282 2" stroke="#1A1A1A" strokeWidth="1.5" />
         </svg>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

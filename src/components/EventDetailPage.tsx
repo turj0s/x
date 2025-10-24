@@ -107,6 +107,7 @@ export const EventDetailPage: React.FC = () => {
               onRegister={checkRegistration} 
               isRegistered={isRegistered}
               onAuthRequired={() => setIsAuthOpen(true)}
+              targetDate={new Date(event.target_date)}
               className="opacity-0 animate-fade-in [animation-delay:400ms]" 
             />
             </div>
