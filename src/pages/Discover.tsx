@@ -23,6 +23,15 @@ const EventCard = ({
 }) => {
   const navigate = useNavigate();
   
+  const isEventEnded = () => {
+    const now = new Date().getTime();
+    const target = new Date(event.target_date).getTime();
+    const oneHour = 1000 * 60 * 60;
+    return target < now - oneHour;
+  };
+  
+  const eventEnded = isEventEnded();
+  
   return (
     <div 
       className="relative cursor-pointer group"
@@ -41,6 +50,11 @@ const EventCard = ({
         <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
           <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
+        {eventEnded && (
+          <div className="bg-[#FF0000] border border-t-0 border-black px-3 h-[23px] flex items-center">
+            <div className="text-[11px] font-medium uppercase leading-none text-white">EVENT ENDED</div>
+          </div>
+        )}
       </div>
       <h3 className="text-xl font-medium">{event.title}</h3>
       <p className="text-sm text-gray-500 mt-1">{event.address}</p>
