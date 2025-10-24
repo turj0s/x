@@ -51,8 +51,8 @@ const EventCard = ({
           <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
         {eventEnded && (
-          <div className="bg-[#FF0000] border border-t-0 border-black px-3 h-[23px] flex items-center">
-            <div className="text-[11px] font-medium uppercase leading-none text-white">EVENT ENDED</div>
+          <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
+            <div className="text-[11px] font-medium uppercase leading-none">EVENT ENDED</div>
           </div>
         )}
       </div>
