@@ -51,11 +51,7 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
     return `${value.toString().padStart(unit === 'D' ? 1 : 2, '0')}${unit}`;
   };
   if (status === 'ended') {
-    return <div className="flex items-center justify-center relative bg-[#FF0000] px-6 py-4 animate-fade-in">
-        <div className="text-white text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
-          EVENT ENDED
-        </div>
-      </div>;
+    return null;
   }
 
   if (status === 'happening') {
