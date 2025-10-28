@@ -60,6 +60,24 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Configuration
+
+### Google Maps Places Autocomplete
+
+This project uses Google Maps Places API for location autocomplete. To enable this feature:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the **Places API (New)** in the API Library
+4. Go to **Credentials** → **Create Credentials** → **API Key**
+5. Copy the API key
+6. Add it to your `.env` file:
+   ```
+   VITE_GOOGLE_MAPS_API_KEY="your-api-key-here"
+   ```
+
+**Optional but recommended:** Restrict your API key to only work with the Places API and your domain for security.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/f1ba0c74-af75-4389-a8ae-60baf80911b5) and click on Share -> Publish.

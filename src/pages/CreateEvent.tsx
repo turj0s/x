@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useGooglePlacesAutocomplete } from '@/hooks/useGooglePlacesAutocomplete';
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -14,6 +15,16 @@ const CreateEvent = () => {
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  
+  const locationInputRef = useRef<HTMLInputElement>(null);
+  const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
+
+  useEffect(() => {
+    onPlaceSelected((place) => {
+      const address = place.formatted_address || place.name || '';
+      setLocation(address);
+    });
+  }, [onPlaceSelected]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -154,6 +165,7 @@ const CreateEvent = () => {
 
             {/* Location */}
             <input
+              ref={locationInputRef}
               type="text"
               placeholder="Add event location"
               className="w-full px-4 py-3 text-[17px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
