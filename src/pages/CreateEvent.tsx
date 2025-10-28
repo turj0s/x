@@ -17,6 +17,7 @@ const CreateEvent = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   
   const locationInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const CreateEvent = () => {
       <div className="max-w-7xl mx-auto pt-32 pb-16 px-8">
         <div className="grid md:grid-cols-2 gap-16 items-start">
           {/* Left: Image Upload */}
-          <div className="flex items-start justify-start">
+          <div className="flex flex-col gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
               {imagePreview ? (
                 <img src={imagePreview} alt="Event preview" className="w-full h-full object-cover" />
@@ -66,12 +67,22 @@ const CreateEvent = () => {
                 </span>
               )}
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 className="hidden"
                 onChange={handleImageUpload}
               />
             </label>
+            
+            {imagePreview && (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-3 text-[13px] font-medium uppercase tracking-wider border border-black bg-white hover:bg-black hover:text-white transition-colors"
+              >
+                Change image
+              </button>
+            )}
           </div>
 
           {/* Right: Form Fields */}
