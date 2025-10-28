@@ -34,12 +34,17 @@ const CreateEvent = () => {
     // Check auth state
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
+      if (!session?.user) {
+        setShowAuthModal(true);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
       if (session?.user) {
         setShowAuthModal(false);
+      } else {
+        setShowAuthModal(true);
       }
     });
 
