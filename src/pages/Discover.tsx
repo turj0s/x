@@ -169,7 +169,7 @@ const Discover = () => {
       </div>
       
       {/* Hero Section */}
-      <section className="pt-24 md:pt-32 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8">
+      <section className="pt-32 md:pt-40 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 md:mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
