@@ -139,7 +139,7 @@ const Discover = () => {
       </div>
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 w-[100px] h-[100px] md:w-[120px] md:h-[120px] lg:w-[172px] lg:h-[172px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 w-[60px] h-[60px] md:w-[72px] md:h-[72px] lg:w-[103px] lg:h-[103px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
