@@ -5,6 +5,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useGooglePlacesAutocomplete } from '@/hooks/useGooglePlacesAutocomplete';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { User } from '@supabase/supabase-js';
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -15,10 +19,37 @@ const CreateEvent = () => {
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const locationInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
   const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
+
+  useEffect(() => {
+    // Check auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        toast.error('Please sign in to create an event');
+        navigate('/auth');
+        return;
+      }
+      setUser(session.user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        toast.error('Please sign in to create an event');
+        navigate('/auth');
+        return;
+      }
+      setUser(session.user);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     onPlaceSelected((place) => {
@@ -30,6 +61,7 @@ const CreateEvent = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -38,16 +70,101 @@ const CreateEvent = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log({
-      eventName,
-      startDate,
-      startTime,
-      endDate,
-      endTime,
-      location,
-      description,
-    });
+  const handleSubmit = async () => {
+    // Validate all fields
+    if (!eventName.trim()) {
+      toast.error('Please enter an event name');
+      return;
+    }
+    if (!startDate) {
+      toast.error('Please select a start date');
+      return;
+    }
+    if (!startTime.trim()) {
+      toast.error('Please enter a start time');
+      return;
+    }
+    if (!endDate) {
+      toast.error('Please select an end date');
+      return;
+    }
+    if (!endTime.trim()) {
+      toast.error('Please enter an end time');
+      return;
+    }
+    if (!location.trim()) {
+      toast.error('Please enter an event location');
+      return;
+    }
+    if (!description.trim()) {
+      toast.error('Please enter an event description');
+      return;
+    }
+    if (!imageFile) {
+      toast.error('Please add an event image');
+      return;
+    }
+    if (!user) {
+      toast.error('Please sign in to create an event');
+      navigate('/auth');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Upload image to storage
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('event-images')
+        .upload(filePath, imageFile);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(filePath);
+
+      // Create target_date from start date and time
+      const targetDate = new Date(startDate);
+      const [hours, minutes] = startTime.split(':');
+      targetDate.setHours(parseInt(hours) || 0, parseInt(minutes) || 0);
+
+      // Format date and time strings
+      const dateStr = format(startDate, 'MMMM dd, yyyy');
+      const timeStr = `${startTime} - ${endTime}`;
+
+      // Get creator name from user metadata or email
+      const creatorName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous';
+
+      // Insert event into database
+      const { error: insertError } = await supabase
+        .from('events')
+        .insert({
+          title: eventName,
+          description: description,
+          date: dateStr,
+          time: timeStr,
+          address: location,
+          background_image_url: publicUrl,
+          target_date: targetDate.toISOString(),
+          creator: creatorName,
+        });
+
+      if (insertError) throw insertError;
+
+      toast.success('Event created successfully!');
+      navigate('/my-events');
+    } catch (error) {
+      console.error('Error creating event:', error);
+      toast.error('Failed to create event. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -194,11 +311,12 @@ const CreateEvent = () => {
             <div className="group flex items-center self-stretch relative overflow-hidden mt-8">
               <button
                 onClick={handleSubmit}
-                className="flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out w-[calc(100%-50px)] z-10 bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF]"
+                disabled={isSubmitting}
+                className="flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out w-[calc(100%-50px)] z-10 bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF] disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Create event"
               >
                 <span className="text-white text-[13px] font-normal uppercase relative transition-colors duration-300 group-hover:text-black">
-                  CREATE EVENT
+                  {isSubmitting ? 'CREATING...' : 'CREATE EVENT'}
                 </span>
                 <svg 
                   width="12" 
