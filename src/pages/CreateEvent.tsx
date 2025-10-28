@@ -177,7 +177,7 @@ const CreateEvent = () => {
         
         {user ? (
           <div className="max-w-7xl mx-auto pt-32 pb-16 px-8">
-            <div className="grid md:grid-cols-2 gap-16 items-start">
+            <div className="grid lg:grid-cols-2 gap-16 items-start">
               {/* Left: Image Upload */}
               <div className="flex flex-col gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
