@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -9,6 +9,8 @@ export const Navbar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -21,6 +23,14 @@ export const Navbar: React.FC = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user && pendingRoute) {
+      navigate(pendingRoute);
+      setPendingRoute(null);
+      setIsAuthOpen(false);
+    }
+  }, [user, pendingRoute, navigate]);
 
   return createPortal(
     <>
@@ -43,13 +53,20 @@ export const Navbar: React.FC = () => {
           <span className="relative z-10">DISCOVER</span>
           <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
-        <Link 
-          to="/create-event" 
+        <button 
+          onClick={() => {
+            if (user) {
+              navigate('/create-event');
+            } else {
+              setPendingRoute('/create-event');
+              setIsAuthOpen(true);
+            }
+          }}
           className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
         >
           <span className="relative z-10">CREATE EVENT</span>
           <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-        </Link>
+        </button>
         {user ? (
           <>
             <Link 
@@ -102,13 +119,20 @@ export const Navbar: React.FC = () => {
             >
               DISCOVER
             </Link>
-            <Link 
-              to="/create-event" 
-              onClick={() => setIsMobileMenuOpen(false)}
+            <button 
+              onClick={() => {
+                if (user) {
+                  navigate('/create-event');
+                } else {
+                  setPendingRoute('/create-event');
+                  setIsAuthOpen(true);
+                }
+                setIsMobileMenuOpen(false);
+              }}
               className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
             >
               CREATE EVENT
-            </Link>
+            </button>
             {user ? (
               <>
                 <Link 
@@ -153,7 +177,7 @@ export const Navbar: React.FC = () => {
       </button>
     </nav>
     
-    <AuthSheet isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+    <AuthSheet isOpen={isAuthOpen} onClose={() => { setIsAuthOpen(false); setPendingRoute(null); }} />
     </>,
     document.body
   );
