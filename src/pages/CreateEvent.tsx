@@ -74,7 +74,7 @@ const CreateEvent = () => {
             {/* Start/End Date/Time Container with connecting line */}
             <div className="relative">
               {/* Vertical connecting line */}
-              <div className="absolute left-[18px] top-[46px] w-[2px] h-[24px] bg-black"></div>
+              <div className="absolute left-[19px] top-[42px] w-[2px] h-[32px] bg-black"></div>
               
               {/* Start Date/Time */}
               <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black mb-6">
