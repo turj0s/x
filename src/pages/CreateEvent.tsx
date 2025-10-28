@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState<Date | undefined>();
   const [startTime, setStartTime] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState<Date | undefined>();
   const [endTime, setEndTime] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
@@ -81,13 +85,27 @@ const CreateEvent = () => {
                   <div className="w-2 h-2 bg-black rounded-full"></div>
                   <span className="text-[17px] font-medium">Start</span>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Thu, 28 Oct"
-                  className="px-4 py-3 text-[17px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={cn(
+                        "px-4 py-3 text-[17px] text-left border-r border-black focus:outline-none bg-white",
+                        !startDate && "text-[#C4C4C4]"
+                      )}
+                    >
+                      {startDate ? format(startDate, "EEE, dd MMM") : "Thu, 28 Oct"}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
                 <input
                   type="text"
                   placeholder="15:00"
@@ -103,13 +121,27 @@ const CreateEvent = () => {
                   <div className="w-2 h-2 bg-black rounded-full"></div>
                   <span className="text-[17px] font-medium">End</span>
                 </div>
-                <input
-                  type="text"
-                  placeholder="Thu, 28 Oct"
-                  className="px-4 py-3 text-[17px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={cn(
+                        "px-4 py-3 text-[17px] text-left border-r border-black focus:outline-none bg-white",
+                        !endDate && "text-[#C4C4C4]"
+                      )}
+                    >
+                      {endDate ? format(endDate, "EEE, dd MMM") : "Thu, 28 Oct"}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
                 <input
                   type="text"
                   placeholder="16:00"
