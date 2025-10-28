@@ -195,8 +195,8 @@ const Discover = () => {
       {/* Events Section */}
       <section id="events-section" className="px-4 md:px-8 pb-16 pt-12">
         <div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center sm:gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
-            <h2 className="text-base md:text-lg lg:text-xl font-normal">Browsing events in</h2>
+          <div className="flex flex-wrap items-center gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
+            <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing events in</h2>
             <span className="text-base md:text-lg lg:text-xl font-normal border-2 border-black px-2 py-1 sm:ml-2">{userCountry}</span>
             
             {/* Calendar button for mobile/tablet */}
