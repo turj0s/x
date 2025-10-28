@@ -134,7 +134,7 @@ const Discover = () => {
       </div>
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="fixed top-8 right-8 w-[172px] h-[172px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
+      <div className="hidden md:block fixed top-4 right-4 md:top-8 md:right-8 w-[120px] h-[120px] md:w-[172px] md:h-[172px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
@@ -169,41 +169,41 @@ const Discover = () => {
       </div>
       
       {/* Hero Section */}
-      <section className="pt-48 pb-24 px-8">
+      <section className="pt-24 md:pt-32 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-7xl font-medium mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 md:mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
-              <span className="border-2 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Discover</span>
-              <span className="bg-[#ff6bff] border-2 border-black px-6 py-4 rounded-[40px] -ml-[2px] animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>events</span>
+              <span className="border-2 border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Discover</span>
+              <span className="bg-[#ff6bff] border-2 border-black px-3 md:px-6 py-2 md:py-4 rounded-[20px] md:rounded-[40px] -ml-[2px] animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>events</span>
             </div>
             <div className="flex items-center -mt-[2px]">
-              <span className="border-2 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>near</span>
-              <span className="border-2 border-l-0 border-black px-6 py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>you</span>
+              <span className="border-2 border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>near</span>
+              <span className="border-2 border-l-0 border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>you</span>
             </div>
           </h1>
-          <p className="text-[18px] text-black max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
+          <p className="text-sm md:text-base lg:text-[18px] text-black max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
             Explore popular events near you, browse by category, or check out some of the great community calendars.
           </p>
         </div>
       </section>
 
       {/* Events Section */}
-      <section id="events-section" className="px-8 pb-16 pt-12">
+      <section id="events-section" className="px-4 md:px-8 pb-16 pt-12">
         <div>
-          <div className="flex items-center gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
-            <h2 className="text-4xl font-normal">Browsing events in</h2>
-            <span className="text-4xl font-normal border-2 border-black px-4 py-2">{userCountry}</span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-normal">Browsing events in</h2>
+            <span className="text-2xl md:text-3xl lg:text-4xl font-normal border-2 border-black px-3 md:px-4 py-1 md:py-2">{userCountry}</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-12 mt-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 mt-8 md:mt-16">
             {/* Calendar */}
-            <div className="animate-fade-in sticky top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
+            <div className="animate-fade-in lg:sticky lg:top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
               
-              <Calendar mode="single" selected={date} onSelect={setDate} />
+              <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-16 gap-x-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-12 md:gap-y-16 gap-x-6 md:gap-x-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
               ) : filteredEvents.length === 0 ? (
