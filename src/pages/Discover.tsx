@@ -196,8 +196,8 @@ const Discover = () => {
       <section id="events-section" className="px-4 md:px-8 pb-16 pt-12">
         <div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center sm:gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-normal">Browsing events in</h2>
-            <span className="text-2xl md:text-3xl lg:text-4xl font-normal border-2 border-black px-3 md:px-4 py-1 md:py-2 sm:ml-4">{userCountry}</span>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-normal">Browsing events in</h2>
+            <span className="text-xl md:text-2xl lg:text-3xl font-normal border-2 border-black px-2 md:px-3 py-1 sm:ml-3">{userCountry}</span>
             
             {/* Calendar button for mobile/tablet */}
             <div className="lg:hidden mt-2 sm:mt-0">
@@ -205,11 +205,11 @@ const Discover = () => {
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "text-2xl md:text-3xl lg:text-4xl font-normal border-2 border-black px-3 md:px-4 py-1 md:py-2 flex items-center bg-white hover:bg-gray-50 transition-colors",
+                      "text-xl md:text-2xl lg:text-3xl font-normal border-2 border-black px-2 md:px-3 py-1 flex items-center bg-white hover:bg-gray-50 transition-colors",
                       !date && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-5 w-5 md:h-6 md:w-6" />
+                    <CalendarIcon className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                     {date ? format(date, "PPP") : <span>Pick a date</span>}
                   </button>
                 </PopoverTrigger>
