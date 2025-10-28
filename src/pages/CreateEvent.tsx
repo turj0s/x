@@ -66,7 +66,7 @@ const CreateEvent = () => {
             <input
               type="text"
               placeholder="Event name"
-              className="w-full text-[#C4C4C4] text-[48px] md:text-[56px] font-light leading-none mb-8 focus:outline-none bg-transparent border-none p-0"
+              className="w-full text-[#C4C4C4] text-[48px] md:text-[56px] font-medium leading-none mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
             />
