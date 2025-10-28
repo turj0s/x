@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { AuthSheet } from './AuthSheet';
 export const Navbar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -79,50 +81,72 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
-        <Link 
-          to="/" 
-          className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-        >
-          <span className="relative z-10">DISCOVER</span>
-          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-        </Link>
-        <Link 
-          to="/create-event" 
-          className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-        >
-          <span className="relative z-10">CREATE EVENT</span>
-          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-        </Link>
-        {user ? (
-          <>
-            <Link 
-              to="/my-events" 
-              className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-            >
-              <span className="relative z-10">MY EVENTS</span>
-              <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-            </Link>
+      {isMobileMenuOpen && (
+        <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
+          <Link 
+            to="/" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
+          >
+            <span className="relative z-10">DISCOVER</span>
+            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+          </Link>
+          <Link 
+            to="/create-event" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
+          >
+            <span className="relative z-10">CREATE EVENT</span>
+            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+          </Link>
+          {user ? (
+            <>
+              <Link 
+                to="/my-events" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
+              >
+                <span className="relative z-10">MY EVENTS</span>
+                <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+              </Link>
+              <button 
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group text-left w-full"
+              >
+                <span className="relative z-10">SIGN OUT</span>
+                <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+              </button>
+            </>
+          ) : (
             <button 
-              onClick={async () => {
-                await supabase.auth.signOut();
+              onClick={() => {
+                setIsAuthOpen(true);
+                setIsMobileMenuOpen(false);
               }}
-              className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group text-left w-full"
+              className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group"
             >
-              <span className="relative z-10">SIGN OUT</span>
+              <span className="relative z-10">SIGN IN</span>
               <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
             </button>
-          </>
+          )}
+        </div>
+      )}
+      
+      {/* Hamburger Menu Button - Mobile Only */}
+      <button 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden relative overflow-hidden bg-white text-black h-[34px] w-[34px] border border-l-0 border-black flex items-center justify-center group"
+      >
+        {isMobileMenuOpen ? (
+          <X className="w-4 h-4 relative z-10" />
         ) : (
-          <button 
-            onClick={() => setIsAuthOpen(true)}
-            className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group"
-          >
-            <span className="relative z-10">SIGN IN</span>
-            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-          </button>
+          <Menu className="w-4 h-4 relative z-10" />
         )}
-      </div>
+        <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+      </button>
     </nav>
     
     <AuthSheet isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
