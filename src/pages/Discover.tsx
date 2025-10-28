@@ -205,7 +205,7 @@ const Discover = () => {
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "text-xl md:text-2xl lg:text-3xl font-normal border-2 border-black px-2 md:px-3 py-1 flex items-center bg-white hover:bg-gray-50 transition-colors",
+                      "text-xl md:text-2xl lg:text-3xl font-normal border-2 border-l-0 border-black px-2 md:px-3 py-1 flex items-center bg-white hover:bg-gray-50 transition-colors",
                       !date && "text-muted-foreground"
                     )}
                   >
