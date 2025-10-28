@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { User } from '@supabase/supabase-js';
+import { AuthSheet } from '@/components/AuthSheet';
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -22,6 +23,7 @@ const CreateEvent = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   const locationInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,25 +33,18 @@ const CreateEvent = () => {
   useEffect(() => {
     // Check auth state
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        toast.error('Please sign in to create an event');
-        navigate('/auth');
-        return;
-      }
-      setUser(session.user);
+      setUser(session?.user || null);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        toast.error('Please sign in to create an event');
-        navigate('/auth');
-        return;
+      setUser(session?.user || null);
+      if (session?.user) {
+        setShowAuthModal(false);
       }
-      setUser(session.user);
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     onPlaceSelected((place) => {
@@ -71,6 +66,12 @@ const CreateEvent = () => {
   };
 
   const handleSubmit = async () => {
+    // Check if user is authenticated first
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     // Validate all fields
     if (!eventName.trim()) {
       toast.error('Please enter an event name');
@@ -102,11 +103,6 @@ const CreateEvent = () => {
     }
     if (!imageFile) {
       toast.error('Please add an event image');
-      return;
-    }
-    if (!user) {
-      toast.error('Please sign in to create an event');
-      navigate('/auth');
       return;
     }
 
@@ -168,8 +164,11 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
+    <>
+      <AuthSheet isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      
+      <div className="min-h-screen bg-white">
+        <Navbar />
       
       <div className="max-w-7xl mx-auto pt-32 pb-16 px-8">
         <div className="grid md:grid-cols-2 gap-16 items-start">
@@ -350,6 +349,7 @@ const CreateEvent = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
