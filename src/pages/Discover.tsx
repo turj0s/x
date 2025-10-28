@@ -169,7 +169,7 @@ const Discover = () => {
         
         {/* Static down arrow in center */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src={arrowDown} alt="Arrow down" className="w-12 h-12" />
+          <img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
         </div>
       </div>
       
