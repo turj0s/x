@@ -71,48 +71,54 @@ const CreateEvent = () => {
               onChange={(e) => setEventName(e.target.value)}
             />
 
-            {/* Start Date/Time */}
-            <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
-              <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                <div className="w-2 h-2 bg-black rounded-full"></div>
-                <span className="text-[11px] font-medium">Start</span>
+            {/* Start/End Date/Time Container with connecting line */}
+            <div className="relative">
+              {/* Vertical connecting line */}
+              <div className="absolute left-[18px] top-[46px] w-[2px] h-[24px] bg-black"></div>
+              
+              {/* Start Date/Time */}
+              <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black mb-6">
+                <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-[11px] font-medium">Start</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Thu, 28 Oct"
+                  className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="15:00"
+                  className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Thu, 28 Oct"
-                className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="15:00"
-                className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              />
-            </div>
 
-            {/* End Date/Time */}
-            <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
-              <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                <div className="w-2 h-2 bg-black rounded-full"></div>
-                <span className="text-[11px] font-medium">End</span>
+              {/* End Date/Time */}
+              <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
+                <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
+                  <span className="text-[11px] font-medium">End</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Thu, 28 Oct"
+                  className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="16:00"
+                  className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
+                  value={endTime}
+                  onChange={(e) => setEndTime(e.target.value)}
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Thu, 28 Oct"
-                className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="16:00"
-                className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
             </div>
 
             {/* Location */}
