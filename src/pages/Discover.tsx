@@ -198,45 +198,41 @@ const Discover = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-normal">Browsing events in</h2>
             <span className="text-2xl md:text-3xl lg:text-4xl font-normal border-2 border-black px-3 md:px-4 py-1 md:py-2">{userCountry}</span>
+            
+            {/* Calendar button for mobile/tablet */}
+            <div className="lg:hidden">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className={cn(
+                      "text-base md:text-lg font-normal border-2 border-black px-3 md:px-4 py-1 md:py-2 flex items-center gap-2 bg-white hover:bg-gray-50 transition-colors",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar 
+                    mode="single" 
+                    selected={date} 
+                    onSelect={setDate} 
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 mt-8 md:mt-16">
-            {/* Calendar */}
-            <div className="animate-fade-in lg:sticky lg:top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
-              {/* Mobile/Tablet - Calendar in Popover */}
-              <div className="lg:hidden">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal border-2 border-black",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar 
-                      mode="single" 
-                      selected={date} 
-                      onSelect={setDate} 
-                      className={cn("p-3 pointer-events-auto")}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              
-              {/* Desktop - Inline Calendar */}
-              <div className="hidden lg:block">
-                <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
-              </div>
+            {/* Calendar - Desktop only */}
+            <div className="hidden lg:block animate-fade-in lg:sticky lg:top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
+              <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-12 md:gap-y-16 gap-x-6 md:gap-x-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:col-start-2 gap-y-12 md:gap-y-16 gap-x-6 md:gap-x-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
               ) : filteredEvents.length === 0 ? (
