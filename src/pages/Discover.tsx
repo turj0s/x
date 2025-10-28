@@ -200,7 +200,7 @@ const Discover = () => {
             <span className="text-base md:text-lg lg:text-xl font-normal border-2 border-black px-2 py-1 sm:ml-2">{userCountry}</span>
             
             {/* Calendar button for mobile/tablet */}
-            <div className="lg:hidden mt-2 sm:mt-0">
+            <div className="lg:hidden">
               <Popover>
                 <PopoverTrigger asChild>
                   <button
