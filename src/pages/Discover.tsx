@@ -134,7 +134,7 @@ const Discover = () => {
       </div>
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="hidden md:block fixed top-4 right-4 md:top-8 md:right-8 w-[120px] h-[120px] md:w-[172px] md:h-[172px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
+      <div className="hidden md:block fixed top-4 right-4 md:top-8 md:right-8 w-[120px] h-[120px] md:w-[120px] md:h-[120px] lg:w-[172px] lg:h-[172px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
@@ -169,7 +169,7 @@ const Discover = () => {
       </div>
       
       {/* Hero Section */}
-      <section className="pt-24 md:pt-32 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8 md:pr-48 lg:pr-8">
+      <section className="pt-24 md:pt-32 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 md:mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
