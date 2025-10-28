@@ -176,10 +176,10 @@ const CreateEvent = () => {
         <Navbar />
         
         {user ? (
-          <div className="max-w-7xl mx-auto pt-32 pb-16 px-8">
-            <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-8 md:pb-16 px-4 md:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left: Image Upload */}
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 md:gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
               {imagePreview ? (
                 <img src={imagePreview} alt="Event preview" className="w-full h-full object-cover" />
@@ -208,11 +208,11 @@ const CreateEvent = () => {
               </div>
 
               {/* Right: Form Fields */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 <input
                   type="text"
                   placeholder="Event name"
-                  className="w-full text-black text-[48px] md:text-[56px] font-medium leading-none mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
+                  className="w-full text-black text-[32px] md:text-[48px] lg:text-[56px] font-medium leading-none mb-4 md:mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
                 />
@@ -220,16 +220,16 @@ const CreateEvent = () => {
                 {/* Start/End Date/Time Container */}
                 <div className="relative">
                   {/* Start Date/Time */}
-                  <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black mb-6">
-                    <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                      <div className="w-2 h-2 bg-black rounded-full"></div>
-                      <span className="text-[17px] font-medium">Start</span>
+                  <div className="grid grid-cols-[80px_1fr_80px] md:grid-cols-[100px_1fr_100px] gap-0 border border-black mb-4 md:mb-6">
+                    <div className="flex items-center justify-start gap-1.5 md:gap-2 border-r border-black px-2 md:px-3 py-2 md:py-3">
+                      <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-black rounded-full"></div>
+                      <span className="text-[14px] md:text-[17px] font-medium">Start</span>
                     </div>
                     <Popover>
                       <PopoverTrigger asChild>
                         <button
                           className={cn(
-                            "px-4 py-3 text-[17px] text-left border-r border-black focus:outline-none bg-white",
+                            "px-2 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-left border-r border-black focus:outline-none bg-white",
                             !startDate && "text-[#C4C4C4]"
                           )}
                         >
@@ -249,23 +249,23 @@ const CreateEvent = () => {
                     <input
                       type="text"
                       placeholder="15:00"
-                      className="px-4 py-3 text-[17px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
+                      className="px-2 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
                       value={startTime}
                       onChange={(e) => setStartTime(e.target.value)}
                     />
                   </div>
 
                   {/* End Date/Time */}
-                  <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
-                <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                  <div className="w-2 h-2 bg-black rounded-full"></div>
-                  <span className="text-[17px] font-medium">End</span>
+                  <div className="grid grid-cols-[80px_1fr_80px] md:grid-cols-[100px_1fr_100px] gap-0 border border-black">
+                <div className="flex items-center justify-start gap-1.5 md:gap-2 border-r border-black px-2 md:px-3 py-2 md:py-3">
+                  <div className="w-1.5 md:w-2 h-1.5 md:h-2 bg-black rounded-full"></div>
+                  <span className="text-[14px] md:text-[17px] font-medium">End</span>
                 </div>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button
                       className={cn(
-                        "px-4 py-3 text-[17px] text-left border-r border-black focus:outline-none bg-white",
+                        "px-2 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-left border-r border-black focus:outline-none bg-white",
                         !endDate && "text-[#C4C4C4]"
                       )}
                     >
@@ -285,7 +285,7 @@ const CreateEvent = () => {
                 <input
                   type="text"
                   placeholder="16:00"
-                  className="px-4 py-3 text-[17px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
+                  className="px-2 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                 />
@@ -297,7 +297,7 @@ const CreateEvent = () => {
               ref={locationInputRef}
               type="text"
               placeholder="Add event location"
-              className="w-full px-4 py-3 text-[17px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
+              className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
@@ -305,14 +305,14 @@ const CreateEvent = () => {
             {/* Description */}
             <textarea
               placeholder="Add description"
-              rows={8}
-              className="w-full px-4 py-3 text-[17px] text-black border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
+              rows={6}
+              className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
 
                 {/* Submit Button */}
-                <div className="group flex items-center self-stretch relative overflow-hidden mt-8">
+                <div className="group flex items-center self-stretch relative overflow-hidden mt-4 md:mt-8">
                   <button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
