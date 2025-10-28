@@ -74,7 +74,7 @@ const CreateEvent = () => {
             {/* Start Date/Time */}
             <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
               <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                <MapPin className="w-4 h-4" />
+                <div className="w-2 h-2 bg-black rounded-full"></div>
                 <span className="text-[11px] font-medium">Start</span>
               </div>
               <input
@@ -94,9 +94,9 @@ const CreateEvent = () => {
             </div>
 
             {/* End Date/Time */}
-            <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-t-0 border-black">
+            <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black">
               <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
-                <MapPin className="w-4 h-4" />
+                <div className="w-2 h-2 bg-black rounded-full"></div>
                 <span className="text-[11px] font-medium">End</span>
               </div>
               <input
