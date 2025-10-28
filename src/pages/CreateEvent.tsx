@@ -85,11 +85,8 @@ const CreateEvent = () => {
               onChange={(e) => setEventName(e.target.value)}
             />
 
-            {/* Start/End Date/Time Container with connecting line */}
+            {/* Start/End Date/Time Container */}
             <div className="relative">
-              {/* Vertical connecting line */}
-              <div className="absolute left-[19px] top-[42px] w-[2px] h-[32px] bg-black"></div>
-              
               {/* Start Date/Time */}
               <div className="grid grid-cols-[100px_1fr_100px] gap-0 border border-black mb-6">
                 <div className="flex items-center justify-start gap-2 border-r border-black px-3 py-3">
