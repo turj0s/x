@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { Calendar } from '@/components/ui/calendar';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 import arrowDown from '@/assets/arrow-down.png';
 import badgeImage from '@/assets/badge.png';
 
@@ -198,8 +203,36 @@ const Discover = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 mt-8 md:mt-16">
             {/* Calendar */}
             <div className="animate-fade-in lg:sticky lg:top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
+              {/* Mobile/Tablet - Calendar in Popover */}
+              <div className="lg:hidden">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal border-2 border-black",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar 
+                      mode="single" 
+                      selected={date} 
+                      onSelect={setDate} 
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
               
-              <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
+              {/* Desktop - Inline Calendar */}
+              <div className="hidden lg:block">
+                <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
+              </div>
             </div>
 
             {/* Event Grid */}
