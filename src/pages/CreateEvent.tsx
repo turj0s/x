@@ -66,7 +66,7 @@ const CreateEvent = () => {
             <input
               type="text"
               placeholder="Event name"
-              className="w-full text-[#C4C4C4] text-[48px] md:text-[56px] font-medium leading-none mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
+              className="w-full text-black text-[48px] md:text-[56px] font-medium leading-none mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
             />
@@ -80,14 +80,14 @@ const CreateEvent = () => {
               <input
                 type="text"
                 placeholder="Thu, 28 Oct"
-                className="px-4 py-3 text-[11px] border-r border-black focus:outline-none"
+                className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="15:00"
-                className="px-4 py-3 text-[11px] text-center focus:outline-none"
+                className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
               />
@@ -102,14 +102,14 @@ const CreateEvent = () => {
               <input
                 type="text"
                 placeholder="Thu, 28 Oct"
-                className="px-4 py-3 text-[11px] border-r border-black focus:outline-none"
+                className="px-4 py-3 text-[11px] text-black border-r border-black focus:outline-none placeholder:text-[#C4C4C4]"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="16:00"
-                className="px-4 py-3 text-[11px] text-center focus:outline-none"
+                className="px-4 py-3 text-[11px] text-black text-center focus:outline-none placeholder:text-[#C4C4C4]"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
               />
@@ -119,7 +119,7 @@ const CreateEvent = () => {
             <input
               type="text"
               placeholder="Add event location"
-              className="w-full px-4 py-3 text-[11px] border border-black focus:outline-none placeholder:text-[#C4C4C4]"
+              className="w-full px-4 py-3 text-[11px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
@@ -128,7 +128,7 @@ const CreateEvent = () => {
             <textarea
               placeholder="Add description"
               rows={8}
-              className="w-full px-4 py-3 text-[11px] border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
+              className="w-full px-4 py-3 text-[11px] text-black border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
