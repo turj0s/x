@@ -80,58 +80,66 @@ export const Navbar: React.FC = () => {
         )}
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Full Screen */}
       {isMobileMenuOpen && (
-        <div className="md:hidden flex flex-col absolute top-full right-0 mt-2 bg-white border border-black">
-          <Link 
-            to="/" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-          >
-            <span className="relative z-10">DISCOVER</span>
-            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-          </Link>
-          <Link 
-            to="/create-event" 
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-          >
-            <span className="relative z-10">CREATE EVENT</span>
-            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-          </Link>
-          {user ? (
-            <>
-              <Link 
-                to="/my-events" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase border-b border-black whitespace-nowrap leading-none group"
-              >
-                <span className="relative z-10">MY EVENTS</span>
-                <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-              </Link>
+        <div className="md:hidden fixed inset-0 z-[3000] flex flex-col">
+          {/* Close header */}
+          <div className="bg-[#1A1A1A] flex items-center justify-center py-16">
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white text-[11px] font-medium uppercase tracking-wider"
+            >
+              CLOSE
+            </button>
+          </div>
+          
+          {/* Menu items */}
+          <div className="flex-1 flex flex-col bg-white">
+            <Link 
+              to="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+            >
+              DISCOVER
+            </Link>
+            <Link 
+              to="/create-event" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+            >
+              CREATE EVENT
+            </Link>
+            {user ? (
+              <>
+                <Link 
+                  to="/my-events" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+                >
+                  MY EVENTS
+                </Link>
+                <button 
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px]"
+                >
+                  SIGN OUT
+                </button>
+              </>
+            ) : (
               <button 
-                onClick={async () => {
-                  await supabase.auth.signOut();
+                onClick={() => {
+                  setIsAuthOpen(true);
                   setIsMobileMenuOpen(false);
                 }}
-                className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group text-left w-full"
+                className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px]"
               >
-                <span className="relative z-10">SIGN OUT</span>
-                <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+                SIGN IN
               </button>
-            </>
-          ) : (
-            <button 
-              onClick={() => {
-                setIsAuthOpen(true);
-                setIsMobileMenuOpen(false);
-              }}
-              className="relative overflow-hidden p-[10px] text-[11px] font-medium uppercase whitespace-nowrap leading-none group"
-            >
-              <span className="relative z-10">SIGN IN</span>
-              <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-            </button>
-          )}
+            )}
+          </div>
         </div>
       )}
       
