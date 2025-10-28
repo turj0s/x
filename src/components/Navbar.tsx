@@ -24,7 +24,7 @@ export const Navbar: React.FC = () => {
 
   return createPortal(
     <>
-      <nav className="fixed top-8 left-4 md:left-8 z-[2000] flex items-center gap-0" >
+      <nav className="fixed top-8 right-4 md:left-8 md:right-auto z-[2000] flex items-center gap-0" >
       {/* Logo */}
       <div className="bg-black text-white h-[34px] w-[34px] border border-black flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" className="w-4 h-4">
@@ -82,7 +82,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="md:hidden flex flex-col absolute top-full left-0 mt-2 bg-white border border-black">
+        <div className="md:hidden flex flex-col absolute top-full right-0 mt-2 bg-white border border-black">
           <Link 
             to="/" 
             onClick={() => setIsMobileMenuOpen(false)}
