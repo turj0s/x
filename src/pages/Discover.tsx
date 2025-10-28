@@ -23,14 +23,14 @@ const EventCard = ({
 }) => {
   const navigate = useNavigate();
   
-  const isEventEnded = () => {
+  const isEventLive = () => {
     const now = new Date().getTime();
     const target = new Date(event.target_date).getTime();
     const oneHour = 1000 * 60 * 60;
-    return target < now - oneHour;
+    return now >= target && now <= target + oneHour;
   };
   
-  const eventEnded = isEventEnded();
+  const eventLive = isEventLive();
   
   return (
     <div 
@@ -50,9 +50,9 @@ const EventCard = ({
         <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
           <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
-        {eventEnded && (
+        {eventLive && (
           <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-            <div className="text-[11px] font-medium uppercase leading-none">EVENT ENDED</div>
+            <div className="text-[11px] font-medium uppercase leading-none">LIVE NOW</div>
           </div>
         )}
       </div>
@@ -101,8 +101,16 @@ const Discover = () => {
     }
   };
 
-  // Filter events based on selected date
+  // Filter events based on selected date and hide ended events
   const filteredEvents = events.filter((event) => {
+    // Check if event has ended (more than 1 hour past target_date)
+    const now = new Date().getTime();
+    const target = new Date(event.target_date).getTime();
+    const oneHour = 1000 * 60 * 60;
+    const hasEnded = target < now - oneHour;
+    
+    if (hasEnded) return false;
+    
     if (!date) return true;
     
     const eventDate = new Date(event.target_date);
