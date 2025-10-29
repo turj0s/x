@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { User } from '@supabase/supabase-js';
 import { AuthSheet } from '@/components/AuthSheet';
 import { SEOHead } from '@/components/SEOHead';
+import { Trash2 } from 'lucide-react';
 
 const EditEvent = () => {
   const { id } = useParams();
@@ -246,6 +247,27 @@ const EditEvent = () => {
     }
   };
 
+  const handleDeleteEvent = async () => {
+    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast.success('Event deleted successfully');
+      navigate('/my-events');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
@@ -443,6 +465,18 @@ const EditEvent = () => {
                     </svg>
                   </div>
                 </div>
+
+                {/* Delete Button */}
+                <button
+                  onClick={handleDeleteEvent}
+                  className="flex h-[50px] w-full justify-center items-center gap-2 border border-black px-4 py-3 transition-all duration-300 bg-white text-black hover:bg-red-500 hover:text-white hover:border-red-500 mt-4"
+                  aria-label="Delete event"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="text-[13px] font-normal uppercase">
+                    DELETE EVENT
+                  </span>
+                </button>
               </div>
             </div>
           </div>
