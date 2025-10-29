@@ -139,7 +139,7 @@ const Discover = () => {
       </div>
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 w-[60px] h-[60px] md:w-[72px] md:h-[72px] lg:w-[103px] lg:h-[103px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
+      <div className="fixed top-4 right-4 md:top-8 md:right-8 w-[60px] h-[60px] md:w-[72px] md:h-[72px] lg:w-[140px] lg:h-[140px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
         {/* Rotating badge background */}
         <div className="w-full h-full animate-[spin_20s_linear_infinite]">
           <img src={badgeImage} alt="Badge" className="w-full h-full" />
@@ -169,7 +169,7 @@ const Discover = () => {
         
         {/* Static down arrow in center */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+          <img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-11 lg:h-11" />
         </div>
       </div>
       
