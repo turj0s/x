@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from './Navbar';
 import { EventCountdown } from './EventCountdown';
@@ -9,6 +9,7 @@ import { EventDescription } from './EventDescription';
 import { EventLocation } from './EventLocation';
 import { EventRegistration } from './EventRegistration';
 import { AuthSheet } from './AuthSheet';
+import { SEOHead } from './SEOHead';
 interface Event {
   id: string;
   title: string;
@@ -22,10 +23,12 @@ interface Event {
 }
 export const EventDetailPage: React.FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isRegistered, setIsRegistered] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   
   useEffect(() => {
     fetchEvent();
@@ -34,10 +37,15 @@ export const EventDetailPage: React.FC = () => {
   
   const fetchEvent = async () => {
     const { data, error } = id
-      ? await supabase.from('events').select('*').eq('id', id).single()
+      ? await supabase.from('events').select('*').eq('id', id).maybeSingle()
       : await supabase.from('events').select('*').limit(1).maybeSingle();
     
-    if (!error && data) {
+    if (error) {
+      console.error('Error fetching event:', error);
+      setNotFound(true);
+    } else if (!data) {
+      setNotFound(true);
+    } else {
       setEvent(data);
     }
     setLoading(false);
@@ -68,12 +76,36 @@ export const EventDetailPage: React.FC = () => {
         <div className="text-[#1A1A1A] text-2xl">Loading...</div>
       </div>;
   }
-  if (!event) {
-    return <div className="flex h-screen items-center justify-center bg-white">
-        <div className="text-[#1A1A1A] text-2xl">No event found</div>
-      </div>;
+  if (notFound || !event) {
+    return (
+      <div className="flex flex-col h-screen items-center justify-center bg-white px-4">
+        <SEOHead 
+          title="Event Not Found"
+          description="The event you're looking for doesn't exist or has been removed."
+        />
+        <Navbar />
+        <div className="text-center mt-20">
+          <h1 className="text-4xl font-medium mb-4 text-[#1A1A1A]">Event Not Found</h1>
+          <p className="text-lg text-[#1A1A1A] opacity-70 mb-8">
+            The event you're looking for doesn't exist or has been removed.
+          </p>
+          <button
+            onClick={() => navigate('/discover')}
+            className="px-6 py-3 bg-[#1A1A1A] text-white border border-[#1A1A1A] hover:bg-white hover:text-[#1A1A1A] transition-colors uppercase text-sm font-medium"
+          >
+            Browse Events
+          </button>
+        </div>
+      </div>
+    );
   }
   return <>
+      <SEOHead 
+        title={event.title}
+        description={event.description.substring(0, 160)}
+        image={event.background_image_url}
+        keywords={`event, ${event.title}, ${event.address}, community event`}
+      />
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <Navbar />
       <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-lg:flex-col max-lg:h-auto">

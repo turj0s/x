@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import arrowDown from '@/assets/arrow-down.png';
 import badgeImage from '@/assets/badge.png';
+import { SEOHead } from '@/components/SEOHead';
 
 interface Event {
   id: string;
@@ -134,6 +135,11 @@ const Discover = () => {
     });
   };
   return <div className="min-h-screen bg-white">
+      <SEOHead 
+        title="Discover Events"
+        description="Explore popular events near you, browse by category, or check out some of the great community calendars."
+        keywords="events, discover events, community events, local events, event calendar"
+      />
       <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
         <Navbar />
       </div>

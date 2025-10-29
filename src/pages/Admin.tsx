@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
+import { SEOHead } from '@/components/SEOHead';
 
 // Input validation schema
 const eventSchema = z.object({
@@ -252,6 +253,10 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-white p-8">
+      <SEOHead 
+        title="Admin Dashboard"
+        description="Manage events and content for your event platform"
+      />
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-normal text-[#1A1A1A] tracking-[-0.02em]">

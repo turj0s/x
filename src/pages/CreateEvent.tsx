@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { User } from '@supabase/supabase-js';
 import { AuthSheet } from '@/components/AuthSheet';
+import { SEOHead } from '@/components/SEOHead';
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -61,6 +62,19 @@ const CreateEvent = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        toast.error('Please upload a JPG, PNG, GIF, or WebP image');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image must be less than 5MB');
+        return;
+      }
+
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -139,8 +153,14 @@ const CreateEvent = () => {
       const dateStr = format(startDate, 'MMMM dd, yyyy');
       const timeStr = `${startTime} - ${endTime}`;
 
-      // Get creator name from user metadata or email
-      const creatorName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous';
+      // Get creator name from profile or fallback to email
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('display_name')
+        .eq('user_id', user.id)
+        .single();
+
+      const creatorName = profile?.display_name || user.email?.split('@')[0] || 'Anonymous';
 
       // Insert event into database
       const { error: insertError } = await supabase
@@ -170,6 +190,10 @@ const CreateEvent = () => {
 
   return (
     <>
+      <SEOHead 
+        title="Create Event"
+        description="Create and publish a new event for your community to discover and join"
+      />
       <AuthSheet isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       
       <div className="min-h-screen bg-white">

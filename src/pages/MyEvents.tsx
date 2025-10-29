@@ -3,6 +3,9 @@ import { Navbar } from '@/components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { SEOHead } from '@/components/SEOHead';
 
 interface Event {
   id: string;
@@ -12,8 +15,23 @@ interface Event {
   background_image_url: string;
 }
 
-const EventCard = ({ event, isCreated }: { event: Event; isCreated?: boolean }) => {
+const EventCard = ({ 
+  event, 
+  isCreated, 
+  onDelete 
+}: { 
+  event: Event; 
+  isCreated?: boolean; 
+  onDelete?: (id: string) => void;
+}) => {
   const navigate = useNavigate();
+  
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this event?')) {
+      onDelete?.(event.id);
+    }
+  };
   
   return (
     <div 
@@ -34,6 +52,15 @@ const EventCard = ({ event, isCreated }: { event: Event; isCreated?: boolean }) 
           <div className="text-[11px] font-medium leading-none">{event.time}</div>
         </div>
       </div>
+      {isCreated && (
+        <button
+          onClick={handleDelete}
+          className="absolute top-4 right-4 bg-white border border-black p-2 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors opacity-0 group-hover:opacity-100"
+          aria-label="Delete event"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      )}
       <h3 className="text-base font-medium">{event.title}</h3>
     </div>
   );
@@ -118,10 +145,31 @@ const MyEvents = () => {
     }
   };
 
+  const handleDeleteEvent = async (eventId: string) => {
+    try {
+      const { error } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', eventId);
+
+      if (error) throw error;
+
+      toast.success('Event deleted successfully');
+      fetchMyEvents();
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event');
+    }
+  };
+
   const displayedEvents = activeTab === 'created' ? createdEvents : registeredEvents;
 
   return (
     <>
+      <SEOHead 
+        title="My Events"
+        description="Manage your created events and view events you've registered for"
+      />
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       
       <div className="min-h-screen bg-white">
@@ -172,7 +220,8 @@ const MyEvents = () => {
                   <EventCard 
                     key={event.id} 
                     event={event} 
-                    isCreated={activeTab === 'created'} 
+                    isCreated={activeTab === 'created'}
+                    onDelete={activeTab === 'created' ? handleDeleteEvent : undefined}
                   />
                 ))
               )}

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { SEOHead } from '@/components/SEOHead';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -77,6 +78,10 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
+      <SEOHead 
+        title={isLogin ? 'Sign In' : 'Sign Up'}
+        description={isLogin ? 'Sign in to manage your events and registrations' : 'Create an account to manage events and register for upcoming events'}
+      />
       <div className="w-full max-w-md space-y-8">
         <div>
           <h2 className="text-4xl font-normal text-[#1A1A1A] tracking-[-0.02em]">
