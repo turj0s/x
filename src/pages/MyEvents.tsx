@@ -191,7 +191,7 @@ const MyEvents = () => {
                     : 'bg-white text-black hover:bg-gray-50'
                 }`}
               >
-                Created ({createdEvents.length})
+                Created by me ({createdEvents.length})
               </button>
               <button
                 onClick={() => setActiveTab('registered')}
