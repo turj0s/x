@@ -12,13 +12,13 @@ interface Event {
   background_image_url: string;
 }
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = ({ event, isCreated }: { event: Event; isCreated?: boolean }) => {
   const navigate = useNavigate();
   
   return (
     <div 
       className="relative cursor-pointer group"
-      onClick={() => navigate(`/event/${event.id}`)}
+      onClick={() => navigate(isCreated ? `/event/${event.id}/edit` : `/event/${event.id}`)}
     >
       <div className="overflow-hidden mb-3">
         <div 
@@ -169,7 +169,11 @@ const MyEvents = () => {
                 </div>
               ) : (
                 displayedEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard 
+                    key={event.id} 
+                    event={event} 
+                    isCreated={activeTab === 'created'} 
+                  />
                 ))
               )}
             </div>

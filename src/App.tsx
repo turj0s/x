@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import MyEvents from "./pages/MyEvents";
 import CreateEvent from "./pages/CreateEvent";
+import EditEvent from "./pages/EditEvent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Discover />} />
           <Route path="/event/:id" element={<Index />} />
+          <Route path="/event/:id/edit" element={<EditEvent />} />
           <Route path="/my-events" element={<MyEvents />} />
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/auth" element={<Auth />} />
