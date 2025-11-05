@@ -81,15 +81,23 @@ const Discover = () => {
 
   const detectUserCountry = async () => {
     try {
-      // Try using Cloudflare's trace API as it's more reliable
       const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
       const data = await response.text();
       const locMatch = data.match(/loc=([A-Z]{2})/);
       
       if (locMatch && locMatch[1]) {
-        // Map country code to full name (simplified version)
         const countryCode = locMatch[1];
-        setUserCountry(countryCode);
+        // Convert country code to full name
+        const countryNames: { [key: string]: string } = {
+          'US': 'United States', 'GB': 'United Kingdom', 'CA': 'Canada', 'AU': 'Australia',
+          'DE': 'Germany', 'FR': 'France', 'IT': 'Italy', 'ES': 'Spain', 'NL': 'Netherlands',
+          'BE': 'Belgium', 'SE': 'Sweden', 'NO': 'Norway', 'DK': 'Denmark', 'FI': 'Finland',
+          'PL': 'Poland', 'CH': 'Switzerland', 'AT': 'Austria', 'IE': 'Ireland', 'PT': 'Portugal',
+          'IN': 'India', 'JP': 'Japan', 'CN': 'China', 'KR': 'South Korea', 'BR': 'Brazil',
+          'MX': 'Mexico', 'AR': 'Argentina', 'CL': 'Chile', 'CO': 'Colombia', 'SG': 'Singapore',
+          'NZ': 'New Zealand', 'ZA': 'South Africa', 'RU': 'Russia', 'TR': 'Turkey', 'GR': 'Greece'
+        };
+        setUserCountry(countryNames[countryCode] || countryCode);
       }
     } catch (error) {
       console.error('Error detecting country:', error);
