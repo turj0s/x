@@ -33,8 +33,8 @@ export const EventsCarousel = () => {
 
   if (events.length === 0) return null;
 
-  // Quadruple the events array for seamless infinite scroll
-  const multipliedEvents = [...events, ...events, ...events, ...events];
+  // Duplicate the events array exactly twice for seamless loop
+  const multipliedEvents = [...events, ...events];
 
   return (
     <div className="w-full overflow-hidden py-12 pb-20 md:pb-24 bg-background">
