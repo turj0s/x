@@ -28,6 +28,8 @@ const EditEvent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [registrants, setRegistrants] = useState<Array<{ display_name: string; registered_at: string }>>([]);
+  
   
   const locationInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,11 +111,39 @@ const EditEvent = () => {
       // For end date, we'll use the same as start for now
       setEndDate(targetDate);
 
+      // Fetch registrants
+      await fetchRegistrants();
+
       setLoading(false);
     } catch (error) {
       console.error('Error fetching event:', error);
       toast.error('Failed to load event');
       navigate('/my-events');
+    }
+  };
+
+  const fetchRegistrants = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('event_registrations')
+        .select(`
+          registered_at,
+          profiles:user_id (display_name)
+        `)
+        .eq('event_id', id)
+        .order('registered_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (data) {
+        const formattedRegistrants = data.map((reg: any) => ({
+          display_name: reg.profiles?.display_name || 'Anonymous',
+          registered_at: reg.registered_at
+        }));
+        setRegistrants(formattedRegistrants);
+      }
+    } catch (error) {
+      console.error('Error fetching registrants:', error);
     }
   };
 
@@ -425,6 +455,29 @@ const EditEvent = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+
+            {/* Registrants List */}
+            {registrants.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-[18px] font-medium mb-4">Registrations ({registrants.length})</h3>
+                <div className="border border-black">
+                  {registrants.map((registrant, index) => (
+                    <div 
+                      key={index}
+                      className={cn(
+                        "px-3 md:px-4 py-2 md:py-3 flex justify-between items-center",
+                        index !== registrants.length - 1 && "border-b border-black"
+                      )}
+                    >
+                      <span className="text-[14px] md:text-[17px] font-medium">{registrant.display_name}</span>
+                      <span className="text-[12px] md:text-[14px] text-gray-500">
+                        {format(new Date(registrant.registered_at), 'MMM d, yyyy')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
                 {/* Submit Button */}
                 <div className="flex gap-3 items-center mt-4 md:mt-8">
