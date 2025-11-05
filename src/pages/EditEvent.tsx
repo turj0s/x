@@ -33,6 +33,7 @@ const EditEvent = () => {
   
   const locationInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const titleRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
 
@@ -69,6 +70,13 @@ const EditEvent = () => {
       setLocation(address);
     });
   }, [onPlaceSelected]);
+
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [eventName]);
 
   const fetchEvent = async () => {
     try {
@@ -354,12 +362,13 @@ const EditEvent = () => {
 
               {/* Right: Form Fields */}
               <div className="space-y-4 md:space-y-6">
-                <input
-                  type="text"
+                <textarea
+                  ref={titleRef}
                   placeholder="Event name"
-                  className="w-full text-black text-[32px] md:text-[48px] lg:text-[56px] font-medium leading-[1.2] mb-4 md:mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4] overflow-visible whitespace-normal"
+                  className="w-full text-black text-[32px] md:text-[48px] lg:text-[56px] font-medium leading-[1.2] mb-4 md:mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4] resize-none overflow-hidden whitespace-pre-wrap break-words"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
+                  rows={1}
                 />
 
                 {/* Start/End Date/Time Container */}
