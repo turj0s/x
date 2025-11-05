@@ -72,7 +72,7 @@ const Discover = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userCountry, setUserCountry] = useState<string>('your location');
+  const [userCountry, setUserCountry] = useState<string>('the world');
 
   useEffect(() => {
     fetchEvents();
@@ -81,14 +81,19 @@ const Discover = () => {
 
   const detectUserCountry = async () => {
     try {
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
-      if (data.country_name) {
-        setUserCountry(data.country_name);
+      // Try using Cloudflare's trace API as it's more reliable
+      const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace');
+      const data = await response.text();
+      const locMatch = data.match(/loc=([A-Z]{2})/);
+      
+      if (locMatch && locMatch[1]) {
+        // Map country code to full name (simplified version)
+        const countryCode = locMatch[1];
+        setUserCountry(countryCode);
       }
     } catch (error) {
       console.error('Error detecting country:', error);
-      // Keep default value on error
+      setUserCountry('the world');
     }
   };
 
