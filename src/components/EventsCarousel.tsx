@@ -33,14 +33,14 @@ export const EventsCarousel = () => {
 
   if (events.length === 0) return null;
 
-  // Double the events array for seamless infinite scroll
-  const doubledEvents = [...events, ...events];
+  // Quadruple the events array for seamless infinite scroll
+  const multipliedEvents = [...events, ...events, ...events, ...events];
 
   return (
     <div className="w-full overflow-hidden py-12 bg-background">
       <div className="relative">
         <div className="flex animate-scroll-left-fast">
-          {doubledEvents.map((event, index) => (
+          {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
               onClick={() => navigate(`/?eventId=${event.id}`)}
