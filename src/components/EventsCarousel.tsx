@@ -38,12 +38,12 @@ export const EventsCarousel = () => {
   return (
     <div className="w-full overflow-hidden py-12 bg-background">
       <div className="relative">
-        <div className="flex gap-4 animate-scroll-left">
+        <div className="flex animate-scroll-left-fast">
           {doubledEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
               onClick={() => navigate(`/?eventId=${event.id}`)}
-              className="relative flex-shrink-0 w-[400px] h-[300px] cursor-pointer group overflow-hidden"
+              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[400px] md:h-[500px] cursor-pointer group overflow-hidden"
             >
               <img
                 src={event.background_image_url}
@@ -51,10 +51,10 @@ export const EventsCarousel = () => {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-xl font-medium mb-1 tracking-tight">{event.title}</h3>
-                <p className="text-sm text-white/80 mb-1">{event.address}</p>
-                <p className="text-xs text-white/60 uppercase tracking-wider">{event.date}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+                <h3 className="text-2xl md:text-3xl font-medium mb-2 tracking-tight">{event.title}</h3>
+                <p className="text-base md:text-lg text-white/80 mb-2">{event.address}</p>
+                <p className="text-sm text-white/60 uppercase tracking-wider">{event.date}</p>
               </div>
             </div>
           ))}
