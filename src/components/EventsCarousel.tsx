@@ -8,6 +8,7 @@ interface Event {
   background_image_url: string;
   address: string;
   date: string;
+  time: string;
 }
 
 export const EventsCarousel = () => {
@@ -18,7 +19,7 @@ export const EventsCarousel = () => {
     const fetchEvents = async () => {
       const { data, error } = await supabase
         .from('events')
-        .select('id, title, background_image_url, address, date')
+        .select('id, title, background_image_url, address, date, time')
         .order('target_date', { ascending: false })
         .limit(10);
 
@@ -43,18 +44,29 @@ export const EventsCarousel = () => {
             <div
               key={`${event.id}-${index}`}
               onClick={() => navigate(`/?eventId=${event.id}`)}
-              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[400px] md:h-[500px] cursor-pointer group overflow-hidden"
+              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[500px] md:h-[600px] cursor-pointer overflow-hidden"
             >
               <img
                 src={event.background_image_url}
                 alt={event.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <h3 className="text-2xl md:text-3xl font-medium mb-2 tracking-tight">{event.title}</h3>
-                <p className="text-base md:text-lg text-white/80 mb-2">{event.address}</p>
-                <p className="text-sm text-white/60 uppercase tracking-wider">{event.date}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+              
+              {/* Date/Time boxes in top-left */}
+              <div className="absolute top-4 left-4 flex flex-col gap-0">
+                <div className="bg-white border border-black px-3 h-[23px] flex items-center">
+                  <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
+                </div>
+                <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
+                  <div className="text-[11px] font-medium leading-none">{event.time}</div>
+                </div>
+              </div>
+
+              {/* Title and address at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+                <h3 className="text-xl md:text-2xl font-medium mb-1 tracking-tight">{event.title}</h3>
+                <p className="text-sm md:text-base text-white/80">{event.address}</p>
               </div>
             </div>
           ))}
