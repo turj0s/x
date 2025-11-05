@@ -37,7 +37,7 @@ export const EventsCarousel = () => {
   const multipliedEvents = [...events, ...events, ...events, ...events];
 
   return (
-    <div className="w-full overflow-hidden py-12 bg-background">
+    <div className="w-full overflow-hidden py-12 pb-20 md:pb-24 bg-background">
       <div className="relative">
         <div className="flex animate-scroll-left-fast">
           {multipliedEvents.map((event, index) => (

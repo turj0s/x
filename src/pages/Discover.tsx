@@ -203,7 +203,7 @@ const Discover = () => {
       <EventsCarousel />
 
       {/* Events Section */}
-      <section id="events-section" className="px-4 md:px-8 pb-16 pt-4 md:pt-8">
+      <section id="events-section" className="px-4 md:px-8 pb-16 pt-12 md:pt-16">
         <div>
           <div className="flex flex-wrap items-center gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing events in</h2>
