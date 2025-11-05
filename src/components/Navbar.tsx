@@ -99,9 +99,9 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Navigation - Full Screen */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-[3000] flex flex-col">
+        <div className="md:hidden fixed inset-0 z-[3000] flex flex-col animate-in slide-in-from-top duration-300">
           {/* Close header */}
-          <div className="bg-[#1A1A1A] flex items-center justify-center py-16">
+          <div className="bg-[#1A1A1A] flex items-center justify-center py-16 animate-in fade-in duration-500">
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-white text-[11px] font-medium uppercase tracking-wider"
@@ -115,7 +115,8 @@ export const Navbar: React.FC = () => {
             <Link 
               to="/" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.1s', animationFillMode: 'both' }}
             >
               DISCOVER
             </Link>
@@ -129,7 +130,8 @@ export const Navbar: React.FC = () => {
                 }
                 setIsMobileMenuOpen(false);
               }}
-              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
             >
               CREATE EVENT
             </button>
@@ -138,7 +140,8 @@ export const Navbar: React.FC = () => {
                 <Link 
                   to="/my-events" 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px]"
+                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+                  style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
                 >
                   MY EVENTS
                 </Link>
@@ -147,7 +150,8 @@ export const Navbar: React.FC = () => {
                     await supabase.auth.signOut();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px]"
+                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
+                  style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
                 >
                   SIGN OUT
                 </button>
@@ -158,7 +162,8 @@ export const Navbar: React.FC = () => {
                   setIsAuthOpen(true);
                   setIsMobileMenuOpen(false);
                 }}
-                className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px]"
+                className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
+                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
               >
                 SIGN IN
               </button>
