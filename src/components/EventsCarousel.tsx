@@ -33,13 +33,13 @@ export const EventsCarousel = () => {
 
   if (events.length === 0) return null;
 
-  // Duplicate the events array exactly twice for seamless loop
-  const multipliedEvents = [...events, ...events];
+  // Quadruple the events array for seamless infinite scroll
+  const multipliedEvents = [...events, ...events, ...events, ...events];
 
   return (
     <div className="w-full overflow-hidden py-12 pb-20 md:pb-24 bg-background">
       <div className="relative overflow-hidden">
-        <div className="flex gap-px w-max animate-scroll-left-fast will-change-transform">
+        <div className="flex gap-px w-max animate-scroll-left-fast will-change-[transform]">
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
@@ -47,7 +47,7 @@ export const EventsCarousel = () => {
                 e.stopPropagation();
                 navigate(`/?eventId=${event.id}`);
               }}
-              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[500px] md:h-[600px] cursor-pointer overflow-hidden hover:opacity-90 transition-opacity"
+              className="relative flex-shrink-0 w-[280px] md:w-[320px] lg:w-[360px] h-[400px] md:h-[450px] cursor-pointer overflow-hidden hover:opacity-90 transition-opacity"
             >
               <img
                 src={event.background_image_url}

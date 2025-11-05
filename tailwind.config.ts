@@ -121,10 +121,10 @@ export default {
         },
         "scroll-left": {
           "0%": {
-            transform: "translate3d(0, 0, 0)"
+            transform: "translateX(0)"
           },
           "100%": {
-            transform: "translate3d(-50%, 0, 0)"
+            transform: "translateX(-25%)"
           }
         },
       },
@@ -135,7 +135,7 @@ export default {
         "fade-in": "fade-in 0.6s ease-out forwards",
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "scroll-left": "scroll-left 40s linear infinite",
-        "scroll-left-fast": "scroll-left 50s linear infinite",
+        "scroll-left-fast": "scroll-left 30s linear infinite",
       },
     },
   },
