@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import arrowDown from '@/assets/arrow-down.png';
 import badgeImage from '@/assets/badge.png';
 import { SEOHead } from '@/components/SEOHead';
+import { EventsCarousel } from '@/components/EventsCarousel';
 
 interface Event {
   id: string;
@@ -197,6 +198,9 @@ const Discover = () => {
           </p>
         </div>
       </section>
+
+      {/* Auto-scrolling Events Carousel */}
+      <EventsCarousel />
 
       {/* Events Section */}
       <section id="events-section" className="px-4 md:px-8 pb-16 pt-4 md:pt-8">
