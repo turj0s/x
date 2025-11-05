@@ -47,7 +47,7 @@ export const EventsCarousel = () => {
                 e.stopPropagation();
                 navigate(`/event/${event.id}`);
               }}
-              className="relative flex-shrink-0 w-[calc(40vw-0.5px)] h-[500px] md:h-[600px] cursor-pointer overflow-hidden hover:opacity-90 transition-opacity"
+              className="relative flex-shrink-0 w-[calc(40vw-0.5px)] h-[500px] md:h-[600px] cursor-pointer overflow-hidden"
             >
               <img
                 src={event.background_image_url}
