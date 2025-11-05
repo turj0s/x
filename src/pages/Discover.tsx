@@ -46,7 +46,7 @@ const EventCard = ({
     >
       <div className="overflow-hidden mb-3">
         <div 
-          className="aspect-[4/3] bg-gray-300 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
+          className="aspect-square bg-gray-300 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
           style={{ backgroundImage: `url(${event.background_image_url})` }}
         ></div>
       </div>
@@ -63,7 +63,7 @@ const EventCard = ({
           </div>
         )}
       </div>
-      <h3 className="text-xl font-medium">{event.title}</h3>
+      <h3 className="text-lg font-medium">{event.title}</h3>
       <p className="text-sm text-gray-500 mt-1">{event.address}</p>
     </div>
   );
@@ -255,7 +255,7 @@ const Discover = () => {
             </div>
 
             {/* Event Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:col-start-2 gap-y-12 md:gap-y-16 gap-x-6 md:gap-x-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:col-start-2 gap-y-12 md:gap-y-16 gap-x-6 md:gap-x-8">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading events...</div>
               ) : filteredEvents.length === 0 ? (
