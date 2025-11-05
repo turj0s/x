@@ -47,7 +47,7 @@ export const EventsCarousel = () => {
                 e.stopPropagation();
                 navigate(`/event/${event.id}`);
               }}
-              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[3/4] cursor-pointer overflow-hidden animate-fade-in"
+              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[4/5] cursor-pointer overflow-hidden animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
             >
               <img
