@@ -45,7 +45,7 @@ export const EventsCarousel = () => {
               key={`${event.id}-${index}`}
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/?eventId=${event.id}`);
+                navigate(`/event/${event.id}`);
               }}
               className="relative flex-shrink-0 w-[calc(40vw-0.5px)] h-[500px] md:h-[600px] cursor-pointer overflow-hidden hover:opacity-90 transition-opacity"
             >
