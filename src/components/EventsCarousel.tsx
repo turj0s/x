@@ -39,7 +39,7 @@ export const EventsCarousel = () => {
   return (
     <div className="w-full overflow-hidden py-12 pb-20 md:pb-24 bg-background">
       <div className="relative">
-        <div className="flex gap-4 animate-scroll-left-fast">
+        <div className="flex gap-px animate-scroll-left-fast">
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
