@@ -33,13 +33,13 @@ export const EventsCarousel = () => {
 
   if (events.length === 0) return null;
 
-  // Quadruple the events array for seamless infinite scroll
-  const multipliedEvents = [...events, ...events, ...events, ...events];
+  // Duplicate the events array exactly twice for seamless loop
+  const multipliedEvents = [...events, ...events];
 
   return (
     <div className="w-full overflow-hidden py-12 pb-20 md:pb-24 bg-background">
       <div className="relative">
-        <div className="flex gap-px animate-scroll-left-fast">
+        <div className="flex gap-px w-max animate-scroll-left-fast">
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
@@ -50,10 +50,10 @@ export const EventsCarousel = () => {
                 src={event.background_image_url}
                 alt={event.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
               
-              {/* Date/Time boxes in top-left */}
               <div className="absolute top-4 left-4 flex flex-col gap-0">
                 <div className="bg-white border border-black px-3 h-[23px] flex items-center">
                   <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
@@ -63,7 +63,6 @@ export const EventsCarousel = () => {
                 </div>
               </div>
 
-              {/* Title and address at bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
                 <h3 className="text-xl md:text-2xl font-medium mb-1 tracking-tight">{event.title}</h3>
                 <p className="text-sm md:text-base text-white/80">{event.address}</p>

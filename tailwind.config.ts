@@ -124,7 +124,7 @@ export default {
             transform: "translateX(0)"
           },
           "100%": {
-            transform: "translateX(-25%)"
+            transform: "translateX(-50%)"
           }
         },
       },
