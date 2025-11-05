@@ -43,8 +43,11 @@ export const EventsCarousel = () => {
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
-              onClick={() => navigate(`/?eventId=${event.id}`)}
-              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[500px] md:h-[600px] cursor-pointer overflow-hidden"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/?eventId=${event.id}`);
+              }}
+              className="relative flex-shrink-0 w-[90vw] sm:w-[70vw] md:w-[50vw] lg:w-[40vw] h-[500px] md:h-[600px] cursor-pointer overflow-hidden hover:opacity-90 transition-opacity"
             >
               <img
                 src={event.background_image_url}
