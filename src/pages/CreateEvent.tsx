@@ -11,6 +11,15 @@ import { toast } from 'sonner';
 import { User } from '@supabase/supabase-js';
 import { AuthSheet } from '@/components/AuthSheet';
 import { SEOHead } from '@/components/SEOHead';
+import { z } from 'zod';
+
+const eventSchema = z.object({
+  eventName: z.string().trim().min(1, 'Event name is required').max(200, 'Event name must be less than 200 characters'),
+  startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time must be in HH:MM format (e.g., 15:00)'),
+  endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'End time must be in HH:MM format (e.g., 16:00)'),
+  location: z.string().trim().min(1, 'Location is required').max(300, 'Location must be less than 300 characters'),
+  description: z.string().trim().min(1, 'Description is required').max(2000, 'Description must be less than 2000 characters'),
+});
 
 const CreateEvent = () => {
   const [eventName, setEventName] = useState('');
@@ -91,37 +100,46 @@ const CreateEvent = () => {
       return;
     }
 
-    // Validate all fields
-    if (!eventName.trim()) {
-      toast.error('Please enter an event name');
-      return;
-    }
+    // Validate date fields first
     if (!startDate) {
       toast.error('Please select a start date');
-      return;
-    }
-    if (!startTime.trim()) {
-      toast.error('Please enter a start time');
       return;
     }
     if (!endDate) {
       toast.error('Please select an end date');
       return;
     }
-    if (!endTime.trim()) {
-      toast.error('Please enter an end time');
-      return;
-    }
-    if (!location.trim()) {
-      toast.error('Please enter an event location');
-      return;
-    }
-    if (!description.trim()) {
-      toast.error('Please enter an event description');
-      return;
-    }
     if (!imageFile) {
       toast.error('Please add an event image');
+      return;
+    }
+
+    // Validate input fields with Zod
+    const validationResult = eventSchema.safeParse({
+      eventName,
+      startTime,
+      endTime,
+      location,
+      description,
+    });
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      toast.error(firstError.message);
+      return;
+    }
+
+    // Validate date/time logic
+    const startDateTime = new Date(startDate);
+    const [startHours, startMinutes] = startTime.split(':');
+    startDateTime.setHours(parseInt(startHours), parseInt(startMinutes), 0, 0);
+
+    const endDateTime = new Date(endDate);
+    const [endHours, endMinutes] = endTime.split(':');
+    endDateTime.setHours(parseInt(endHours), parseInt(endMinutes), 0, 0);
+
+    if (endDateTime <= startDateTime) {
+      toast.error('End date/time must be after start date/time');
       return;
     }
 
