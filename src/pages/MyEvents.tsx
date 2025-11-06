@@ -175,7 +175,7 @@ const MyEvents = () => {
       <div className="min-h-screen bg-white">
         <Navbar />
         
-        <div className="pt-32 pb-20 px-8">
+        <div className="pt-32 pb-20 px-4 md:px-8">
           <div>
             <h1 className="text-[64px] font-medium leading-tight mb-8">
               My Events
