@@ -187,7 +187,7 @@ const MyEvents = () => {
                 onClick={() => setActiveTab('created')}
                 className={`px-6 py-3 text-[11px] font-medium uppercase border border-black transition-colors max-sm:flex-1 ${
                   activeTab === 'created'
-                    ? 'bg-black text-white'
+                    ? 'bg-[#ff6bff] text-black'
                     : 'bg-white text-black hover:bg-gray-50'
                 }`}
               >
@@ -197,7 +197,7 @@ const MyEvents = () => {
                 onClick={() => setActiveTab('registered')}
                 className={`px-6 py-3 text-[11px] font-medium uppercase border border-l-0 border-black transition-colors max-sm:flex-1 ${
                   activeTab === 'registered'
-                    ? 'bg-black text-white'
+                    ? 'bg-[#ff6bff] text-black'
                     : 'bg-white text-black hover:bg-gray-50'
                 }`}
               >
