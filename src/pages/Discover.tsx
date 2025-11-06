@@ -194,7 +194,7 @@ const Discover = () => {
       </div>
       
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 lg:pt-48 pb-12 md:pb-16 lg:pb-24 px-4 md:px-8">
+      <section className="pt-32 md:pt-40 lg:pt-48 pb-6 md:pb-16 lg:pb-24 px-4 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-6 md:mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
@@ -216,7 +216,7 @@ const Discover = () => {
       <EventsCarousel />
 
       {/* Events Section */}
-      <section id="events-section" className="px-4 md:px-8 pb-16 pt-12 md:pt-16">
+      <section id="events-section" className="px-4 md:px-8 pb-16 pt-6 md:pt-16">
         <div>
           <div className="flex flex-wrap items-center gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing events in</h2>
