@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RotatingBadge } from './RotatingBadge';
 interface TimeLeft {
   days: number;
   hours: number;
@@ -55,11 +56,13 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
   }
 
   if (status === 'happening') {
-    return <div className="flex items-center justify-center relative bg-primary px-6 py-4 border-2 border-primary">
-        <div className="text-primary-foreground text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
-          HAPPENING NOW
-        </div>
-      </div>;
+    return (
+      <RotatingBadge 
+        text="LIVE" 
+        showIcon={false}
+        className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px]"
+      />
+    );
   }
 
   return <div className="flex items-center gap-[2px] w-[409px] h-[49px] max-md:static max-md:w-auto max-md:justify-center max-sm:flex-wrap">

@@ -121,14 +121,6 @@ export const EventDetailPage: React.FC = () => {
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       <Navbar />
 
-      {/* LIVE badge when event is happening */}
-      {isEventLive() && (
-        <RotatingBadge 
-          text="LIVE" 
-          showIcon={false}
-        />
-      )}
-
       <main className="flex h-screen justify-center items-start w-full relative bg-white mx-auto my-0 max-lg:flex-col max-lg:h-auto">
         <div className="flex flex-col justify-end items-start fixed h-screen w-[calc(100%-540px)] pl-[49px] pr-[590px] pt-[calc(100vh-97px)] pb-12 left-0 top-0 overflow-hidden max-lg:relative max-lg:w-full max-lg:h-[400px] max-lg:bg-cover max-lg:bg-center max-lg:pt-80 max-lg:pb-6 max-lg:px-4 max-lg:right-0 max-sm:h-[300px] max-sm:pt-60 max-sm:pb-6 max-sm:px-4" role="img" aria-label="Event background image">
           <div className="absolute inset-0 animate-[zoom-in_1.2s_ease-out_forwards]" style={{
