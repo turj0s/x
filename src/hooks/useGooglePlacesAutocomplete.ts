@@ -36,7 +36,7 @@ export const useGooglePlacesAutocomplete = (inputRef: React.RefObject<HTMLInputE
     script.async = true;
     script.defer = true;
     script.onload = () => setIsLoaded(true);
-    script.onerror = () => console.error('Failed to load Google Maps script');
+    script.onerror = () => { if (import.meta.env.DEV) console.error('Failed to load Google Maps script'); };
     document.head.appendChild(script);
 
     return () => {

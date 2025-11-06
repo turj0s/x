@@ -162,7 +162,7 @@ const MyEvents = () => {
       
       setRegisteredEvents(registeredEventsData);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      if (import.meta.env.DEV) console.error('Error fetching events:', error);
     } finally {
       setLoading(false);
     }
@@ -180,7 +180,7 @@ const MyEvents = () => {
       toast.success('Event deleted successfully');
       fetchMyEvents();
     } catch (error) {
-      console.error('Error deleting event:', error);
+      if (import.meta.env.DEV) console.error('Error deleting event:', error);
       toast.error('Failed to delete event');
     }
   };

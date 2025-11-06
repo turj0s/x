@@ -41,7 +41,7 @@ export const EventDetailPage: React.FC = () => {
       : await supabase.from('events').select('*').limit(1).maybeSingle();
     
     if (error) {
-      console.error('Error fetching event:', error);
+      if (import.meta.env.DEV) console.error('Error fetching event:', error);
       setNotFound(true);
     } else if (!data) {
       setNotFound(true);

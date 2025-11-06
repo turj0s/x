@@ -100,7 +100,7 @@ const Discover = () => {
         setUserCountry(countryNames[countryCode] || countryCode);
       }
     } catch (error) {
-      console.error('Error detecting country:', error);
+      if (import.meta.env.DEV) console.error('Error detecting country:', error);
       setUserCountry('the world');
     }
   };
@@ -115,7 +115,7 @@ const Discover = () => {
       if (error) throw error;
       setEvents(data || []);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      if (import.meta.env.DEV) console.error('Error fetching events:', error);
     } finally {
       setLoading(false);
     }

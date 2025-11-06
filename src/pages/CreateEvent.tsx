@@ -181,7 +181,7 @@ const CreateEvent = () => {
       toast.success('Event created successfully!');
       navigate('/my-events');
     } catch (error) {
-      console.error('Error creating event:', error);
+      if (import.meta.env.DEV) console.error('Error creating event:', error);
       toast.error('Failed to create event. Please try again.');
     } finally {
       setIsSubmitting(false);

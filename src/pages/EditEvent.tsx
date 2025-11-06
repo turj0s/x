@@ -124,7 +124,7 @@ const EditEvent = () => {
 
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching event:', error);
+      if (import.meta.env.DEV) console.error('Error fetching event:', error);
       toast.error('Failed to load event');
       navigate('/my-events');
     }
@@ -151,7 +151,7 @@ const EditEvent = () => {
         setRegistrants(formattedRegistrants);
       }
     } catch (error) {
-      console.error('Error fetching registrants:', error);
+      if (import.meta.env.DEV) console.error('Error fetching registrants:', error);
     }
   };
 
@@ -278,7 +278,7 @@ const EditEvent = () => {
       toast.success('Event updated successfully!');
       navigate('/my-events');
     } catch (error) {
-      console.error('Error updating event:', error);
+      if (import.meta.env.DEV) console.error('Error updating event:', error);
       toast.error('Failed to update event. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -301,7 +301,7 @@ const EditEvent = () => {
       toast.success('Event deleted successfully');
       navigate('/my-events');
     } catch (error) {
-      console.error('Error deleting event:', error);
+      if (import.meta.env.DEV) console.error('Error deleting event:', error);
       toast.error('Failed to delete event');
     }
   };
