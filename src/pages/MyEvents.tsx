@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -72,6 +72,9 @@ const MyEvents = () => {
   const [registeredEvents, setRegisteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'created' | 'registered'>('created');
+  const [slideStyle, setSlideStyle] = useState({ width: 0, transform: 'translateX(0)' });
+  const createdRef = useRef<HTMLButtonElement>(null);
+  const registeredRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -100,6 +103,26 @@ const MyEvents = () => {
       fetchMyEvents();
     }
   }, [user]);
+
+  useEffect(() => {
+    const updateSlidePosition = () => {
+      if (activeTab === 'created' && createdRef.current) {
+        setSlideStyle({
+          width: createdRef.current.offsetWidth,
+          transform: 'translateX(0)'
+        });
+      } else if (activeTab === 'registered' && registeredRef.current && createdRef.current) {
+        setSlideStyle({
+          width: registeredRef.current.offsetWidth,
+          transform: `translateX(${createdRef.current.offsetWidth}px)`
+        });
+      }
+    };
+
+    updateSlidePosition();
+    window.addEventListener('resize', updateSlidePosition);
+    return () => window.removeEventListener('resize', updateSlidePosition);
+  }, [activeTab, createdEvents.length, registeredEvents.length]);
 
   const fetchMyEvents = async () => {
     if (!user) return;
@@ -185,20 +208,22 @@ const MyEvents = () => {
             <div className="relative flex gap-0 mb-12">
               {/* Sliding background */}
               <div 
-                className="absolute inset-0 bg-[#ff6bff] border border-black transition-transform duration-300 ease-out pointer-events-none"
+                className="absolute top-0 left-0 h-full bg-[#ff6bff] border border-black transition-all duration-300 ease-out pointer-events-none"
                 style={{
-                  width: '50%',
-                  transform: activeTab === 'registered' ? 'translateX(100%)' : 'translateX(0)'
+                  width: `${slideStyle.width}px`,
+                  transform: slideStyle.transform
                 }}
               />
               
               <button
+                ref={createdRef}
                 onClick={() => setActiveTab('created')}
                 className="relative z-10 px-6 py-3 text-[11px] font-medium uppercase text-black border border-black transition-colors max-sm:flex-1 bg-transparent"
               >
                 Created by me ({createdEvents.length})
               </button>
               <button
+                ref={registeredRef}
                 onClick={() => setActiveTab('registered')}
                 className="relative z-10 px-6 py-3 text-[11px] font-medium uppercase text-black border border-l-0 border-black transition-colors max-sm:flex-1 bg-transparent"
               >
