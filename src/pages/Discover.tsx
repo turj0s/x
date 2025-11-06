@@ -9,9 +9,9 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import arrowDown from '@/assets/arrow-down.png';
-import badgeImage from '@/assets/badge.png';
 import { SEOHead } from '@/components/SEOHead';
 import { EventsCarousel } from '@/components/EventsCarousel';
+import { RotatingBadge } from '@/components/RotatingBadge';
 
 interface Event {
   id: string;
@@ -159,39 +159,12 @@ const Discover = () => {
       </div>
       
       {/* Decorative rotating badge - fixed to viewport */}
-      <div className="fixed top-4 right-4 md:top-8 md:right-8 w-[60px] h-[60px] md:w-[72px] md:h-[72px] lg:w-[154px] lg:h-[154px] cursor-pointer z-40 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }} onClick={scrollToEvents}>
-        {/* Rotating badge background */}
-        <div className="w-full h-full animate-[spin_20s_linear_infinite]">
-          <img src={badgeImage} alt="Badge" className="w-full h-full" />
-          
-          {/* Circular text "BROWSE" repeated around badge */}
-          <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">
-            <defs>
-              <path id="circlePath" d="M 100, 30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140" />
-            </defs>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="0%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="20%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="40%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="60%">BROWSE</textPath>
-            </text>
-            <text className="text-[16px] font-bold uppercase" fill="black">
-              <textPath href="#circlePath" startOffset="80%">BROWSE</textPath>
-            </text>
-          </svg>
-        </div>
-        
-        {/* Static down arrow in center */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-12 lg:h-12" />
-        </div>
-      </div>
+      <RotatingBadge 
+        text="BROWSE" 
+        onClick={scrollToEvents}
+        showIcon={true}
+        icon={<img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-12 lg:h-12" />}
+      />
       
       {/* Hero Section */}
       <section className="pt-32 md:pt-40 lg:pt-48 pb-6 md:pb-16 lg:pb-24 px-4 md:px-8">
