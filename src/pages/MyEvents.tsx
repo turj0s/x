@@ -185,20 +185,20 @@ const MyEvents = () => {
             <div className="flex gap-0 mb-12">
               <button
                 onClick={() => setActiveTab('created')}
-                className={`px-6 py-3 text-[11px] font-medium uppercase border border-black transition-colors max-sm:flex-1 ${
+                className={`px-6 py-3 text-[11px] font-medium uppercase border border-black transition-all duration-300 max-sm:flex-1 ${
                   activeTab === 'created'
-                    ? 'bg-[#ff6bff] text-black'
-                    : 'bg-white text-black hover:bg-gray-50'
+                    ? 'bg-[#ff6bff] text-black scale-105'
+                    : 'bg-white text-black hover:bg-gray-50 scale-100'
                 }`}
               >
                 Created by me ({createdEvents.length})
               </button>
               <button
                 onClick={() => setActiveTab('registered')}
-                className={`px-6 py-3 text-[11px] font-medium uppercase border border-l-0 border-black transition-colors max-sm:flex-1 ${
+                className={`px-6 py-3 text-[11px] font-medium uppercase border border-l-0 border-black transition-all duration-300 max-sm:flex-1 ${
                   activeTab === 'registered'
-                    ? 'bg-[#ff6bff] text-black'
-                    : 'bg-white text-black hover:bg-gray-50'
+                    ? 'bg-[#ff6bff] text-black scale-105'
+                    : 'bg-white text-black hover:bg-gray-50 scale-100'
                 }`}
               >
                 Registered ({registeredEvents.length})
