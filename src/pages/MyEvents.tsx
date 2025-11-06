@@ -185,7 +185,7 @@ const MyEvents = () => {
             <div className="flex gap-0 mb-12">
               <button
                 onClick={() => setActiveTab('created')}
-                className={`px-6 py-3 text-sm font-medium uppercase border border-black transition-colors ${
+                className={`px-6 py-3 text-[11px] font-medium uppercase border border-black transition-colors ${
                   activeTab === 'created'
                     ? 'bg-black text-white'
                     : 'bg-white text-black hover:bg-gray-50'
@@ -195,7 +195,7 @@ const MyEvents = () => {
               </button>
               <button
                 onClick={() => setActiveTab('registered')}
-                className={`px-6 py-3 text-sm font-medium uppercase border border-l-0 border-black transition-colors ${
+                className={`px-6 py-3 text-[11px] font-medium uppercase border border-l-0 border-black transition-colors ${
                   activeTab === 'registered'
                     ? 'bg-black text-white'
                     : 'bg-white text-black hover:bg-gray-50'
