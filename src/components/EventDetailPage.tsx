@@ -77,8 +77,10 @@ export const EventDetailPage: React.FC = () => {
     if (!event) return false;
     const now = new Date().getTime();
     const target = new Date(event.target_date).getTime();
+    const distance = target - now;
     const oneHour = 1000 * 60 * 60;
-    return now >= target && now <= target + oneHour;
+    // Match EventCountdown logic: show from 1 hour before to 1 hour after
+    return distance >= -oneHour && distance <= oneHour;
   };
 
   if (loading) {
