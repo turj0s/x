@@ -182,24 +182,25 @@ const MyEvents = () => {
             </h1>
 
             {/* Tabs */}
-            <div className="flex gap-0 mb-12">
+            <div className="relative flex gap-0 mb-12">
+              {/* Sliding background */}
+              <div 
+                className="absolute inset-0 bg-[#ff6bff] border border-black transition-transform duration-300 ease-out pointer-events-none"
+                style={{
+                  width: '50%',
+                  transform: activeTab === 'registered' ? 'translateX(100%)' : 'translateX(0)'
+                }}
+              />
+              
               <button
                 onClick={() => setActiveTab('created')}
-                className={`px-6 py-3 text-[11px] font-medium uppercase border border-black transition-colors max-sm:flex-1 ${
-                  activeTab === 'created'
-                    ? 'bg-[#ff6bff] text-black'
-                    : 'bg-white text-black hover:bg-gray-50'
-                }`}
+                className="relative z-10 px-6 py-3 text-[11px] font-medium uppercase text-black border border-black transition-colors max-sm:flex-1 bg-transparent"
               >
                 Created by me ({createdEvents.length})
               </button>
               <button
                 onClick={() => setActiveTab('registered')}
-                className={`px-6 py-3 text-[11px] font-medium uppercase border border-l-0 border-black transition-colors max-sm:flex-1 ${
-                  activeTab === 'registered'
-                    ? 'bg-[#ff6bff] text-black'
-                    : 'bg-white text-black hover:bg-gray-50'
-                }`}
+                className="relative z-10 px-6 py-3 text-[11px] font-medium uppercase text-black border border-l-0 border-black transition-colors max-sm:flex-1 bg-transparent"
               >
                 Registered ({registeredEvents.length})
               </button>
