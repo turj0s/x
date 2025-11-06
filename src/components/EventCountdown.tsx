@@ -55,8 +55,8 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
   }
 
   if (status === 'happening') {
-    return <div className="flex items-center justify-center relative bg-[#00FF00] px-6 py-4 animate-pulse">
-        <div className="text-[#1A1A1A] text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
+    return <div className="flex items-center justify-center relative bg-primary px-6 py-4 border-2 border-primary">
+        <div className="text-primary-foreground text-[32px] font-medium tracking-[-1.28px] uppercase max-md:text-[24px] max-sm:text-xl">
           HAPPENING NOW
         </div>
       </div>;
