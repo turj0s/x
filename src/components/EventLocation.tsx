@@ -20,14 +20,14 @@ export const EventLocation: React.FC<EventLocationProps> = ({
         </h2>
       </div>
       <div className="flex items-start gap-8 self-stretch relative max-sm:flex-col max-sm:gap-4">
-        <address className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative not-italic">
+        <address className="flex-1 text-[#1A1A1A] text-[11px] font-normal uppercase relative not-italic">
           {address}
         </address>
         <a 
           href={`https://maps.google.com/?q=${encodedAddress}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer text-left hover:opacity-70 transition-opacity flex items-center gap-2 no-underline"
+          className="text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer hover:opacity-70 transition-opacity flex items-center gap-2 no-underline whitespace-nowrap"
         >
           GET DIRECTIONS
           <ArrowRight className="w-3 h-3" />
