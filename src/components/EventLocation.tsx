@@ -20,7 +20,7 @@ export const EventLocation: React.FC<EventLocationProps> = ({
         </h2>
       </div>
       <div className="flex items-start gap-8 self-stretch relative max-sm:flex-col max-sm:gap-4">
-        <address className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase opacity-50 relative not-italic">
+        <address className="flex-[1_0_0] text-[#1A1A1A] text-[11px] font-normal uppercase relative not-italic">
           {address}
         </address>
         <a 
