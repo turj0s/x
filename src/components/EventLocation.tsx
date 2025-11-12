@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { MoveUpRight } from 'lucide-react';
 
 interface EventLocationProps {
   address: string;
@@ -29,8 +29,8 @@ export const EventLocation: React.FC<EventLocationProps> = ({
           rel="noopener noreferrer"
           className="text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer hover:opacity-70 transition-opacity flex items-center gap-2 no-underline whitespace-nowrap"
         >
+          <MoveUpRight className="w-3 h-3" />
           GET DIRECTIONS
-          <ArrowRight className="w-3 h-3" />
         </a>
       </div>
       <iframe
