@@ -1,5 +1,5 @@
 import React from 'react';
-import { MoveUpRight } from 'lucide-react';
+import arrowRight from '@/assets/arrow-right.svg';
 
 interface EventLocationProps {
   address: string;
@@ -29,7 +29,7 @@ export const EventLocation: React.FC<EventLocationProps> = ({
           rel="noopener noreferrer"
           className="text-[#1A1A1A] text-[11px] font-normal uppercase relative bg-transparent cursor-pointer hover:opacity-70 transition-opacity flex items-center gap-2 no-underline whitespace-nowrap"
         >
-          <MoveUpRight className="w-3 h-3" />
+          <img src={arrowRight} alt="" className="w-2 h-2.5" />
           GET DIRECTIONS
         </a>
       </div>
