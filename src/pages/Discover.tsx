@@ -69,15 +69,44 @@ const EventCard = ({
   );
 };
 const Discover = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [userCountry, setUserCountry] = useState<string>('the world');
+  const [initialDateSet, setInitialDateSet] = useState(false);
 
   useEffect(() => {
     fetchEvents();
     detectUserCountry();
   }, []);
+
+  // Set initial date only if there are events today
+  useEffect(() => {
+    if (!initialDateSet && events.length > 0) {
+      const today = new Date();
+      const now = today.getTime();
+      const oneHour = 1000 * 60 * 60;
+      
+      const hasEventsToday = events.some((event) => {
+        const eventDate = new Date(event.target_date);
+        const target = eventDate.getTime();
+        const hasEnded = target < now - oneHour;
+        
+        if (hasEnded) return false;
+        
+        return (
+          eventDate.getFullYear() === today.getFullYear() &&
+          eventDate.getMonth() === today.getMonth() &&
+          eventDate.getDate() === today.getDate()
+        );
+      });
+      
+      if (hasEventsToday) {
+        setDate(today);
+      }
+      setInitialDateSet(true);
+    }
+  }, [events, initialDateSet]);
 
   const detectUserCountry = async () => {
     try {
