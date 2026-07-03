@@ -41,11 +41,7 @@ export const EventsCarousel = () => {
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/event/${event.id}`);
-              }}
-              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[4/5] max-h-[800px] cursor-pointer overflow-hidden animate-fade-in"
+              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[4/5] max-h-[800px] overflow-hidden animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
             >
               <img
