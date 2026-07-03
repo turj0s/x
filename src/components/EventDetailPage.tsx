@@ -142,8 +142,7 @@ export const EventDetailPage: React.FC = () => {
             </div>
             
             <EventDescription description={event.description} />
-            
-            <EventLocation address={event.address} onGetDirections={handleGetDirections} />
+
           </div>
           
           <div className="fixed bottom-0 right-0 w-[540px] bg-white py-6 border-t border-border max-lg:relative max-lg:w-full max-lg:py-6 max-lg:border-t-0">
