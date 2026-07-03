@@ -84,9 +84,9 @@ export const Footer: React.FC = () => {
           <span className="text-[11px] font-medium uppercase text-muted-foreground">
             &copy; {new Date().getFullYear()} UNICV. All rights reserved.
           </span>
-          <span className="text-[11px] font-medium uppercase text-muted-foreground">
-            Built for real teams
-          </span>
+          <a href="https://turjo.dev" target="_blank" rel="noopener noreferrer" className="text-[11px] font-medium uppercase text-muted-foreground hover:text-black transition-colors">
+            Build by Turjo S.
+          </a>
         </div>
       </div>
     </footer>
