@@ -70,10 +70,14 @@ export const Footer: React.FC = () => {
             </span>
             <ul className="space-y-2">
               <li>
-                <span className="text-sm text-muted-foreground">Privacy Policy</span>
+                <Link to="/privacy" className="text-sm text-muted-foreground hover:text-black transition-colors">
+                  Privacy Policy
+                </Link>
               </li>
               <li>
-                <span className="text-sm text-muted-foreground">Terms of Service</span>
+                <Link to="/terms" className="text-sm text-muted-foreground hover:text-black transition-colors">
+                  Terms of Service
+                </Link>
               </li>
             </ul>
           </div>
