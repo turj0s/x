@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
+
 
 interface EventRegistrationProps {
   eventId: string;
@@ -24,6 +26,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   const [isRegistered, setIsRegistered] = useState(initialIsRegistered);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -142,7 +146,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   return (
     <div className={`group flex items-center self-stretch relative overflow-hidden ${className}`}>
       <button 
-        onClick={handleRegister}
+        onClick={() => navigate(`/event/${eventId}/edit`)}
+
         disabled={loading || isPastEvent}
         className={`flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed w-[calc(100%-50px)] z-10 ${
           isPastEvent 
