@@ -10,6 +10,7 @@ import MyEvents from "./pages/MyEvents";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
 import NotFound from "./pages/NotFound";
+import { Footer } from "@/components/Footer";
 
 const App = () => (
   <TooltipProvider>
