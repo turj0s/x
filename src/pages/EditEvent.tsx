@@ -253,29 +253,34 @@ const EditEvent = () => {
       const dateStr = format(startDate, 'MMMM dd, yyyy');
       const timeStr = `${startTime} - ${endTime}`;
 
-      // Get creator name from profile or fallback to email
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('display_name')
-        .eq('user_id', user.id)
-        .single();
-
-      const creatorName = profile?.display_name || user.email?.split('@')[0] || 'Anonymous';
+      // Keep existing creator name if signed out; otherwise use profile/email
+      let creatorName: string | undefined;
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        creatorName = profile?.display_name || user.email?.split('@')[0] || undefined;
+      }
 
       // Update event in database
+      const updatePayload: Record<string, any> = {
+        title: eventName,
+        description: description,
+        date: dateStr,
+        time: timeStr,
+        address: location,
+        background_image_url: imageUrl,
+        target_date: targetDate.toISOString(),
+      };
+      if (creatorName) updatePayload.creator = creatorName;
+
       const { error: updateError } = await supabase
         .from('events')
-        .update({
-          title: eventName,
-          description: description,
-          date: dateStr,
-          time: timeStr,
-          address: location,
-          background_image_url: imageUrl,
-          target_date: targetDate.toISOString(),
-          creator: creatorName,
-        })
+        .update(updatePayload)
         .eq('id', id);
+
 
       if (updateError) throw updateError;
 
