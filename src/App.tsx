@@ -10,6 +10,7 @@ import MyEvents from "./pages/MyEvents";
 import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
 import NotFound from "./pages/NotFound";
+import { Footer } from "@/components/Footer";
 
 const App = () => (
   <TooltipProvider>
@@ -26,6 +27,7 @@ const App = () => (
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+    <Footer />
   </TooltipProvider>
 );
 
