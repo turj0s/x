@@ -11,6 +11,8 @@ import CreateEvent from "./pages/CreateEvent";
 import EditEvent from "./pages/EditEvent";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import TemplateEditor from "./pages/TemplateEditor";
+
 import NotFound from "./pages/NotFound";
 import { Footer } from "@/components/Footer";
 
