@@ -285,7 +285,8 @@ const EditEvent = () => {
       if (updateError) throw updateError;
 
       toast.success('CV updated successfully!');
-      navigate('/my-events');
+      navigate(`/event/${id}`);
+
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error updating event:', error);
       toast.error('Failed to update CV. Please try again.');
