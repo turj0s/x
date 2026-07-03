@@ -255,12 +255,12 @@ const Admin = () => {
     <div className="min-h-screen bg-white p-8">
       <SEOHead 
         title="Admin Dashboard"
-        description="Manage events and content for your event platform"
+        description="Manage CV templates and content for your CV Maker"
       />
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-normal text-[#1A1A1A] tracking-[-0.02em]">
-            Event CMS
+            CV CMS
           </h1>
           <Button onClick={handleSignOut} variant="outline">
             Sign Out
@@ -271,7 +271,7 @@ const Admin = () => {
           <form onSubmit={handleSave} className="space-y-6">
             <div>
               <label className="text-[#1A1A1A] text-sm font-normal uppercase mb-2 block">
-                Event Title
+                CV Title
               </label>
               <Input
                 value={selectedEvent.title}
@@ -284,7 +284,7 @@ const Admin = () => {
 
             <div>
               <label className="text-[#1A1A1A] text-sm font-normal uppercase mb-2 block">
-                Creator
+                Author
               </label>
               <Input
                 value={selectedEvent.creator}

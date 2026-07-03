@@ -28,7 +28,7 @@ const EventCard = ({
   
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    if (window.confirm('Are you sure you want to delete this CV?')) {
       onDelete?.(event.id);
     }
   };
@@ -56,7 +56,7 @@ const EventCard = ({
         <button
           onClick={handleDelete}
           className="absolute top-4 right-4 bg-white border border-black p-2 hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors opacity-0 group-hover:opacity-100"
-          aria-label="Delete event"
+          aria-label="Delete CV"
         >
           <Trash2 className="w-4 h-4" />
         </button>
@@ -177,11 +177,11 @@ const MyEvents = () => {
 
       if (error) throw error;
 
-      toast.success('Event deleted successfully');
+      toast.success('CV deleted successfully');
       fetchMyEvents();
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error deleting event:', error);
-      toast.error('Failed to delete event');
+      toast.error('Failed to delete CV');
     }
   };
 
@@ -190,8 +190,8 @@ const MyEvents = () => {
   return (
     <>
       <SEOHead 
-        title="My Events"
-        description="Manage your created events and view events you've registered for"
+        title="My CVs"
+        description="Manage the CV templates you've created and the ones you've saved"
       />
       <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
       
@@ -201,7 +201,7 @@ const MyEvents = () => {
         <div className="pt-32 pb-20 px-4 md:px-8">
           <div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium leading-tight mb-8">
-              My Events
+              My CVs
             </h1>
 
             {/* Tabs */}
@@ -227,19 +227,19 @@ const MyEvents = () => {
                 onClick={() => setActiveTab('registered')}
                 className="relative z-10 px-6 py-3 text-[11px] font-medium uppercase text-black border border-l-0 border-black transition-colors max-sm:flex-1 bg-transparent"
               >
-                Registered ({registeredEvents.length})
+                Saved ({registeredEvents.length})
               </button>
             </div>
 
             {/* Events Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
               {loading ? (
-                <div className="col-span-full text-center py-12">Loading events...</div>
+                <div className="col-span-full text-center py-12">Loading CVs...</div>
               ) : displayedEvents.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   {activeTab === 'created' 
-                    ? 'You haven\'t created any events yet' 
-                    : 'You haven\'t registered for any events yet'}
+                    ? 'You haven\'t created any CVs yet' 
+                    : 'You haven\'t saved any CVs yet'}
                 </div>
               ) : (
                 displayedEvents.map((event) => (

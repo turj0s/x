@@ -14,10 +14,10 @@ import { SEOHead } from '@/components/SEOHead';
 import { z } from 'zod';
 
 const eventSchema = z.object({
-  eventName: z.string().trim().min(1, 'Event name is required').max(200, 'Event name must be less than 200 characters'),
+  eventName: z.string().trim().min(1, 'CV title is required').max(200, 'CV title must be less than 200 characters'),
   startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time must be in HH:MM format (e.g., 15:00)'),
   endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'End time must be in HH:MM format (e.g., 16:00)'),
-  location: z.string().trim().min(1, 'Location is required').max(300, 'Location must be less than 300 characters'),
+  location: z.string().trim().min(1, 'Contact address is required').max(300, 'Contact address must be less than 300 characters'),
   description: z.string().trim().min(1, 'Description is required').max(2000, 'Description must be less than 2000 characters'),
 });
 
@@ -110,7 +110,7 @@ const CreateEvent = () => {
       return;
     }
     if (!imageFile) {
-      toast.error('Please add an event image');
+      toast.error('Please add a CV preview image');
       return;
     }
 
@@ -196,11 +196,11 @@ const CreateEvent = () => {
 
       if (insertError) throw insertError;
 
-      toast.success('Event created successfully!');
+      toast.success('CV created successfully!');
       navigate('/my-events');
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error creating event:', error);
-      toast.error('Failed to create event. Please try again.');
+      toast.error('Failed to create CV. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -209,8 +209,8 @@ const CreateEvent = () => {
   return (
     <>
       <SEOHead 
-        title="Create Event"
-        description="Create and publish a new event for your community to discover and join"
+        title="Create CV"
+        description="Create and publish a new CV template for others to discover and use"
       />
       <AuthSheet isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       
@@ -224,10 +224,10 @@ const CreateEvent = () => {
               <div className="flex flex-col gap-3 md:gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
               {imagePreview ? (
-                <img src={imagePreview} alt="Event preview" className="w-full h-full object-cover" />
+                <img src={imagePreview} alt="CV preview" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-black text-[11px] font-medium uppercase tracking-wider">
-                  ADD IMAGE
+                  ADD PREVIEW
                 </span>
               )}
               <input
@@ -253,7 +253,7 @@ const CreateEvent = () => {
               <div className="space-y-4 md:space-y-6">
                 <input
                   type="text"
-                  placeholder="Event name"
+                  placeholder="CV title"
                   className="w-full text-black text-[32px] md:text-[48px] lg:text-[56px] font-medium leading-none mb-4 md:mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4]"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
@@ -338,7 +338,7 @@ const CreateEvent = () => {
             <input
               ref={locationInputRef}
               type="text"
-              placeholder="Add event location"
+              placeholder="Add contact address"
               className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -346,7 +346,7 @@ const CreateEvent = () => {
 
             {/* Description */}
             <textarea
-              placeholder="Add description"
+              placeholder="About this CV"
               rows={6}
               className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
               value={description}
@@ -359,10 +359,10 @@ const CreateEvent = () => {
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                     className="flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out w-[calc(100%-50px)] z-10 bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF] disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Create event"
+                    aria-label="Create CV"
                   >
                     <span className="text-white text-[13px] font-normal uppercase relative transition-colors duration-300 group-hover:text-black">
-                      {isSubmitting ? 'CREATING...' : 'CREATE EVENT'}
+                      {isSubmitting ? 'CREATING...' : 'CREATE CV'}
                     </span>
                     <svg 
                       width="12" 

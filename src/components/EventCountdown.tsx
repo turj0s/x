@@ -58,7 +58,7 @@ export const EventCountdown: React.FC<EventCountdownProps> = ({
   if (status === 'happening') {
     return (
       <RotatingBadge 
-        text="LIVE" 
+        text="NEW" 
         showIcon={false}
         className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px] lg:w-[120px] lg:h-[120px]"
       />

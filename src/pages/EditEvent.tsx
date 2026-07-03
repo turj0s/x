@@ -15,10 +15,10 @@ import { Trash2 } from 'lucide-react';
 import { z } from 'zod';
 
 const eventSchema = z.object({
-  eventName: z.string().trim().min(1, 'Event name is required').max(200, 'Event name must be less than 200 characters'),
+  eventName: z.string().trim().min(1, 'CV title is required').max(200, 'CV title must be less than 200 characters'),
   startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time must be in HH:MM format (e.g., 15:00)'),
   endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'End time must be in HH:MM format (e.g., 16:00)'),
-  location: z.string().trim().min(1, 'Location is required').max(300, 'Location must be less than 300 characters'),
+  location: z.string().trim().min(1, 'Contact address is required').max(300, 'Contact address must be less than 300 characters'),
   description: z.string().trim().min(1, 'Description is required').max(2000, 'Description must be less than 2000 characters'),
 });
 
@@ -98,14 +98,14 @@ const EditEvent = () => {
       if (error) throw error;
 
       if (!data) {
-        toast.error('Event not found');
+        toast.error('CV not found');
         navigate('/my-events');
         return;
       }
 
       // Check if user is the creator
       if (data.created_by !== user?.id) {
-        toast.error('You do not have permission to edit this event');
+        toast.error('You do not have permission to edit this CV');
         navigate('/my-events');
         return;
       }
@@ -134,7 +134,7 @@ const EditEvent = () => {
       setLoading(false);
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error fetching event:', error);
-      toast.error('Failed to load event');
+      toast.error('Failed to load CV');
       navigate('/my-events');
     }
   };
@@ -293,18 +293,18 @@ const EditEvent = () => {
 
       if (updateError) throw updateError;
 
-      toast.success('Event updated successfully!');
+      toast.success('CV updated successfully!');
       navigate('/my-events');
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error updating event:', error);
-      toast.error('Failed to update event. Please try again.');
+      toast.error('Failed to update CV. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteEvent = async () => {
-    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+    if (!window.confirm('Are you sure you want to delete this CV? This action cannot be undone.')) {
       return;
     }
 
@@ -316,11 +316,11 @@ const EditEvent = () => {
 
       if (error) throw error;
 
-      toast.success('Event deleted successfully');
+      toast.success('CV deleted successfully');
       navigate('/my-events');
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error deleting event:', error);
-      toast.error('Failed to delete event');
+      toast.error('Failed to delete CV');
     }
   };
 
@@ -338,8 +338,8 @@ const EditEvent = () => {
   return (
     <>
       <SEOHead 
-        title="Edit Event"
-        description="Update your event details and settings"
+        title="Edit CV"
+        description="Update your CV details and settings"
       />
       <AuthSheet isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       
@@ -353,10 +353,10 @@ const EditEvent = () => {
               <div className="flex flex-col gap-3 md:gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
               {imagePreview ? (
-                <img src={imagePreview} alt="Event preview" className="w-full h-full object-cover" />
+                <img src={imagePreview} alt="CV preview" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-black text-[11px] font-medium uppercase tracking-wider">
-                  ADD IMAGE
+                  ADD PREVIEW
                 </span>
               )}
               <input
@@ -382,7 +382,7 @@ const EditEvent = () => {
               <div className="space-y-4 md:space-y-6">
                 <textarea
                   ref={titleRef}
-                  placeholder="Event name"
+                  placeholder="CV title"
                   className="w-full text-black text-[32px] md:text-[48px] lg:text-[56px] font-medium leading-[1.2] mb-4 md:mb-8 focus:outline-none bg-transparent border-none p-0 placeholder:text-[#C4C4C4] resize-none overflow-hidden whitespace-pre-wrap break-words"
                   value={eventName}
                   onChange={(e) => setEventName(e.target.value)}
@@ -468,7 +468,7 @@ const EditEvent = () => {
             <input
               ref={locationInputRef}
               type="text"
-              placeholder="Add event location"
+              placeholder="Add contact address"
               className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none placeholder:text-[#C4C4C4]"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -476,7 +476,7 @@ const EditEvent = () => {
 
             {/* Description */}
             <textarea
-              placeholder="Add description"
+              placeholder="About this CV"
               rows={6}
               className="w-full px-3 md:px-4 py-2 md:py-3 text-[14px] md:text-[17px] text-black border border-black focus:outline-none resize-none placeholder:text-[#C4C4C4]"
               value={description}
@@ -486,7 +486,7 @@ const EditEvent = () => {
             {/* Registrants List */}
             {registrants.length > 0 && (
               <div className="mt-8">
-                <h3 className="text-[18px] font-medium mb-4">Registrations ({registrants.length})</h3>
+                <h3 className="text-[18px] font-medium mb-4">Saved by ({registrants.length})</h3>
                 <div className="border border-black">
                   {registrants.map((registrant, index) => (
                     <div 
@@ -513,10 +513,10 @@ const EditEvent = () => {
                       onClick={handleSubmit}
                       disabled={isSubmitting}
                       className="flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out w-[calc(100%-50px)] z-10 bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF] disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Update event"
+                      aria-label="Update CV"
                     >
                       <span className="text-white text-[13px] font-normal uppercase relative transition-colors duration-300 group-hover:text-black">
-                        {isSubmitting ? 'UPDATING...' : 'UPDATE EVENT'}
+                        {isSubmitting ? 'UPDATING...' : 'UPDATE CV'}
                       </span>
                       <svg 
                         width="12" 
@@ -551,7 +551,7 @@ const EditEvent = () => {
                   <button
                     onClick={handleDeleteEvent}
                     className="flex w-[50px] h-[50px] justify-center items-center border border-red-500 bg-red-500 text-white transition-all duration-300 hover:bg-red-600 hover:border-red-600"
-                    aria-label="Delete event"
+                    aria-label="Delete CV"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
