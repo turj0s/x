@@ -47,31 +47,24 @@ const EditEvent = () => {
   const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
 
   useEffect(() => {
-    // Check auth state
+    // Track auth state (optional — editing is allowed without login)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
-      if (!session?.user) {
-        setShowAuthModal(true);
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
-      if (session?.user) {
-        setShowAuthModal(false);
-      } else {
-        setShowAuthModal(true);
-      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (user && id) {
+    if (id) {
       fetchEvent();
     }
-  }, [user, id]);
+  }, [id]);
+
 
   useEffect(() => {
     onPlaceSelected((place) => {
@@ -103,12 +96,8 @@ const EditEvent = () => {
         return;
       }
 
-      // Check if user is the creator
-      if (data.created_by !== user?.id) {
-        toast.error('You do not have permission to edit this CV');
-        navigate('/my-events');
-        return;
-      }
+      // Editing is now open to everyone — no ownership check
+
 
       // Populate form fields
       setEventName(data.title);
@@ -190,10 +179,7 @@ const EditEvent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
+
 
     // Validate date fields first
     if (!startDate) {
@@ -267,34 +253,40 @@ const EditEvent = () => {
       const dateStr = format(startDate, 'MMMM dd, yyyy');
       const timeStr = `${startTime} - ${endTime}`;
 
-      // Get creator name from profile or fallback to email
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('display_name')
-        .eq('user_id', user.id)
-        .single();
-
-      const creatorName = profile?.display_name || user.email?.split('@')[0] || 'Anonymous';
+      // Keep existing creator name if signed out; otherwise use profile/email
+      let creatorName: string | undefined;
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        creatorName = profile?.display_name || user.email?.split('@')[0] || undefined;
+      }
 
       // Update event in database
+      const updatePayload: Record<string, any> = {
+        title: eventName,
+        description: description,
+        date: dateStr,
+        time: timeStr,
+        address: location,
+        background_image_url: imageUrl,
+        target_date: targetDate.toISOString(),
+      };
+      if (creatorName) updatePayload.creator = creatorName;
+
       const { error: updateError } = await supabase
         .from('events')
-        .update({
-          title: eventName,
-          description: description,
-          date: dateStr,
-          time: timeStr,
-          address: location,
-          background_image_url: imageUrl,
-          target_date: targetDate.toISOString(),
-          creator: creatorName,
-        })
+        .update(updatePayload)
         .eq('id', id);
+
 
       if (updateError) throw updateError;
 
       toast.success('CV updated successfully!');
-      navigate('/my-events');
+      navigate(`/event/${id}`);
+
     } catch (error) {
       if (import.meta.env.DEV) console.error('Error updating event:', error);
       toast.error('Failed to update CV. Please try again.');
@@ -346,7 +338,7 @@ const EditEvent = () => {
       <div className="min-h-screen bg-white">
         <Navbar />
         
-        {user ? (
+        {true ? (
           <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-8 md:pb-16 px-4 md:px-8">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left: Image Upload */}
