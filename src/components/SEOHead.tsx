@@ -11,11 +11,11 @@ interface SEOHeadProps {
 export const SEOHead = ({ 
   title, 
   description, 
-  keywords = 'events, discover events, event management, community events',
+  keywords = 'cv, resume, cv maker, resume builder, cv templates, resume templates',
   image = '/placeholder.svg',
   url = window.location.href
 }: SEOHeadProps) => {
-  const fullTitle = `${title} | EventHub`;
+  const fullTitle = `${title} | CV Maker`;
   
   return (
     <Helmet>

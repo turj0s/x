@@ -72,8 +72,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   const handleRegister = async () => {
     if (isPastEvent) {
       toast({
-        title: 'Event has ended',
-        description: 'You cannot register for past events',
+        title: 'Template unavailable',
+        description: 'This CV template is no longer available',
         variant: 'destructive'
       });
       return;
@@ -85,7 +85,7 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
       } else {
         toast({
           title: 'Sign in required',
-          description: 'Please sign in to register for events',
+          description: 'Please sign in to save CV templates',
           variant: 'destructive'
         });
       }
@@ -107,8 +107,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
 
         setIsRegistered(false);
         toast({
-          title: 'Unregistered',
-          description: 'You have been unregistered from this event'
+          title: 'Removed',
+          description: 'This CV template has been removed from your saved list'
         });
       } else {
         // Register
@@ -124,8 +124,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
         setIsRegistered(true);
         onRegister();
         toast({
-          title: 'Registered!',
-          description: 'You have successfully registered for this event'
+          title: 'Saved!',
+          description: 'This CV template has been added to your list'
         });
       }
     } catch (error: any) {
@@ -149,10 +149,10 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
             ? 'bg-gray-400 border-gray-400 cursor-not-allowed' 
             : 'bg-[#1A1A1A] border-[#1A1A1A] group-hover:w-full group-hover:bg-[#FA76FF] group-hover:border-[#FA76FF]'
         }`}
-        aria-label={isPastEvent ? "Event has ended" : isRegistered ? "Unregister from event" : "Register for event"}
+        aria-label={isPastEvent ? "Template unavailable" : isRegistered ? "Remove from saved CVs" : "Use this CV template"}
       >
         <span className={`text-white text-[13px] font-normal uppercase relative transition-colors duration-300 ${!isPastEvent && 'group-hover:text-black'}`}>
-          {loading ? "LOADING..." : isPastEvent ? "EVENT ENDED" : isRegistered ? "UNREGISTER" : "REGISTER"}
+          {loading ? "LOADING..." : isPastEvent ? "UNAVAILABLE" : isRegistered ? "SAVED" : "USE TEMPLATE"}
         </span>
         <svg 
           width="12" 
