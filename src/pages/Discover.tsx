@@ -145,27 +145,20 @@ const Discover = () => {
     }
   };
 
-  // Filter events based on selected date and hide ended events
+  // Filter templates based on selected date
   const filteredEvents = events.filter((event) => {
-    // Check if event has ended (more than 1 hour past target_date)
-    const now = new Date().getTime();
-    const target = new Date(event.target_date).getTime();
-    const oneHour = 1000 * 60 * 60;
-    const hasEnded = target < now - oneHour;
-    
-    if (hasEnded) return false;
-    
     if (!date) return true;
-    
+
     const eventDate = new Date(event.target_date);
     const selectedDate = new Date(date);
-    
+
     return (
       eventDate.getFullYear() === selectedDate.getFullYear() &&
       eventDate.getMonth() === selectedDate.getMonth() &&
       eventDate.getDate() === selectedDate.getDate()
     );
   });
+
   const scrollToEvents = () => {
     const eventsSection = document.getElementById('events-section');
     eventsSection?.scrollIntoView({
