@@ -179,10 +179,7 @@ const EditEvent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
+
 
     // Validate date fields first
     if (!startDate) {
