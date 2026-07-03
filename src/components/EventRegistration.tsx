@@ -146,7 +146,7 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   return (
     <div className={`group flex items-center self-stretch relative overflow-hidden ${className}`}>
       <button 
-        onClick={() => navigate(`/event/${eventId}/edit`)}
+        onClick={() => navigate(`/event/${eventId}/editor`)}
 
         disabled={loading || isPastEvent}
         className={`flex h-[50px] justify-center items-center gap-2.5 border relative px-2.5 py-3.5 border-solid transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed w-[calc(100%-50px)] z-10 ${
