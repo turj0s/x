@@ -129,9 +129,6 @@ export const EventDetailPage: React.FC = () => {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
           }}></div>
-          <div className="relative z-10 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>
-            <EventCountdown targetDate={new Date(event.target_date)} />
-          </div>
         </div>
         
         <aside className="flex w-[540px] flex-col justify-start items-start fixed h-screen box-border right-0 top-0 bg-white overflow-y-auto max-lg:relative max-lg:w-full max-lg:h-auto max-lg:right-auto max-lg:top-0 max-lg:overflow-y-visible">
