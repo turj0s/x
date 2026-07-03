@@ -303,22 +303,18 @@ const Discover = () => {
                 <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Freelancers</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+            <div className="grid grid-cols-3 gap-4 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">10k+</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
                 <div className="text-[11px] font-medium uppercase text-muted-foreground">CVs created</div>
               </div>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">50+</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">11</div>
                 <div className="text-[11px] font-medium uppercase text-muted-foreground">Templates</div>
               </div>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">98%</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">Satisfaction</div>
-              </div>
-              <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">24/7</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">Support</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
+                <div className="text-[11px] font-medium uppercase text-muted-foreground">Users</div>
               </div>
             </div>
           </div>
