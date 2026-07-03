@@ -96,12 +96,8 @@ const EditEvent = () => {
         return;
       }
 
-      // Check if user is the creator
-      if (data.created_by !== user?.id) {
-        toast.error('You do not have permission to edit this CV');
-        navigate('/my-events');
-        return;
-      }
+      // Editing is now open to everyone — no ownership check
+
 
       // Populate form fields
       setEventName(data.title);
