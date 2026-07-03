@@ -59,7 +59,7 @@ const EventCard = ({
         </div>
         {eventLive && (
           <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-            <div className="text-[11px] font-medium uppercase leading-none">LIVE NOW</div>
+            <div className="text-[11px] font-medium uppercase leading-none">NEW</div>
           </div>
         )}
       </div>
@@ -179,9 +179,9 @@ const Discover = () => {
   };
   return <div className="min-h-screen bg-white">
       <SEOHead 
-        title="Discover Events"
-        description="Explore popular events near you, browse by category, or check out some of the great community calendars."
-        keywords="events, discover events, community events, local events, event calendar"
+        title="Browse CV Templates"
+        description="Explore beautifully designed CV templates for every industry and career level."
+        keywords="cv templates, resume templates, cv maker, resume builder, professional cv"
       />
       <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
         <Navbar />
@@ -189,7 +189,7 @@ const Discover = () => {
       
       {/* Decorative rotating badge - fixed to viewport */}
       <RotatingBadge 
-        text="BROWSE" 
+        text="TEMPLATES" 
         onClick={scrollToEvents}
         showIcon={true}
         icon={<img src={arrowDown} alt="Arrow down" className="w-6 h-6 md:w-7 md:h-7 lg:w-12 lg:h-12" />}
@@ -200,16 +200,16 @@ const Discover = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-6 md:mb-10 inline-flex flex-col items-center" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
             <div className="flex items-center">
-              <span className="border border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Discover</span>
-              <span className="bg-[#ff6bff] border border-black px-3 md:px-6 py-2 md:py-4 rounded-[20px] md:rounded-[40px] -ml-px animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>events</span>
+              <span className="border border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Build your</span>
+              <span className="bg-[#ff6bff] border border-black px-3 md:px-6 py-2 md:py-4 rounded-[20px] md:rounded-[40px] -ml-px animate-fade-in" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>perfect</span>
             </div>
             <div className="flex items-center -mt-px">
-              <span className="border border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>near</span>
-              <span className="border border-l-0 border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>you</span>
+              <span className="border border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.5s', animationFillMode: 'both' }}>CV in</span>
+              <span className="border border-l-0 border-black px-3 md:px-6 py-2 md:py-4 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>minutes</span>
             </div>
           </h1>
           <p className="text-sm md:text-base lg:text-[18px] text-black max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
-            Explore popular events near you, browse by category, or check out some of the great community calendars.
+            Browse professionally designed CV templates, customize them to your story, and download a resume that stands out.
           </p>
         </div>
       </section>
@@ -221,7 +221,7 @@ const Discover = () => {
       <section id="events-section" className="px-4 md:px-8 pb-16 pt-6 md:pt-16">
         <div>
           <div className="flex flex-wrap items-center gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
-            <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing events in</h2>
+            <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing CV templates for</h2>
             <span className="text-base md:text-lg lg:text-xl font-normal border border-black px-2 py-1 sm:ml-2">{userCountry}</span>
             
             {/* Calendar button for mobile/tablet */}
@@ -259,10 +259,10 @@ const Discover = () => {
             {/* Event Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:col-start-2 gap-5">
               {loading ? (
-                <div className="col-span-full text-center py-12">Loading events...</div>
+                <div className="col-span-full text-center py-12">Loading templates...</div>
               ) : filteredEvents.length === 0 ? (
                 <div className="col-span-full text-center py-12">
-                  {date ? `No events found for ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}` : 'No events found'}
+                  {date ? `No templates released on ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}` : 'No templates found'}
                 </div>
               ) : (
                 filteredEvents.map((event, index) => (

@@ -80,7 +80,7 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <SEOHead 
         title={isLogin ? 'Sign In' : 'Sign Up'}
-        description={isLogin ? 'Sign in to manage your events and registrations' : 'Create an account to manage events and register for upcoming events'}
+        description={isLogin ? 'Sign in to manage your CVs and saved templates' : 'Create an account to build CVs and save templates'}
       />
       <div className="w-full max-w-md space-y-8">
         <div>
@@ -88,7 +88,7 @@ const Auth = () => {
             {isLogin ? 'Sign In' : 'Sign Up'}
           </h2>
           <p className="mt-2 text-sm text-[#1A1A1A] opacity-50">
-            {isLogin ? 'Sign in to manage events' : 'Create an account to manage events'}
+            {isLogin ? 'Sign in to manage your CVs' : 'Create an account to build your CV'}
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">

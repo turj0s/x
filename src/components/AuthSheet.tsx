@@ -88,7 +88,7 @@ export const AuthSheet: React.FC<AuthSheetProps> = ({ isOpen, onClose }) => {
           </h2>
           <p className="text-gray-400 text-sm mb-8">
             {isSignUp 
-              ? 'Join us to create and manage your events' 
+              ? 'Join us to build and save CV templates' 
               : 'Welcome back! Please sign in to continue'}
           </p>
 
