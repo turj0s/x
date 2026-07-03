@@ -26,6 +26,8 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   const [isRegistered, setIsRegistered] = useState(initialIsRegistered);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
