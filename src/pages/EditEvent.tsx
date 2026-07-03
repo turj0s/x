@@ -338,7 +338,7 @@ const EditEvent = () => {
       <div className="min-h-screen bg-white">
         <Navbar />
         
-        {user ? (
+        {true ? (
           <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-8 md:pb-16 px-4 md:px-8">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left: Image Upload */}
