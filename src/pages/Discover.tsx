@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import arrowDown from '@/assets/arrow-down.png';
 import { SEOHead } from '@/components/SEOHead';
 import { EventsCarousel } from '@/components/EventsCarousel';
 import { RotatingBadge } from '@/components/RotatingBadge';
+
 
 interface Event {
   id: string;
@@ -223,52 +218,19 @@ const Discover = () => {
           <div className="flex flex-wrap items-center gap-0 mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
             <h2 className="text-base md:text-lg lg:text-xl font-normal w-full sm:w-auto mb-2 sm:mb-0">Browsing CV templates for</h2>
             <span className="text-base md:text-lg lg:text-xl font-normal border border-black px-2 py-1 sm:ml-2">{userCountry}</span>
-            
-            {/* Calendar button for mobile/tablet */}
-            <div className="lg:hidden">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    className={cn(
-                      "text-base md:text-lg lg:text-xl font-normal border border-l-0 border-black px-2 py-1 flex items-center bg-white hover:bg-gray-50 transition-colors",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "MMM do, yyyy") : <span>Pick a date</span>}
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar 
-                    mode="single" 
-                    selected={date} 
-                    onSelect={setDate} 
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-12 mt-8 md:mt-16">
-            {/* Calendar - Desktop only */}
-            <div className="hidden lg:block animate-fade-in lg:sticky lg:top-24 self-start" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
-              <Calendar mode="single" selected={date} onSelect={setDate} className="mx-auto" />
-            </div>
-
-            {/* Event Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:col-start-2 gap-5">
+          <div className="mt-8 md:mt-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {loading ? (
                 <div className="col-span-full text-center py-12">Loading templates...</div>
               ) : filteredEvents.length === 0 ? (
-                <div className="col-span-full text-center py-12">
-                  {date ? `No templates released on ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}` : 'No templates found'}
-                </div>
+                <div className="col-span-full text-center py-12">No templates found</div>
               ) : (
                 filteredEvents.map((event, index) => (
-                  <div 
-                    key={event.id} 
-                    className="animate-fade-in" 
+                  <div
+                    key={event.id}
+                    className="animate-fade-in"
                     style={{ animationDelay: `${1.0 + (index * 0.1)}s`, animationFillMode: 'both' }}
                   >
                     <EventCard event={event} />
@@ -277,6 +239,7 @@ const Discover = () => {
               )}
             </div>
           </div>
+
         </div>
       </section>
     </div>;
