@@ -67,7 +67,7 @@ export const EventRegistration: React.FC<EventRegistrationProps> = ({
   };
 
   const eventStatus = getEventStatus();
-  const isPastEvent = eventStatus === 'ended';
+  const isPastEvent = false;
 
   const handleRegister = async () => {
     if (isPastEvent) {
