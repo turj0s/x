@@ -47,31 +47,24 @@ const EditEvent = () => {
   const { onPlaceSelected } = useGooglePlacesAutocomplete(locationInputRef);
 
   useEffect(() => {
-    // Check auth state
+    // Track auth state (optional — editing is allowed without login)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
-      if (!session?.user) {
-        setShowAuthModal(true);
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
-      if (session?.user) {
-        setShowAuthModal(false);
-      } else {
-        setShowAuthModal(true);
-      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (user && id) {
+    if (id) {
       fetchEvent();
     }
-  }, [user, id]);
+  }, [id]);
+
 
   useEffect(() => {
     onPlaceSelected((place) => {
