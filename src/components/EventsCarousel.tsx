@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 
 interface Event {
   id: string;
@@ -13,7 +12,6 @@ interface Event {
 
 export const EventsCarousel = () => {
   const [events, setEvents] = useState<Event[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvents = async () => {
