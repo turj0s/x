@@ -193,19 +193,11 @@ const TemplateEditor = () => {
     setOcrProgress(0);
     try {
       const { default: Tesseract } = await import('tesseract.js');
-      // Load image via canvas to bypass CORS taint for tesseract
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = template.background_image_url;
-      await new Promise<void>((res, rej) => {
-        img.onload = () => res();
-        img.onerror = () => rej(new Error('image load failed'));
-      });
-      const cvs = document.createElement('canvas');
-      cvs.width = img.naturalWidth;
-      cvs.height = img.naturalHeight;
-      cvs.getContext('2d')!.drawImage(img, 0, 0);
-      const blob: Blob = await new Promise((r) => cvs.toBlob((b) => r(b!), 'image/png')!);
+      // Fetch the image as a blob (avoids CORS taint issues with crossOrigin img element)
+      const resp = await fetch(template.background_image_url, { mode: 'cors' }).catch(() => null)
+        || await fetch(template.background_image_url);
+      if (!resp.ok) throw new Error(`image fetch ${resp.status}`);
+      const blob = await resp.blob();
 
       const result = await Tesseract.recognize(blob, 'eng', {
         logger: (m: { status: string; progress: number }) => {
@@ -214,8 +206,8 @@ const TemplateEditor = () => {
       });
 
       const lines = (result.data as unknown as { lines?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }> }).lines || [];
-      const iw = img.naturalWidth;
-      const ih = img.naturalHeight;
+      const iw = imgSize.w;
+      const ih = imgSize.h;
       const newBoxes: TextBox[] = lines
         .map((ln) => {
           const text = (ln.text || '').replace(/\s+$/g, '');
