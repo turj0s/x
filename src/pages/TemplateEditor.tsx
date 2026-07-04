@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { SEOHead } from '@/components/SEOHead';
 import { toast } from 'sonner';
-import { ArrowLeft, Download, Plus, Trash2, Type, Bold, Italic } from 'lucide-react';
+import { ArrowLeft, Download, Plus, Trash2, Type, Bold, Italic, Wand2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
