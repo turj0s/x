@@ -442,6 +442,7 @@ const TemplateEditor = () => {
               style={{ width: paperWidth, height: paperHeight }}
             >
               <img
+                ref={imgRef}
                 src={template.background_image_url}
                 alt={template.title}
                 onLoad={(e) => {
@@ -452,6 +453,13 @@ const TemplateEditor = () => {
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                 draggable={false}
               />
+              {detecting && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-50 pointer-events-none">
+                  <div className="bg-white border border-black px-4 py-3 text-[12px] uppercase tracking-wider">
+                    Detecting text… {ocrProgress}%
+                  </div>
+                </div>
+              )}
               {boxes.map((b) => (
                 <div
                   key={b.id}
