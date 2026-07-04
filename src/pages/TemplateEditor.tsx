@@ -250,7 +250,7 @@ const TemplateEditor = () => {
             bold: false,
             italic: false,
             align: 'left' as const,
-            bg: '#FFFFFF',
+            bg: 'transparent',
             edited: false,
           };
         })
