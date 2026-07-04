@@ -12,6 +12,7 @@ import EditEvent from "./pages/EditEvent";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import TemplateEditor from "./pages/TemplateEditor";
+import EditableFixture from "./pages/EditableFixture";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "@/components/Footer";
