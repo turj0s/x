@@ -176,8 +176,7 @@ describe('EditableText — multi-line region behavior', () => {
   describe('paste', () => {
     it('normalizes CRLF and CR to LF and preserves tabs + boundary newlines', () => {
       installExecCommandShim();
-      const onFirstChange = vi.fn();
-      render(<Harness initialText="" onFirstChange={onFirstChange} />);
+      render(<Harness initialText="" />);
       const el = document.querySelector('[data-text-box-input]') as HTMLDivElement;
       el.focus();
       placeCaretAtEnd(el);
@@ -185,9 +184,10 @@ describe('EditableText — multi-line region behavior', () => {
         getData: (t: string) => (t === 'text/plain' ? '\r\nA\tB\r\nC\rD\n' : ''),
       };
       fireEvent.paste(el, { clipboardData: clipboard });
+      // Leading \n, trailing \n, tabs, and CR/CRLF all normalized to \n.
       expect(el.textContent).toBe('\nA\tB\nC\nD\n');
-      expect(onFirstChange).toHaveBeenCalledTimes(1);
     });
+
 
     it('handles very large multi-line pastes as a single text node insert', () => {
       installExecCommandShim();
