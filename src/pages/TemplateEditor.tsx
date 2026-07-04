@@ -378,7 +378,7 @@ const TemplateEditor = () => {
                     cursor: 'move',
                     padding: '2px 4px',
                     outline: selectedId === b.id ? '1.5px dashed #FA76FF' : '1px dashed transparent',
-                    background: selectedId === b.id ? 'rgba(255,255,255,0.35)' : 'transparent',
+                    background: b.bg && b.bg !== 'transparent' ? b.bg : (selectedId === b.id ? 'rgba(255,255,255,0.35)' : 'transparent'),
                   }}
                   onMouseEnter={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
                   onMouseLeave={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed transparent'; }}
