@@ -27,6 +27,7 @@ interface TextBox {
   italic: boolean;
   align: 'left' | 'center' | 'right';
   bg: string; // background color to cover template text ('transparent' or hex)
+  edited: boolean; // false means OCR hotspot only; original template pixels stay visible
 }
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -36,6 +37,8 @@ const STORAGE_KEY = (id: string) => `cv-overlay:${id}`;
 const FONTS = ['Inter', 'Georgia', 'Times New Roman', 'Courier New', 'Arial'];
 const COLORS = ['#111111', '#333333', '#555555', '#1E40AF', '#B91C1C', '#047857', '#B45309', '#FFFFFF'];
 
+const normalizeText = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const TemplateEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,6 +46,7 @@ const TemplateEditor = () => {
   const [loading, setLoading] = useState(true);
   const [boxes, setBoxes] = useState<TextBox[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [detecting, setDetecting] = useState(false);
@@ -60,6 +64,7 @@ const TemplateEditor = () => {
       setLoading(true);
       setBoxes([]);
       setSelectedId(null);
+      setEditingId(null);
       setImgSize(null);
       const { data, error } = await supabase
         .from('events')
@@ -76,7 +81,7 @@ const TemplateEditor = () => {
       try {
         const raw = localStorage.getItem(STORAGE_KEY(data.id));
         const parsed: TextBox[] = raw ? JSON.parse(raw) : [];
-        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b })));
+        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b, edited: Boolean(b.edited) })));
       } catch {
         setBoxes([]);
       }
@@ -110,6 +115,7 @@ const TemplateEditor = () => {
       italic: false,
       align: 'left',
       bg: '#FFFFFF',
+      edited: true,
     };
     setBoxes((p) => [...p, nb]);
     setSelectedId(nb.id);
@@ -121,6 +127,7 @@ const TemplateEditor = () => {
   const removeBox = (bid: string) => {
     setBoxes((p) => p.filter((b) => b.id !== bid));
     if (selectedId === bid) setSelectedId(null);
+    if (editingId === bid) setEditingId(null);
   };
 
   const onPointerDownBox = (e: React.PointerEvent, b: TextBox) => {
@@ -185,6 +192,7 @@ const TemplateEditor = () => {
     if (!window.confirm('Remove all text boxes on this template?')) return;
     setBoxes([]);
     setSelectedId(null);
+    setEditingId(null);
   };
 
   const runOcr = async (replace = true) => {
@@ -243,12 +251,14 @@ const TemplateEditor = () => {
             italic: false,
             align: 'left' as const,
             bg: '#FFFFFF',
+            edited: false,
           };
         })
         .filter(Boolean) as TextBox[];
 
       setBoxes((prev) => (replace ? newBoxes : [...prev, ...newBoxes]));
       setSelectedId(null);
+      setEditingId(null);
       toast.success(`Detected ${newBoxes.length} editable text regions`);
     } catch (err) {
       console.error(err);
@@ -299,7 +309,7 @@ const TemplateEditor = () => {
             </button>
             <h2 className="text-[11px] uppercase tracking-wider font-medium">{template.title}</h2>
             <p className="text-[11px] text-gray-500 leading-relaxed">
-              Click any detected text on the template to edit it. Use Auto-detect to make every text region editable.
+              Detected text stays exactly like the original template until you replace a selected region.
             </p>
 
             <button
@@ -465,49 +475,74 @@ const TemplateEditor = () => {
                   </div>
                 </div>
               )}
-              {boxes.map((b) => (
-                <div
-                  key={b.id}
-                  onPointerDown={(e) => onPointerDownBox(e, b)}
-                  onPointerMove={onPointerMoveBox}
-                  onPointerUp={onPointerUpBox}
-                  onClick={() => setSelectedId(b.id)}
-                  style={{
-                    position: 'absolute',
-                    left: `${b.x}%`,
-                    top: `${b.y}%`,
-                    width: `${b.w}%`,
-                    cursor: 'move',
-                    padding: '2px 4px',
-                    outline: selectedId === b.id ? '1.5px dashed #FA76FF' : '1px dashed transparent',
-                    background: b.bg && b.bg !== 'transparent' ? b.bg : (selectedId === b.id ? 'rgba(255,255,255,0.35)' : 'transparent'),
-                  }}
-                  onMouseEnter={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
-                  onMouseLeave={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed transparent'; }}
-                >
+              {boxes.map((b) => {
+                const isEditing = editingId === b.id;
+                const isVisible = b.edited || isEditing;
+
+                return (
                   <div
-                    contentEditable
-                    suppressContentEditableWarning
-                    onDoubleClick={(e) => (e.currentTarget as HTMLElement).focus()}
-                    onBlur={(e) => patchBox(b.id, { text: e.currentTarget.innerText })}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    style={{
-                      outline: 'none',
-                      fontFamily: b.fontFamily,
-                      fontSize: b.fontSize,
-                      color: b.color,
-                      fontWeight: b.bold ? 700 : 400,
-                      fontStyle: b.italic ? 'italic' : 'normal',
-                      textAlign: b.align,
-                      lineHeight: 1.25,
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word',
+                    key={b.id}
+                    onPointerDown={(e) => onPointerDownBox(e, b)}
+                    onPointerMove={onPointerMoveBox}
+                    onPointerUp={onPointerUpBox}
+                    onClick={() => setSelectedId(b.id)}
+                    onDoubleClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedId(b.id);
+                      setEditingId(b.id);
+                      const el = e.currentTarget.querySelector<HTMLElement>('[data-text-box-input]');
+                      setTimeout(() => el?.focus(), 0);
                     }}
+                    style={{
+                      position: 'absolute',
+                      left: `${b.x}%`,
+                      top: `${b.y}%`,
+                      width: `${b.w}%`,
+                      minHeight: Math.max(12, b.fontSize * 1.3),
+                      cursor: isEditing ? 'text' : 'move',
+                      padding: '2px 4px',
+                      outline: selectedId === b.id ? '1.5px dashed #FA76FF' : '1px dashed transparent',
+                      background: isVisible && b.bg && b.bg !== 'transparent'
+                        ? b.bg
+                        : (selectedId === b.id ? 'rgba(255,255,255,0.08)' : 'transparent'),
+                    }}
+                    onMouseEnter={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
+                    onMouseLeave={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed transparent'; }}
                   >
-                    {b.text}
+                    <div
+                      data-text-box-input
+                      contentEditable={isEditing}
+                      suppressContentEditableWarning
+                      onBlur={(e) => {
+                        const nextText = e.currentTarget.innerText;
+                        patchBox(b.id, {
+                          text: nextText,
+                          edited: b.edited || normalizeText(nextText) !== normalizeText(b.text),
+                        });
+                        setEditingId(null);
+                      }}
+                      onPointerDown={(e) => { if (isEditing) e.stopPropagation(); }}
+                      style={{
+                        outline: 'none',
+                        opacity: isVisible ? 1 : 0,
+                        pointerEvents: isEditing ? 'auto' : 'none',
+                        fontFamily: b.fontFamily,
+                        fontSize: b.fontSize,
+                        color: b.color,
+                        caretColor: b.color,
+                        fontWeight: b.bold ? 700 : 400,
+                        fontStyle: b.italic ? 'italic' : 'normal',
+                        textAlign: b.align,
+                        lineHeight: 1.25,
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {b.text}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
