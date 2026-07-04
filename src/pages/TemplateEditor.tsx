@@ -324,11 +324,11 @@ const TemplateEditor = () => {
               <img
                 src={template.background_image_url}
                 alt={template.title}
-                crossOrigin="anonymous"
                 onLoad={(e) => {
                   const img = e.currentTarget;
                   setImgSize({ w: img.naturalWidth, h: img.naturalHeight });
                 }}
+                onError={() => setImgSize({ w: 800, h: 1130 })}
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                 draggable={false}
               />
