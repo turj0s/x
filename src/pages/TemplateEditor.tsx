@@ -203,9 +203,19 @@ const TemplateEditor = () => {
         logger: (m: { status: string; progress: number }) => {
           if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
         },
-      });
+      } as Parameters<typeof Tesseract.recognize>[2]);
 
-      const lines = (result.data as unknown as { lines?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }> }).lines || [];
+      // Tesseract v6+ requires opting into blocks/lines/words in the output
+      type OcrLine = { text: string; bbox: { x0: number; y0: number; x1: number; y1: number } };
+      type OcrBlock = { lines?: OcrLine[]; paragraphs?: Array<{ lines?: OcrLine[] }> };
+      const data = result.data as unknown as { lines?: OcrLine[]; blocks?: OcrBlock[] };
+      let lines: OcrLine[] = data.lines || [];
+      if (!lines.length && data.blocks) {
+        for (const blk of data.blocks) {
+          if (blk.lines) lines.push(...blk.lines);
+          else if (blk.paragraphs) for (const par of blk.paragraphs) if (par.lines) lines.push(...par.lines);
+        }
+      }
       const iw = imgSize.w;
       const ih = imgSize.h;
       const newBoxes: TextBox[] = lines
