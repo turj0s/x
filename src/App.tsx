@@ -12,6 +12,7 @@ import EditEvent from "./pages/EditEvent";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import TemplateEditor from "./pages/TemplateEditor";
+import EditableFixture from "./pages/EditableFixture";
 
 import NotFound from "./pages/NotFound";
 import { Footer } from "@/components/Footer";
@@ -25,6 +26,7 @@ const App = () => (
       <Route path="/event/:id" element={<Index />} />
       <Route path="/event/:id/edit" element={<EditEvent />} />
       <Route path="/event/:id/editor" element={<TemplateEditor />} />
+      <Route path="/dev/editable-fixture" element={<EditableFixture />} />
 
       <Route path="/my-events" element={<MyEvents />} />
       <Route path="/create-event" element={<CreateEvent />} />
