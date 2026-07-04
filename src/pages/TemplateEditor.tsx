@@ -150,12 +150,41 @@ const EditableText: React.FC<EditableTextProps> = ({
       }}
 
       onPaste={(e) => {
-        // Strip formatting so pasted text inherits the region's styles and
-        // doesn't inject HTML that would confuse caret placement.
+        // Strip formatting and normalize CRLF/CR to LF so pasted content
+        // uses the same \n line model as `white-space: pre-wrap`.
         e.preventDefault();
-        const text = e.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, text);
+        const el = ref.current;
+        const raw = e.clipboardData.getData('text/plain');
+        const text = raw.replace(/\r\n?/g, '\n');
+        if (!el) return;
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+          // No caret yet: append at end.
+          el.appendChild(document.createTextNode(text));
+        } else {
+          const range = sel.getRangeAt(0);
+          // Only paste if the current selection lives inside this box.
+          if (!el.contains(range.startContainer)) return;
+          range.deleteContents();
+          // Insert as a single text node so \n characters are preserved
+          // verbatim (pre-wrap wraps them). This avoids execCommand's
+          // browser-specific <br>/<div> splitting which throws off caret
+          // and line indexing on multi-line pastes.
+          const node = document.createTextNode(text);
+          range.insertNode(node);
+          // Move caret to just after the inserted text.
+          const after = document.createRange();
+          after.setStartAfter(node);
+          after.collapse(true);
+          sel.removeAllRanges();
+          sel.addRange(after);
+          // Normalize adjacent text nodes so subsequent caret math stays sane.
+          el.normalize();
+        }
+        // Fire input so onFirstChange / edited flag triggers.
+        el.dispatchEvent(new Event('input', { bubbles: true }));
       }}
+
       onInput={(e) => {
         if (firedChangeRef.current) return;
         const next = (e.currentTarget as HTMLDivElement).textContent ?? '';
