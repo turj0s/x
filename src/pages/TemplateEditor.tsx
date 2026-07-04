@@ -26,6 +26,7 @@ interface TextBox {
   bold: boolean;
   italic: boolean;
   align: 'left' | 'center' | 'right';
+  bg: string; // background color to cover template text ('transparent' or hex)
 }
 
 const uid = () => Math.random().toString(36).slice(2, 10);
