@@ -290,6 +290,34 @@ const TemplateEditor = () => {
                     />
                   </div>
                 </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Cover (background)</div>
+                  <div className="flex flex-wrap gap-1 items-center">
+                    <button
+                      onClick={() => patchBox(selected.id, { bg: 'transparent' })}
+                      className={`w-6 h-6 border text-[9px] ${selected.bg === 'transparent' ? 'border-black ring-2 ring-black' : 'border-gray-300'}`}
+                      style={{ background: 'repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 50% / 8px 8px' }}
+                      aria-label="transparent"
+                      title="No cover"
+                    />
+                    {['#FFFFFF','#F5F5F5','#000000'].map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => patchBox(selected.id, { bg: c })}
+                        style={{ background: c }}
+                        className={`w-6 h-6 border ${selected.bg === c ? 'border-black ring-2 ring-black' : 'border-gray-300'}`}
+                        aria-label={c}
+                      />
+                    ))}
+                    <input
+                      type="color"
+                      value={selected.bg === 'transparent' ? '#ffffff' : selected.bg}
+                      onChange={(e) => patchBox(selected.id, { bg: e.target.value })}
+                      className="w-6 h-6 border border-gray-300 p-0"
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-500 mt-1 leading-tight">Use a solid cover to hide the template's original text underneath.</p>
+                </div>
                 <button
                   onClick={() => removeBox(selected.id)}
                   className="w-full flex items-center justify-center gap-2 border border-red-500 text-red-600 px-3 py-1.5 text-[11px] uppercase tracking-wider hover:bg-red-500 hover:text-white transition-colors"
