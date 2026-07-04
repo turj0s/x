@@ -192,30 +192,35 @@ const TemplateEditor = () => {
     setDetecting(true);
     setOcrProgress(0);
     try {
-      const { default: Tesseract } = await import('tesseract.js');
-      // Load image via canvas to bypass CORS taint for tesseract
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = template.background_image_url;
-      await new Promise<void>((res, rej) => {
-        img.onload = () => res();
-        img.onerror = () => rej(new Error('image load failed'));
-      });
-      const cvs = document.createElement('canvas');
-      cvs.width = img.naturalWidth;
-      cvs.height = img.naturalHeight;
-      cvs.getContext('2d')!.drawImage(img, 0, 0);
-      const blob: Blob = await new Promise((r) => cvs.toBlob((b) => r(b!), 'image/png')!);
+      const { createWorker } = await import('tesseract.js');
+      // Fetch the image as a blob (avoids CORS taint issues with crossOrigin img element)
+      const resp = await fetch(template.background_image_url, { mode: 'cors' }).catch(() => null)
+        || await fetch(template.background_image_url);
+      if (!resp.ok) throw new Error(`image fetch ${resp.status}`);
+      const blob = await resp.blob();
 
-      const result = await Tesseract.recognize(blob, 'eng', {
+      const worker = await createWorker('eng', 1, {
         logger: (m: { status: string; progress: number }) => {
           if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
         },
-      });
+      } as Parameters<typeof createWorker>[2]);
+      const result = await worker.recognize(blob, {}, { blocks: true, text: true });
+      await worker.terminate();
 
-      const lines = (result.data as unknown as { lines?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }> }).lines || [];
-      const iw = img.naturalWidth;
-      const ih = img.naturalHeight;
+      // v6+: bounding boxes live under data.blocks -> paragraphs -> lines
+      type OcrLine = { text: string; bbox: { x0: number; y0: number; x1: number; y1: number } };
+      type OcrBlock = { lines?: OcrLine[]; paragraphs?: Array<{ lines?: OcrLine[] }> };
+      const data = result.data as unknown as { lines?: OcrLine[]; blocks?: OcrBlock[] };
+      const lines: OcrLine[] = [];
+      if (data.lines?.length) lines.push(...data.lines);
+      if (!lines.length && data.blocks) {
+        for (const blk of data.blocks) {
+          if (blk.lines?.length) lines.push(...blk.lines);
+          else if (blk.paragraphs) for (const par of blk.paragraphs) if (par.lines) lines.push(...par.lines);
+        }
+      }
+      const iw = imgSize.w;
+      const ih = imgSize.h;
       const newBoxes: TextBox[] = lines
         .map((ln) => {
           const text = (ln.text || '').replace(/\s+$/g, '');
