@@ -562,7 +562,9 @@ const TemplateEditor = () => {
                       left: `${b.x}%`,
                       top: `${b.y}%`,
                       width: `${b.w}%`,
-                      minHeight: Math.max(12, b.fontSize * 1.3),
+                      minHeight: b.h
+                        ? `${b.h}%`
+                        : Math.max(12, b.fontSize * (b.lineHeight ?? 1.25)),
                       cursor: isEditing ? 'text' : 'move',
                       padding: '2px 4px',
                       outline: isSelected ? '1.5px dashed #FA76FF' : '1px dashed transparent',
