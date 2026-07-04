@@ -45,8 +45,12 @@ const TemplateEditor = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
+  const [detecting, setDetecting] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState(0);
   const paperRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const dragRef = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const autoRanRef = useRef<Set<string>>(new Set());
 
   // Load template + saved boxes whenever template id changes
   useEffect(() => {
