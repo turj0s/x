@@ -26,6 +26,7 @@ interface TextBox {
   bold: boolean;
   italic: boolean;
   align: 'left' | 'center' | 'right';
+  bg: string; // background color to cover template text ('transparent' or hex)
 }
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -70,7 +71,8 @@ const TemplateEditor = () => {
       setTemplate(data as Template);
       try {
         const raw = localStorage.getItem(STORAGE_KEY(data.id));
-        setBoxes(raw ? JSON.parse(raw) : []);
+        const parsed: TextBox[] = raw ? JSON.parse(raw) : [];
+        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b })));
       } catch {
         setBoxes([]);
       }
@@ -103,6 +105,7 @@ const TemplateEditor = () => {
       bold: false,
       italic: false,
       align: 'left',
+      bg: '#FFFFFF',
     };
     setBoxes((p) => [...p, nb]);
     setSelectedId(nb.id);
@@ -287,6 +290,34 @@ const TemplateEditor = () => {
                     />
                   </div>
                 </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Cover (background)</div>
+                  <div className="flex flex-wrap gap-1 items-center">
+                    <button
+                      onClick={() => patchBox(selected.id, { bg: 'transparent' })}
+                      className={`w-6 h-6 border text-[9px] ${selected.bg === 'transparent' ? 'border-black ring-2 ring-black' : 'border-gray-300'}`}
+                      style={{ background: 'repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 50% / 8px 8px' }}
+                      aria-label="transparent"
+                      title="No cover"
+                    />
+                    {['#FFFFFF','#F5F5F5','#000000'].map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => patchBox(selected.id, { bg: c })}
+                        style={{ background: c }}
+                        className={`w-6 h-6 border ${selected.bg === c ? 'border-black ring-2 ring-black' : 'border-gray-300'}`}
+                        aria-label={c}
+                      />
+                    ))}
+                    <input
+                      type="color"
+                      value={selected.bg === 'transparent' ? '#ffffff' : selected.bg}
+                      onChange={(e) => patchBox(selected.id, { bg: e.target.value })}
+                      className="w-6 h-6 border border-gray-300 p-0"
+                    />
+                  </div>
+                  <p className="text-[10px] text-gray-500 mt-1 leading-tight">Use a solid cover to hide the template's original text underneath.</p>
+                </div>
                 <button
                   onClick={() => removeBox(selected.id)}
                   className="w-full flex items-center justify-center gap-2 border border-red-500 text-red-600 px-3 py-1.5 text-[11px] uppercase tracking-wider hover:bg-red-500 hover:text-white transition-colors"
@@ -324,11 +355,11 @@ const TemplateEditor = () => {
               <img
                 src={template.background_image_url}
                 alt={template.title}
-                crossOrigin="anonymous"
                 onLoad={(e) => {
                   const img = e.currentTarget;
                   setImgSize({ w: img.naturalWidth, h: img.naturalHeight });
                 }}
+                onError={() => setImgSize({ w: 800, h: 1130 })}
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                 draggable={false}
               />
@@ -347,7 +378,7 @@ const TemplateEditor = () => {
                     cursor: 'move',
                     padding: '2px 4px',
                     outline: selectedId === b.id ? '1.5px dashed #FA76FF' : '1px dashed transparent',
-                    background: selectedId === b.id ? 'rgba(255,255,255,0.35)' : 'transparent',
+                    background: b.bg && b.bg !== 'transparent' ? b.bg : (selectedId === b.id ? 'rgba(255,255,255,0.35)' : 'transparent'),
                   }}
                   onMouseEnter={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
                   onMouseLeave={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed transparent'; }}
