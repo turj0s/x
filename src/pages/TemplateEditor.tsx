@@ -62,6 +62,10 @@ const EditableText: React.FC<EditableTextProps> = ({
   const ref = useRef<HTMLDivElement>(null);
   const firedChangeRef = useRef(false);
   const baselineRef = useRef(initialText);
+  // Pending click coords captured on the mousedown that opens edit mode.
+  // We apply them once the element becomes contentEditable so the caret
+  // lands exactly under the cursor, matching the original line wrapping.
+  const pendingCaretRef = useRef<{ x: number; y: number } | null>(null);
 
   // Sync DOM text from prop only when NOT focused, so we never stomp the caret.
   useEffect(() => {
@@ -75,12 +79,45 @@ const EditableText: React.FC<EditableTextProps> = ({
     firedChangeRef.current = false;
   }, [initialText]);
 
-  // Focus when entering edit mode; caret lands where the user clicked.
+  const placeCaretAt = (x: number, y: number) => {
+    const el = ref.current;
+    if (!el) return false;
+    const doc = document as Document & {
+      caretRangeFromPoint?: (x: number, y: number) => Range | null;
+      caretPositionFromPoint?: (
+        x: number,
+        y: number,
+      ) => { offsetNode: Node; offset: number } | null;
+    };
+    let range: Range | null = null;
+    if (doc.caretRangeFromPoint) {
+      range = doc.caretRangeFromPoint(x, y);
+    } else if (doc.caretPositionFromPoint) {
+      const pos = doc.caretPositionFromPoint(x, y);
+      if (pos) {
+        range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+        range.collapse(true);
+      }
+    }
+    if (!range || !el.contains(range.startContainer)) return false;
+    const sel = window.getSelection();
+    if (!sel) return false;
+    sel.removeAllRanges();
+    sel.addRange(range);
+    return true;
+  };
+
+  // On entering edit mode: focus, then place caret under the pointer.
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    if (editing && document.activeElement !== el) {
-      el.focus();
+    if (!el || !editing) return;
+    el.focus({ preventScroll: true });
+    const pending = pendingCaretRef.current;
+    pendingCaretRef.current = null;
+    if (pending) {
+      // rAF so layout/contentEditable is settled before hit-testing.
+      requestAnimationFrame(() => placeCaretAt(pending.x, pending.y));
     }
   }, [editing]);
 
@@ -91,18 +128,27 @@ const EditableText: React.FC<EditableTextProps> = ({
       contentEditable={editing}
       suppressContentEditableWarning
       onPointerDown={(e) => {
-        if (editing) e.stopPropagation();
+        if (editing) {
+          // Already editing: let the browser handle native caret placement,
+          // just prevent the parent from starting a drag.
+          e.stopPropagation();
+        } else {
+          // First click into the box: remember where so we can restore caret
+          // there after React flips contentEditable on.
+          pendingCaretRef.current = { x: e.clientX, y: e.clientY };
+        }
         onPointerDown?.(e);
       }}
       onKeyDown={(e) => {
         // Enter -> single \n (matches white-space: pre-wrap wrapping model).
-        // Without this, browsers insert <div><br></div> which breaks caret math
-        // and produces double line breaks after export.
+        // Arrow keys, Home/End, Shift+Arrow selection: fall through to native
+        // contentEditable behavior so cursor navigation respects visual lines.
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           document.execCommand('insertText', false, '\n');
         }
       }}
+
       onPaste={(e) => {
         // Strip formatting so pasted text inherits the region's styles and
         // doesn't inject HTML that would confuse caret placement.
