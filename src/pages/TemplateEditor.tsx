@@ -115,6 +115,7 @@ const TemplateEditor = () => {
       bold: false,
       italic: false,
       align: 'left',
+      lineHeight: 1.25,
       bg: '#FFFFFF',
       edited: true,
     };
