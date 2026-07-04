@@ -268,6 +268,7 @@ const TemplateEditor = () => {
 
       const newBoxes: TextBox[] = groups.map((g) => {
         const wPct = ((g.x1 - g.x0) / iw) * 100;
+        const hPctFull = ((g.y1 - g.y0) / ih) * 100;
         const hPx = g.h; // single-line px height (for font-size derivation)
         const displayH = (hPx / iw) * paperWidth;
         const fontSize = Math.max(8, Math.round(displayH / 1.15));
