@@ -51,7 +51,7 @@ interface EditableTextProps {
   onCommit: (text: string) => void;
   onPointerDown?: (e: React.PointerEvent) => void;
 }
-const EditableText: React.FC<EditableTextProps> = ({
+export const EditableText: React.FC<EditableTextProps> = ({
   initialText,
   editing,
   style,
