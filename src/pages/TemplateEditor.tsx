@@ -293,6 +293,7 @@ const TemplateEditor = () => {
           x: (g.x0 / iw) * 100,
           y: (g.y0 / ih) * 100,
           w: Math.max(wPct + 1, 6),
+          h: hPctFull,
           text,
           fontSize,
           fontFamily: 'Georgia',
