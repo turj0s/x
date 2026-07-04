@@ -231,41 +231,78 @@ const TemplateEditor = () => {
       }
       const iw = imgSize.w;
       const ih = imgSize.h;
-      const newBoxes: TextBox[] = lines
+
+      // Normalize + sort lines top-to-bottom, then group adjacent lines into paragraphs
+      // whose left edges and font sizes match — so multi-line text becomes one editable
+      // block that wraps and breaks exactly like the source.
+      type Ln = { text: string; x0: number; y0: number; x1: number; y1: number; h: number };
+      const norm: Ln[] = lines
         .map((ln) => {
           const text = (ln.text || '').replace(/\s+$/g, '');
           if (!text.trim()) return null;
           const { x0, y0, x1, y1 } = ln.bbox;
-          const wPct = ((x1 - x0) / iw) * 100;
-          const hPct = ((y1 - y0) / ih) * 100;
-          // Convert bbox px to display font-size (paperWidth-based)
-          const displayH = (hPct / 100) * ((paperWidth * ih) / iw);
-          // bbox height ≈ full glyph height incl. ascenders/descenders → fontSize ≈ h / 1.15
-          const fontSize = Math.max(8, Math.round(displayH / 1.15));
-          // Infer alignment from bbox position on the page
-          const leftGap = (x0 / iw) * 100;
-          const rightGap = 100 - ((x1 / iw) * 100);
-          let align: 'left' | 'center' | 'right' = 'left';
-          if (Math.abs(leftGap - rightGap) < 3) align = 'center';
-          else if (rightGap < leftGap - 6) align = 'right';
-          return {
-            id: uid(),
-            x: (x0 / iw) * 100,
-            y: (y0 / ih) * 100,
-            w: Math.max(wPct + 1, 6),
-            text,
-            fontSize,
-            fontFamily: 'Georgia',
-            color: '#111111',
-            bold: false,
-            italic: false,
-            align,
-            lineHeight: 1.15,
-            bg: 'transparent',
-            edited: false,
-          };
+          return { text, x0, y0, x1, y1, h: y1 - y0 };
         })
-        .filter(Boolean) as TextBox[];
+        .filter(Boolean) as Ln[];
+      norm.sort((a, b) => a.y0 - b.y0);
+
+      type Grp = { lines: Ln[]; x0: number; y0: number; x1: number; y1: number; h: number };
+      const groups: Grp[] = [];
+      for (const ln of norm) {
+        const g = groups[groups.length - 1];
+        const sameCol = g && Math.abs(ln.x0 - g.x0) < ln.h * 0.6;
+        const sameSize = g && Math.abs(ln.h - g.h) < Math.max(2, g.h * 0.25);
+        const gap = g ? ln.y0 - g.y1 : Infinity;
+        const closeVert = g && gap < g.h * 0.9 && gap > -g.h * 0.4;
+        if (g && sameCol && sameSize && closeVert) {
+          g.lines.push(ln);
+          g.x0 = Math.min(g.x0, ln.x0);
+          g.y0 = Math.min(g.y0, ln.y0);
+          g.x1 = Math.max(g.x1, ln.x1);
+          g.y1 = Math.max(g.y1, ln.y1);
+        } else {
+          groups.push({ lines: [ln], x0: ln.x0, y0: ln.y0, x1: ln.x1, y1: ln.y1, h: ln.h });
+        }
+      }
+
+      const newBoxes: TextBox[] = groups.map((g) => {
+        const wPct = ((g.x1 - g.x0) / iw) * 100;
+        const hPx = g.h; // single-line px height (for font-size derivation)
+        const displayH = (hPx / iw) * paperWidth;
+        const fontSize = Math.max(8, Math.round(displayH / 1.15));
+        // line-height from measured vertical stride if we have >1 line
+        let lineHeight = 1.15;
+        if (g.lines.length > 1) {
+          const strides: number[] = [];
+          for (let i = 1; i < g.lines.length; i++) strides.push(g.lines[i].y0 - g.lines[i - 1].y0);
+          const stride = strides.reduce((s, v) => s + v, 0) / strides.length;
+          lineHeight = Math.max(1, Math.min(2.2, stride / hPx));
+        }
+        // Infer alignment from group extents on the page
+        const leftGap = (g.x0 / iw) * 100;
+        const rightGap = 100 - ((g.x1 / iw) * 100);
+        let align: 'left' | 'center' | 'right' = 'left';
+        if (Math.abs(leftGap - rightGap) < 3) align = 'center';
+        else if (rightGap < leftGap - 6) align = 'right';
+        // Join with real line breaks so wrapping/breaks match the source
+        const text = g.lines.map((l) => l.text).join('\n');
+        return {
+          id: uid(),
+          x: (g.x0 / iw) * 100,
+          y: (g.y0 / ih) * 100,
+          w: Math.max(wPct + 1, 6),
+          text,
+          fontSize,
+          fontFamily: 'Georgia',
+          color: '#111111',
+          bold: false,
+          italic: false,
+          align,
+          lineHeight,
+          bg: 'transparent',
+          edited: false,
+        };
+      });
 
       setBoxes((prev) => (replace ? newBoxes : [...prev, ...newBoxes]));
       setSelectedId(null);
