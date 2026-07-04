@@ -658,20 +658,19 @@ const TemplateEditor = () => {
                     onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
                     onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed transparent'; }}
                   >
-                    <div
-                      data-text-box-input
-                      contentEditable={isEditing}
-                      suppressContentEditableWarning
-                      onInput={(e) => {
-                        // Auto-cover the original text with white the moment the user changes it,
-                        // unless they've explicitly chosen a different cover.
-                        const nextText = e.currentTarget.innerText;
-                        if (!b.edited && normalizeText(nextText) !== normalizeText(b.text)) {
-                          patchBox(b.id, { edited: true, bg: b.bg === 'transparent' ? '#FFFFFF' : b.bg });
+                    <EditableText
+                      key={b.id}
+                      initialText={b.text}
+                      editing={isEditing}
+                      onFirstChange={() => {
+                        if (!b.edited) {
+                          patchBox(b.id, {
+                            edited: true,
+                            bg: b.bg === 'transparent' ? '#FFFFFF' : b.bg,
+                          });
                         }
                       }}
-                      onBlur={(e) => {
-                        const nextText = e.currentTarget.innerText;
+                      onCommit={(nextText) => {
                         const changed = normalizeText(nextText) !== normalizeText(b.text);
                         patchBox(b.id, {
                           text: nextText,
@@ -680,7 +679,6 @@ const TemplateEditor = () => {
                         });
                         setEditingId(null);
                       }}
-                      onPointerDown={(e) => { if (isEditing) e.stopPropagation(); }}
                       style={{
                         outline: 'none',
                         opacity: showOverlayText || isEditing ? 1 : 0,
@@ -695,10 +693,10 @@ const TemplateEditor = () => {
                         lineHeight: b.lineHeight ?? 1.25,
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
+                        minHeight: '1em',
                       }}
-                    >
-                      {b.text}
-                    </div>
+                    />
+
                   </div>
                 );
               })}
