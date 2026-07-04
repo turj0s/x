@@ -41,6 +41,91 @@ const COLORS = ['#111111', '#333333', '#555555', '#1E40AF', '#B91C1C', '#047857'
 
 const normalizeText = (value: string) => value.replace(/\s+/g, ' ').trim();
 
+// Uncontrolled contentEditable: caret/selection are preserved because React
+// never re-renders the DOM subtree during editing. Parent state syncs on blur.
+interface EditableTextProps {
+  initialText: string;
+  editing: boolean;
+  style: React.CSSProperties;
+  onFirstChange?: () => void;
+  onCommit: (text: string) => void;
+  onPointerDown?: (e: React.PointerEvent) => void;
+}
+const EditableText: React.FC<EditableTextProps> = ({
+  initialText,
+  editing,
+  style,
+  onFirstChange,
+  onCommit,
+  onPointerDown,
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const firedChangeRef = useRef(false);
+  const baselineRef = useRef(initialText);
+
+  // Sync DOM text from prop only when NOT focused, so we never stomp the caret.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (document.activeElement === el) return;
+    if (el.textContent !== initialText) {
+      el.textContent = initialText;
+    }
+    baselineRef.current = initialText;
+    firedChangeRef.current = false;
+  }, [initialText]);
+
+  // Focus when entering edit mode; caret lands where the user clicked.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (editing && document.activeElement !== el) {
+      el.focus();
+    }
+  }, [editing]);
+
+  return (
+    <div
+      ref={ref}
+      data-text-box-input
+      contentEditable={editing}
+      suppressContentEditableWarning
+      onPointerDown={(e) => {
+        if (editing) e.stopPropagation();
+        onPointerDown?.(e);
+      }}
+      onKeyDown={(e) => {
+        // Enter -> single \n (matches white-space: pre-wrap wrapping model).
+        // Without this, browsers insert <div><br></div> which breaks caret math
+        // and produces double line breaks after export.
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          document.execCommand('insertText', false, '\n');
+        }
+      }}
+      onPaste={(e) => {
+        // Strip formatting so pasted text inherits the region's styles and
+        // doesn't inject HTML that would confuse caret placement.
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+      }}
+      onInput={(e) => {
+        if (firedChangeRef.current) return;
+        const next = (e.currentTarget as HTMLDivElement).textContent ?? '';
+        if (normalizeText(next) !== normalizeText(baselineRef.current)) {
+          firedChangeRef.current = true;
+          onFirstChange?.();
+        }
+      }}
+      onBlur={(e) => {
+        onCommit((e.currentTarget as HTMLDivElement).textContent ?? '');
+      }}
+      style={style}
+    />
+  );
+};
+
 const TemplateEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -573,20 +658,19 @@ const TemplateEditor = () => {
                     onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
                     onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed transparent'; }}
                   >
-                    <div
-                      data-text-box-input
-                      contentEditable={isEditing}
-                      suppressContentEditableWarning
-                      onInput={(e) => {
-                        // Auto-cover the original text with white the moment the user changes it,
-                        // unless they've explicitly chosen a different cover.
-                        const nextText = e.currentTarget.innerText;
-                        if (!b.edited && normalizeText(nextText) !== normalizeText(b.text)) {
-                          patchBox(b.id, { edited: true, bg: b.bg === 'transparent' ? '#FFFFFF' : b.bg });
+                    <EditableText
+                      key={b.id}
+                      initialText={b.text}
+                      editing={isEditing}
+                      onFirstChange={() => {
+                        if (!b.edited) {
+                          patchBox(b.id, {
+                            edited: true,
+                            bg: b.bg === 'transparent' ? '#FFFFFF' : b.bg,
+                          });
                         }
                       }}
-                      onBlur={(e) => {
-                        const nextText = e.currentTarget.innerText;
+                      onCommit={(nextText) => {
                         const changed = normalizeText(nextText) !== normalizeText(b.text);
                         patchBox(b.id, {
                           text: nextText,
@@ -595,7 +679,6 @@ const TemplateEditor = () => {
                         });
                         setEditingId(null);
                       }}
-                      onPointerDown={(e) => { if (isEditing) e.stopPropagation(); }}
                       style={{
                         outline: 'none',
                         opacity: showOverlayText || isEditing ? 1 : 0,
@@ -610,10 +693,10 @@ const TemplateEditor = () => {
                         lineHeight: b.lineHeight ?? 1.25,
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
+                        minHeight: '1em',
                       }}
-                    >
-                      {b.text}
-                    </div>
+                    />
+
                   </div>
                 );
               })}
