@@ -65,7 +65,11 @@ const EditableText: React.FC<EditableTextProps> = ({
   // Pending click coords captured on the mousedown that opens edit mode.
   // We apply them once the element becomes contentEditable so the caret
   // lands exactly under the cursor, matching the original line wrapping.
-  const pendingCaretRef = useRef<{ x: number; y: number } | null>(null);
+  const pendingCaretRef = useRef<{ x: number; y: number; shift: boolean } | null>(null);
+  // True while an IME composition (Japanese/Chinese/Korean) is in flight.
+  // We must not intercept keys or rewrite the DOM during this window,
+  // otherwise the composed character is lost and the caret desyncs.
+  const composingRef = useRef(false);
 
   // Sync DOM text from prop only when NOT focused, so we never stomp the caret.
   useEffect(() => {
@@ -79,9 +83,7 @@ const EditableText: React.FC<EditableTextProps> = ({
     firedChangeRef.current = false;
   }, [initialText]);
 
-  const placeCaretAt = (x: number, y: number) => {
-    const el = ref.current;
-    if (!el) return false;
+  const caretRangeAt = (x: number, y: number): Range | null => {
     const doc = document as Document & {
       caretRangeFromPoint?: (x: number, y: number) => Range | null;
       caretPositionFromPoint?: (
@@ -89,23 +91,40 @@ const EditableText: React.FC<EditableTextProps> = ({
         y: number,
       ) => { offsetNode: Node; offset: number } | null;
     };
-    let range: Range | null = null;
-    if (doc.caretRangeFromPoint) {
-      range = doc.caretRangeFromPoint(x, y);
-    } else if (doc.caretPositionFromPoint) {
+    if (doc.caretRangeFromPoint) return doc.caretRangeFromPoint(x, y);
+    if (doc.caretPositionFromPoint) {
       const pos = doc.caretPositionFromPoint(x, y);
       if (pos) {
-        range = document.createRange();
-        range.setStart(pos.offsetNode, pos.offset);
-        range.collapse(true);
+        const r = document.createRange();
+        r.setStart(pos.offsetNode, pos.offset);
+        r.collapse(true);
+        return r;
       }
     }
-    if (!range || !el.contains(range.startContainer)) return false;
+    return null;
+  };
+
+  const applyPendingCaret = (
+    x: number,
+    y: number,
+    shift: boolean,
+  ) => {
+    const el = ref.current;
+    if (!el) return;
+    const range = caretRangeAt(x, y);
+    if (!range || !el.contains(range.startContainer)) return;
     const sel = window.getSelection();
-    if (!sel) return false;
-    sel.removeAllRanges();
-    sel.addRange(range);
-    return true;
+    if (!sel) return;
+    if (shift && sel.rangeCount > 0 && sel.anchorNode && el.contains(sel.anchorNode)) {
+      // Shift+click / shift-mousedown: extend the existing selection to the
+      // clicked point instead of collapsing. Native browsers do this on
+      // fresh mousedown but not when we programmatically re-focus, so we
+      // reproduce it explicitly.
+      sel.extend(range.startContainer, range.startOffset);
+    } else {
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   };
 
   // On entering edit mode: focus, then place caret under the pointer.
@@ -116,8 +135,7 @@ const EditableText: React.FC<EditableTextProps> = ({
     const pending = pendingCaretRef.current;
     pendingCaretRef.current = null;
     if (pending) {
-      // rAF so layout/contentEditable is settled before hit-testing.
-      requestAnimationFrame(() => placeCaretAt(pending.x, pending.y));
+      requestAnimationFrame(() => applyPendingCaret(pending.x, pending.y, pending.shift));
     }
   }, [editing]);
 
@@ -127,65 +145,84 @@ const EditableText: React.FC<EditableTextProps> = ({
       data-text-box-input
       contentEditable={editing}
       suppressContentEditableWarning
+      // `dir="auto"` lets each paragraph's directionality follow its first
+      // strong character, so RTL scripts (Arabic/Hebrew) wrap, caret-move,
+      // and paste with correct visual indexing without affecting LTR lines.
+      dir="auto"
       onPointerDown={(e) => {
         if (editing) {
-          // Already editing: let the browser handle native caret placement,
-          // just prevent the parent from starting a drag.
+          // Native contentEditable already handles fresh clicks and
+          // shift+mousedown selection extension correctly — don't interfere.
           e.stopPropagation();
         } else {
-          // First click into the box: remember where so we can restore caret
-          // there after React flips contentEditable on.
-          pendingCaretRef.current = { x: e.clientX, y: e.clientY };
+          pendingCaretRef.current = { x: e.clientX, y: e.clientY, shift: e.shiftKey };
         }
         onPointerDown?.(e);
       }}
+      onCompositionStart={() => {
+        composingRef.current = true;
+      }}
+      onCompositionEnd={(e) => {
+        composingRef.current = false;
+        // Treat composition commit as a regular input for change tracking.
+        if (!firedChangeRef.current) {
+          const next = (e.currentTarget as HTMLDivElement).textContent ?? '';
+          if (normalizeText(next) !== normalizeText(baselineRef.current)) {
+            firedChangeRef.current = true;
+            onFirstChange?.();
+          }
+        }
+      }}
       onKeyDown={(e) => {
-        // Enter -> single \n (matches white-space: pre-wrap wrapping model).
-        // Arrow keys, Home/End, Shift+Arrow selection: fall through to native
-        // contentEditable behavior so cursor navigation respects visual lines.
+        // While composing, the browser owns every key (including Enter used
+        // to commit the candidate). `e.isComposing` and keyCode 229 both
+        // signal this — bail out so we don't swallow the commit key.
+        if (composingRef.current || e.nativeEvent.isComposing || e.keyCode === 229) return;
         if (e.key === 'Enter' && !e.shiftKey) {
+          // execCommand keeps the newline in the browser's native undo stack,
+          // so Ctrl/Cmd+Z reverses each Enter individually.
           e.preventDefault();
           document.execCommand('insertText', false, '\n');
         }
+        // Arrow keys, Home/End, Shift+Arrow, Ctrl/Cmd+Z/Y: fall through to
+        // native contentEditable so navigation, selection, and undo/redo
+        // all track the visual wrapping.
       }}
-
       onPaste={(e) => {
-        // Strip formatting and normalize CRLF/CR to LF so pasted content
-        // uses the same \n line model as `white-space: pre-wrap`.
+        // Normalize CRLF/CR to LF, keep tabs and leading/trailing newlines
+        // verbatim, and route through execCommand so the paste is a single
+        // atomic entry in the native undo stack. execCommand('insertText')
+        // inserts \n as a real newline character under `white-space: pre-wrap`
+        // (not <br>/<div>), which keeps caret math and per-line indexing
+        // exact regardless of paste size.
         e.preventDefault();
-        const el = ref.current;
+        if (composingRef.current) return;
         const raw = e.clipboardData.getData('text/plain');
         const text = raw.replace(/\r\n?/g, '\n');
-        if (!el) return;
-        const sel = window.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-          // No caret yet: append at end.
-          el.appendChild(document.createTextNode(text));
-        } else {
+        if (!text) return;
+        const ok = document.execCommand('insertText', false, text);
+        if (!ok) {
+          // Fallback for browsers that reject execCommand: manual range insert.
+          const el = ref.current;
+          const sel = window.getSelection();
+          if (!el || !sel || sel.rangeCount === 0) return;
           const range = sel.getRangeAt(0);
-          // Only paste if the current selection lives inside this box.
           if (!el.contains(range.startContainer)) return;
           range.deleteContents();
-          // Insert as a single text node so \n characters are preserved
-          // verbatim (pre-wrap wraps them). This avoids execCommand's
-          // browser-specific <br>/<div> splitting which throws off caret
-          // and line indexing on multi-line pastes.
           const node = document.createTextNode(text);
           range.insertNode(node);
-          // Move caret to just after the inserted text.
           const after = document.createRange();
           after.setStartAfter(node);
           after.collapse(true);
           sel.removeAllRanges();
           sel.addRange(after);
-          // Normalize adjacent text nodes so subsequent caret math stays sane.
           el.normalize();
+          el.dispatchEvent(new Event('input', { bubbles: true }));
         }
-        // Fire input so onFirstChange / edited flag triggers.
-        el.dispatchEvent(new Event('input', { bubbles: true }));
       }}
-
       onInput={(e) => {
+        // Skip change bookkeeping mid-composition; onCompositionEnd handles it.
+        if (composingRef.current) return;
         if (firedChangeRef.current) return;
         const next = (e.currentTarget as HTMLDivElement).textContent ?? '';
         if (normalizeText(next) !== normalizeText(baselineRef.current)) {
@@ -198,6 +235,7 @@ const EditableText: React.FC<EditableTextProps> = ({
       }}
       style={style}
     />
+
   );
 };
 
