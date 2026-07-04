@@ -221,8 +221,6 @@ const TemplateEditor = () => {
       }
       const iw = imgSize.w;
       const ih = imgSize.h;
-      const iw = imgSize.w;
-      const ih = imgSize.h;
       const newBoxes: TextBox[] = lines
         .map((ln) => {
           const text = (ln.text || '').replace(/\s+$/g, '');
