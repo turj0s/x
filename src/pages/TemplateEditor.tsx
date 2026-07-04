@@ -27,6 +27,7 @@ interface TextBox {
   italic: boolean;
   align: 'left' | 'center' | 'right';
   bg: string; // background color to cover template text ('transparent' or hex)
+  edited: boolean; // false means OCR hotspot only; original template pixels stay visible
 }
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -36,6 +37,8 @@ const STORAGE_KEY = (id: string) => `cv-overlay:${id}`;
 const FONTS = ['Inter', 'Georgia', 'Times New Roman', 'Courier New', 'Arial'];
 const COLORS = ['#111111', '#333333', '#555555', '#1E40AF', '#B91C1C', '#047857', '#B45309', '#FFFFFF'];
 
+const normalizeText = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const TemplateEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -43,6 +46,7 @@ const TemplateEditor = () => {
   const [loading, setLoading] = useState(true);
   const [boxes, setBoxes] = useState<TextBox[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [detecting, setDetecting] = useState(false);
@@ -60,6 +64,7 @@ const TemplateEditor = () => {
       setLoading(true);
       setBoxes([]);
       setSelectedId(null);
+      setEditingId(null);
       setImgSize(null);
       const { data, error } = await supabase
         .from('events')
@@ -76,7 +81,7 @@ const TemplateEditor = () => {
       try {
         const raw = localStorage.getItem(STORAGE_KEY(data.id));
         const parsed: TextBox[] = raw ? JSON.parse(raw) : [];
-        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b })));
+        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b, edited: Boolean(b.edited) })));
       } catch {
         setBoxes([]);
       }
@@ -110,6 +115,7 @@ const TemplateEditor = () => {
       italic: false,
       align: 'left',
       bg: '#FFFFFF',
+      edited: true,
     };
     setBoxes((p) => [...p, nb]);
     setSelectedId(nb.id);
@@ -121,6 +127,7 @@ const TemplateEditor = () => {
   const removeBox = (bid: string) => {
     setBoxes((p) => p.filter((b) => b.id !== bid));
     if (selectedId === bid) setSelectedId(null);
+    if (editingId === bid) setEditingId(null);
   };
 
   const onPointerDownBox = (e: React.PointerEvent, b: TextBox) => {
@@ -185,6 +192,7 @@ const TemplateEditor = () => {
     if (!window.confirm('Remove all text boxes on this template?')) return;
     setBoxes([]);
     setSelectedId(null);
+    setEditingId(null);
   };
 
   const runOcr = async (replace = true) => {
@@ -243,12 +251,14 @@ const TemplateEditor = () => {
             italic: false,
             align: 'left' as const,
             bg: '#FFFFFF',
+            edited: false,
           };
         })
         .filter(Boolean) as TextBox[];
 
       setBoxes((prev) => (replace ? newBoxes : [...prev, ...newBoxes]));
       setSelectedId(null);
+      setEditingId(null);
       toast.success(`Detected ${newBoxes.length} editable text regions`);
     } catch (err) {
       console.error(err);
