@@ -187,6 +187,83 @@ const TemplateEditor = () => {
     setSelectedId(null);
   };
 
+  const runOcr = async (replace = true) => {
+    if (!template || !imgSize) return;
+    setDetecting(true);
+    setOcrProgress(0);
+    try {
+      const { default: Tesseract } = await import('tesseract.js');
+      // Load image via canvas to bypass CORS taint for tesseract
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = template.background_image_url;
+      await new Promise<void>((res, rej) => {
+        img.onload = () => res();
+        img.onerror = () => rej(new Error('image load failed'));
+      });
+      const cvs = document.createElement('canvas');
+      cvs.width = img.naturalWidth;
+      cvs.height = img.naturalHeight;
+      cvs.getContext('2d')!.drawImage(img, 0, 0);
+      const blob: Blob = await new Promise((r) => cvs.toBlob((b) => r(b!), 'image/png')!);
+
+      const result = await Tesseract.recognize(blob, 'eng', {
+        logger: (m: { status: string; progress: number }) => {
+          if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
+        },
+      });
+
+      const lines = (result.data as unknown as { lines?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }> }).lines || [];
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+      const newBoxes: TextBox[] = lines
+        .map((ln) => {
+          const text = (ln.text || '').replace(/\s+$/g, '');
+          if (!text.trim()) return null;
+          const { x0, y0, x1, y1 } = ln.bbox;
+          const wPct = ((x1 - x0) / iw) * 100;
+          const hPct = ((y1 - y0) / ih) * 100;
+          // Convert bbox px to display font-size (paperWidth-based)
+          const displayH = (hPct / 100) * ((paperWidth * ih) / iw);
+          return {
+            id: uid(),
+            x: (x0 / iw) * 100,
+            y: (y0 / ih) * 100,
+            w: Math.max(wPct + 1, 6),
+            text,
+            fontSize: Math.max(8, Math.round(displayH * 0.85)),
+            fontFamily: 'Georgia',
+            color: '#111111',
+            bold: false,
+            italic: false,
+            align: 'left' as const,
+            bg: '#FFFFFF',
+          };
+        })
+        .filter(Boolean) as TextBox[];
+
+      setBoxes((prev) => (replace ? newBoxes : [...prev, ...newBoxes]));
+      setSelectedId(null);
+      toast.success(`Detected ${newBoxes.length} editable text regions`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not auto-detect text');
+    } finally {
+      setDetecting(false);
+      setOcrProgress(0);
+    }
+  };
+
+  // Auto-run OCR on first visit for a template with no saved boxes
+  useEffect(() => {
+    if (!template || !imgSize || loading) return;
+    if (boxes.length > 0) return;
+    if (autoRanRef.current.has(template.id)) return;
+    autoRanRef.current.add(template.id);
+    runOcr(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [template, imgSize, loading]);
+
   if (loading || !template) {
     return (
       <div className="min-h-screen bg-white">
