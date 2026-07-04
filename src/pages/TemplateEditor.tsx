@@ -19,6 +19,7 @@ interface TextBox {
   x: number; // percent 0..100
   y: number; // percent 0..100
   w: number; // percent width
+  h?: number; // percent height (source bbox); box grows past this if needed
   text: string;
   fontSize: number;
   fontFamily: string;
@@ -267,6 +268,7 @@ const TemplateEditor = () => {
 
       const newBoxes: TextBox[] = groups.map((g) => {
         const wPct = ((g.x1 - g.x0) / iw) * 100;
+        const hPctFull = ((g.y1 - g.y0) / ih) * 100;
         const hPx = g.h; // single-line px height (for font-size derivation)
         const displayH = (hPx / iw) * paperWidth;
         const fontSize = Math.max(8, Math.round(displayH / 1.15));
@@ -291,6 +293,7 @@ const TemplateEditor = () => {
           x: (g.x0 / iw) * 100,
           y: (g.y0 / ih) * 100,
           w: Math.max(wPct + 1, 6),
+          h: hPctFull,
           text,
           fontSize,
           fontFamily: 'Georgia',
@@ -559,7 +562,9 @@ const TemplateEditor = () => {
                       left: `${b.x}%`,
                       top: `${b.y}%`,
                       width: `${b.w}%`,
-                      minHeight: Math.max(12, b.fontSize * 1.3),
+                      minHeight: b.h
+                        ? `${b.h}%`
+                        : Math.max(12, b.fontSize * (b.lineHeight ?? 1.25)),
                       cursor: isEditing ? 'text' : 'move',
                       padding: '2px 4px',
                       outline: isSelected ? '1.5px dashed #FA76FF' : '1px dashed transparent',
