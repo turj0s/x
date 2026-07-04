@@ -19,6 +19,7 @@ interface TextBox {
   x: number; // percent 0..100
   y: number; // percent 0..100
   w: number; // percent width
+  h?: number; // percent height (source bbox); box grows past this if needed
   text: string;
   fontSize: number;
   fontFamily: string;
