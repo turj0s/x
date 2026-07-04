@@ -82,7 +82,7 @@ const TemplateEditor = () => {
       try {
         const raw = localStorage.getItem(STORAGE_KEY(data.id));
         const parsed: TextBox[] = raw ? JSON.parse(raw) : [];
-        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', ...b, edited: Boolean(b.edited) })));
+        setBoxes(parsed.map((b) => ({ bg: '#FFFFFF', lineHeight: 1.25, ...b, edited: Boolean(b.edited) })));
       } catch {
         setBoxes([]);
       }
