@@ -104,6 +104,7 @@ const TemplateEditor = () => {
       bold: false,
       italic: false,
       align: 'left',
+      bg: '#FFFFFF',
     };
     setBoxes((p) => [...p, nb]);
     setSelectedId(nb.id);
