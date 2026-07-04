@@ -240,18 +240,27 @@ const TemplateEditor = () => {
           const hPct = ((y1 - y0) / ih) * 100;
           // Convert bbox px to display font-size (paperWidth-based)
           const displayH = (hPct / 100) * ((paperWidth * ih) / iw);
+          // bbox height ≈ full glyph height incl. ascenders/descenders → fontSize ≈ h / 1.15
+          const fontSize = Math.max(8, Math.round(displayH / 1.15));
+          // Infer alignment from bbox position on the page
+          const leftGap = (x0 / iw) * 100;
+          const rightGap = 100 - ((x1 / iw) * 100);
+          let align: 'left' | 'center' | 'right' = 'left';
+          if (Math.abs(leftGap - rightGap) < 3) align = 'center';
+          else if (rightGap < leftGap - 6) align = 'right';
           return {
             id: uid(),
             x: (x0 / iw) * 100,
             y: (y0 / ih) * 100,
             w: Math.max(wPct + 1, 6),
             text,
-            fontSize: Math.max(8, Math.round(displayH * 0.85)),
+            fontSize,
             fontFamily: 'Georgia',
             color: '#111111',
             bold: false,
             italic: false,
-            align: 'left' as const,
+            align,
+            lineHeight: 1.15,
             bg: 'transparent',
             edited: false,
           };
