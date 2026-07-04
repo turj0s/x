@@ -294,8 +294,16 @@ const TemplateEditor = () => {
             </button>
             <h2 className="text-[11px] uppercase tracking-wider font-medium">{template.title}</h2>
             <p className="text-[11px] text-gray-500 leading-relaxed">
-              Add text on top of the template. Drag to move, double-click to edit.
+              Click any detected text on the template to edit it. Use Auto-detect to make every text region editable.
             </p>
+
+            <button
+              onClick={() => runOcr(true)}
+              disabled={detecting || !imgSize}
+              className="w-full flex items-center justify-center gap-2 border border-black bg-[#FA76FF] text-black px-3 py-2 text-[12px] uppercase tracking-wider hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+            >
+              <Wand2 className="w-4 h-4" /> {detecting ? `Detecting… ${ocrProgress}%` : 'Auto-detect text'}
+            </button>
 
             <button
               onClick={addBox}
