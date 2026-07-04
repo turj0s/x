@@ -565,7 +565,7 @@ const TemplateEditor = () => {
                         fontWeight: b.bold ? 700 : 400,
                         fontStyle: b.italic ? 'italic' : 'normal',
                         textAlign: b.align,
-                        lineHeight: 1.25,
+                        lineHeight: b.lineHeight ?? 1.25,
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
                       }}
