@@ -26,6 +26,7 @@ interface TextBox {
   bold: boolean;
   italic: boolean;
   align: 'left' | 'center' | 'right';
+  lineHeight: number; // unitless multiplier
   bg: string; // background color to cover template text ('transparent' or hex)
   edited: boolean; // false means OCR hotspot only; original template pixels stay visible
 }
