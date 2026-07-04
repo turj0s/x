@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
 import { SEOHead } from '@/components/SEOHead';
 import { toast } from 'sonner';
-import { ArrowLeft, Download, Plus, Trash2, Type, Bold, Italic } from 'lucide-react';
+import { ArrowLeft, Download, Plus, Trash2, Type, Bold, Italic, Wand2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -45,8 +45,12 @@ const TemplateEditor = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
+  const [detecting, setDetecting] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState(0);
   const paperRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const dragRef = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const autoRanRef = useRef<Set<string>>(new Set());
 
   // Load template + saved boxes whenever template id changes
   useEffect(() => {
@@ -183,6 +187,83 @@ const TemplateEditor = () => {
     setSelectedId(null);
   };
 
+  const runOcr = async (replace = true) => {
+    if (!template || !imgSize) return;
+    setDetecting(true);
+    setOcrProgress(0);
+    try {
+      const { default: Tesseract } = await import('tesseract.js');
+      // Load image via canvas to bypass CORS taint for tesseract
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = template.background_image_url;
+      await new Promise<void>((res, rej) => {
+        img.onload = () => res();
+        img.onerror = () => rej(new Error('image load failed'));
+      });
+      const cvs = document.createElement('canvas');
+      cvs.width = img.naturalWidth;
+      cvs.height = img.naturalHeight;
+      cvs.getContext('2d')!.drawImage(img, 0, 0);
+      const blob: Blob = await new Promise((r) => cvs.toBlob((b) => r(b!), 'image/png')!);
+
+      const result = await Tesseract.recognize(blob, 'eng', {
+        logger: (m: { status: string; progress: number }) => {
+          if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
+        },
+      });
+
+      const lines = (result.data as unknown as { lines?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }> }).lines || [];
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+      const newBoxes: TextBox[] = lines
+        .map((ln) => {
+          const text = (ln.text || '').replace(/\s+$/g, '');
+          if (!text.trim()) return null;
+          const { x0, y0, x1, y1 } = ln.bbox;
+          const wPct = ((x1 - x0) / iw) * 100;
+          const hPct = ((y1 - y0) / ih) * 100;
+          // Convert bbox px to display font-size (paperWidth-based)
+          const displayH = (hPct / 100) * ((paperWidth * ih) / iw);
+          return {
+            id: uid(),
+            x: (x0 / iw) * 100,
+            y: (y0 / ih) * 100,
+            w: Math.max(wPct + 1, 6),
+            text,
+            fontSize: Math.max(8, Math.round(displayH * 0.85)),
+            fontFamily: 'Georgia',
+            color: '#111111',
+            bold: false,
+            italic: false,
+            align: 'left' as const,
+            bg: '#FFFFFF',
+          };
+        })
+        .filter(Boolean) as TextBox[];
+
+      setBoxes((prev) => (replace ? newBoxes : [...prev, ...newBoxes]));
+      setSelectedId(null);
+      toast.success(`Detected ${newBoxes.length} editable text regions`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not auto-detect text');
+    } finally {
+      setDetecting(false);
+      setOcrProgress(0);
+    }
+  };
+
+  // Auto-run OCR on first visit for a template with no saved boxes
+  useEffect(() => {
+    if (!template || !imgSize || loading) return;
+    if (boxes.length > 0) return;
+    if (autoRanRef.current.has(template.id)) return;
+    autoRanRef.current.add(template.id);
+    runOcr(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [template, imgSize, loading]);
+
   if (loading || !template) {
     return (
       <div className="min-h-screen bg-white">
@@ -213,8 +294,16 @@ const TemplateEditor = () => {
             </button>
             <h2 className="text-[11px] uppercase tracking-wider font-medium">{template.title}</h2>
             <p className="text-[11px] text-gray-500 leading-relaxed">
-              Add text on top of the template. Drag to move, double-click to edit.
+              Click any detected text on the template to edit it. Use Auto-detect to make every text region editable.
             </p>
+
+            <button
+              onClick={() => runOcr(true)}
+              disabled={detecting || !imgSize}
+              className="w-full flex items-center justify-center gap-2 border border-black bg-[#FA76FF] text-black px-3 py-2 text-[12px] uppercase tracking-wider hover:bg-black hover:text-white transition-colors disabled:opacity-50"
+            >
+              <Wand2 className="w-4 h-4" /> {detecting ? `Detecting… ${ocrProgress}%` : 'Auto-detect text'}
+            </button>
 
             <button
               onClick={addBox}
@@ -353,6 +442,7 @@ const TemplateEditor = () => {
               style={{ width: paperWidth, height: paperHeight }}
             >
               <img
+                ref={imgRef}
                 src={template.background_image_url}
                 alt={template.title}
                 onLoad={(e) => {
@@ -363,6 +453,13 @@ const TemplateEditor = () => {
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                 draggable={false}
               />
+              {detecting && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-50 pointer-events-none">
+                  <div className="bg-white border border-black px-4 py-3 text-[12px] uppercase tracking-wider">
+                    Detecting text… {ocrProgress}%
+                  </div>
+                </div>
+              )}
               {boxes.map((b) => (
                 <div
                   key={b.id}
