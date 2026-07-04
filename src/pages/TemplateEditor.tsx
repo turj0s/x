@@ -250,7 +250,7 @@ const TemplateEditor = () => {
             bold: false,
             italic: false,
             align: 'left' as const,
-            bg: '#FFFFFF',
+            bg: 'transparent',
             edited: false,
           };
         })
@@ -477,7 +477,10 @@ const TemplateEditor = () => {
               )}
               {boxes.map((b) => {
                 const isEditing = editingId === b.id;
-                const isVisible = b.edited || isEditing;
+                const isSelected = selectedId === b.id;
+                // Original template pixels stay visible until the user actually edits this region.
+                const showOverlayText = b.edited;
+                const coverBg = b.edited && b.bg && b.bg !== 'transparent' ? b.bg : 'transparent';
 
                 return (
                   <div
@@ -491,7 +494,17 @@ const TemplateEditor = () => {
                       setSelectedId(b.id);
                       setEditingId(b.id);
                       const el = e.currentTarget.querySelector<HTMLElement>('[data-text-box-input]');
-                      setTimeout(() => el?.focus(), 0);
+                      setTimeout(() => {
+                        el?.focus();
+                        // Select-all so typing replaces the original text cleanly.
+                        if (el) {
+                          const range = document.createRange();
+                          range.selectNodeContents(el);
+                          const sel = window.getSelection();
+                          sel?.removeAllRanges();
+                          sel?.addRange(range);
+                        }
+                      }, 0);
                     }}
                     style={{
                       position: 'absolute',
@@ -501,30 +514,38 @@ const TemplateEditor = () => {
                       minHeight: Math.max(12, b.fontSize * 1.3),
                       cursor: isEditing ? 'text' : 'move',
                       padding: '2px 4px',
-                      outline: selectedId === b.id ? '1.5px dashed #FA76FF' : '1px dashed transparent',
-                      background: isVisible && b.bg && b.bg !== 'transparent'
-                        ? b.bg
-                        : (selectedId === b.id ? 'rgba(255,255,255,0.08)' : 'transparent'),
+                      outline: isSelected ? '1.5px dashed #FA76FF' : '1px dashed transparent',
+                      background: coverBg,
                     }}
-                    onMouseEnter={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
-                    onMouseLeave={(e) => { if (selectedId !== b.id) e.currentTarget.style.outline = '1px dashed transparent'; }}
+                    onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed rgba(0,0,0,0.35)'; }}
+                    onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.outline = '1px dashed transparent'; }}
                   >
                     <div
                       data-text-box-input
                       contentEditable={isEditing}
                       suppressContentEditableWarning
+                      onInput={(e) => {
+                        // Auto-cover the original text with white the moment the user changes it,
+                        // unless they've explicitly chosen a different cover.
+                        const nextText = e.currentTarget.innerText;
+                        if (!b.edited && normalizeText(nextText) !== normalizeText(b.text)) {
+                          patchBox(b.id, { edited: true, bg: b.bg === 'transparent' ? '#FFFFFF' : b.bg });
+                        }
+                      }}
                       onBlur={(e) => {
                         const nextText = e.currentTarget.innerText;
+                        const changed = normalizeText(nextText) !== normalizeText(b.text);
                         patchBox(b.id, {
                           text: nextText,
-                          edited: b.edited || normalizeText(nextText) !== normalizeText(b.text),
+                          edited: b.edited || changed,
+                          bg: changed && b.bg === 'transparent' ? '#FFFFFF' : b.bg,
                         });
                         setEditingId(null);
                       }}
                       onPointerDown={(e) => { if (isEditing) e.stopPropagation(); }}
                       style={{
                         outline: 'none',
-                        opacity: isVisible ? 1 : 0,
+                        opacity: showOverlayText || isEditing ? 1 : 0,
                         pointerEvents: isEditing ? 'auto' : 'none',
                         fontFamily: b.fontFamily,
                         fontSize: b.fontSize,
