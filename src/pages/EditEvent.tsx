@@ -354,6 +354,7 @@ const EditEvent = () => {
         
         {user ? (
           <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-8 md:pb-16 px-4 md:px-8">
+            <h1 className="sr-only">Edit CV</h1>
             <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left: Image Upload */}
               <div className="flex flex-col gap-3 md:gap-4">
