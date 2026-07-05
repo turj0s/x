@@ -8,12 +8,14 @@ interface SEOHeadProps {
   url?: string;
 }
 
-export const SEOHead = ({ 
-  title, 
-  description, 
+const SITE_ORIGIN = 'https://unicv.turjo.dev';
+
+export const SEOHead = ({
+  title,
+  description,
   keywords = 'cv, resume, cv maker, resume builder, cv templates, resume templates',
   image = 'https://unicv.turjo.dev/og-preview.png',
-  url = window.location.href
+  url = `${SITE_ORIGIN}${typeof window !== 'undefined' ? window.location.pathname : '/'}`,
 }: SEOHeadProps) => {
   const fullTitle = `${title} | CV Maker`;
 

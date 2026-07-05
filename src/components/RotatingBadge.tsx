@@ -34,10 +34,14 @@ export const RotatingBadge: React.FC<RotatingBadgeProps> = ({
       className={`${className} w-[60px] h-[60px] md:w-[72px] md:h-[72px] lg:w-[154px] lg:h-[154px] ${onClick ? 'cursor-pointer' : ''} z-40 animate-fade-in`}
       style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `${text} — click to browse templates` : `${text} badge`}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
     >
       {/* Rotating badge background */}
       <div className="w-full h-full animate-[spin_20s_linear_infinite]">
-        <img src={badgeImage} alt="Badge" className="w-full h-full" />
+        <img src={badgeImage} alt="Decorative rotating templates badge" className="w-full h-full" />
         
         {/* Circular text repeated around badge */}
         <svg viewBox="0 0 200 200" className="w-full h-full absolute inset-0">

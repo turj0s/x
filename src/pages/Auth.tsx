@@ -84,9 +84,9 @@ const Auth = () => {
       />
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="text-4xl font-normal text-[#1A1A1A] tracking-[-0.02em]">
-            {isLogin ? 'Sign In' : 'Sign Up'}
-          </h2>
+          <h1 className="text-4xl font-normal text-[#1A1A1A] tracking-[-0.02em]">
+            {isLogin ? 'Sign In to UNICV' : 'Create Your UNICV Account'}
+          </h1>
           <p className="mt-2 text-sm text-[#1A1A1A] opacity-50">
             {isLogin ? 'Sign in to manage your CVs' : 'Create an account to build your CV'}
           </p>
