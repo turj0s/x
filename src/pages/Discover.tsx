@@ -250,20 +250,21 @@ const Discover = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">01</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Pick a template</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Browse our curated collection of professionally designed CV templates built for every industry and experience level.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Browse templates for your country</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">UNICV auto-detects your country and surfaces CV templates tailored to local hiring standards and formats.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">02</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Customize your story</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Fill in your details, rearrange sections, and tweak colors and fonts to match your personal brand.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Edit live with ONLYOFFICE</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Open any template in our built-in ONLYOFFICE editor and customize your details, layout, and styling right in the browser.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">03</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Download & share</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Export your CV as a polished PDF ready for recruiters, job boards, or email applications.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Save to My CVs & download</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Sign in with Google to save every version to My CVs, then download your finished resume whenever you need it.</p>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -275,11 +276,12 @@ const Discover = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { title: 'ATS-friendly', desc: 'Every template is optimized to pass through applicant tracking systems cleanly.' },
-              { title: 'One-click export', desc: 'Download your CV as a high-resolution PDF in seconds, no watermarks.' },
-              { title: 'Mobile editing', desc: 'Build and tweak your resume on any device, wherever inspiration strikes.' },
-              { title: 'Real-time preview', desc: 'See changes instantly as you type, so you know exactly what recruiters will see.' },
+              { title: 'Country-aware templates', desc: 'Templates automatically filter to your detected country so you always see formats that match local hiring norms.' },
+              { title: 'ONLYOFFICE editor built in', desc: 'Edit .docx templates directly in the browser with a full ONLYOFFICE workspace — no downloads or Word required.' },
+              { title: 'Google sign-in', desc: 'One-click sign in with Google. No passwords to remember, no email verification hoops.' },
+              { title: 'My CVs library', desc: 'Every CV you create is saved to your personal My CVs page, ready to re-open, re-edit, or re-download anytime.' },
             ].map((feature, i) => (
+
               <div key={feature.title} className="border border-black p-6 md:p-8 animate-fade-in" style={{ animationDelay: `${0.1 + i * 0.1}s`, animationFillMode: 'both' }}>
                 <h3 className="text-base md:text-lg font-medium mb-3">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
@@ -297,32 +299,33 @@ const Discover = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 leading-tight">Designed for the way modern teams hire and grow</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 leading-tight">One CV builder for job seekers everywhere</h2>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
-                Whether you are a startup scaling fast or an enterprise refining your employer brand, our CV builder helps you create consistent, professional resumes across your entire organization.
+                UNICV pairs country-specific templates with a full ONLYOFFICE editor in the browser. Sign in with Google, pick a template that fits your market, edit it live, and keep every version in your My CVs library.
               </p>
               <div className="flex flex-wrap gap-3">
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Startups</span>
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Agencies</span>
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Enterprise</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Students</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Job seekers</span>
                 <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Freelancers</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Career switchers</span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">CVs created</div>
-              </div>
-              <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">11</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">9</div>
                 <div className="text-[11px] font-medium uppercase text-muted-foreground">Templates</div>
               </div>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">Users</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">1</div>
+                <div className="text-[11px] font-medium uppercase text-muted-foreground">Click sign‑in</div>
+              </div>
+              <div className="border border-black p-5 md:p-6 text-center">
+                <div className="text-2xl md:text-3xl font-medium mb-1">∞</div>
+                <div className="text-[11px] font-medium uppercase text-muted-foreground">Saved CVs</div>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -335,25 +338,26 @@ const Discover = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Faster hiring workflows</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Stop wrestling with Word formatting. Your team builds consistent, recruiter-ready CVs in minutes instead of hours.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Templates for your country</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">No more guessing which CV format recruiters expect. UNICV detects your country and only shows templates that fit local hiring conventions.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Better candidate experience</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Give your applicants and employees beautiful templates that reflect your company&apos;s professionalism and care.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Real editing, not just forms</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Every template opens in a built-in ONLYOFFICE editor, so you can restyle, rewrite, and reorder anything — just like a desktop word processor.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Easy sharing & export</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Download, print, or share CVs instantly. No software lock-in, no compatibility headaches, just clean PDFs every time.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Your CVs, always saved</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Sign in with Google and every CV lands in My CVs. Re-open, tweak for a new role, and download in seconds — no lost drafts.</p>
             </div>
+
           </div>
         </div>
       </section>
