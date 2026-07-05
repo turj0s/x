@@ -80,7 +80,9 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <SEOHead 
         title={isLogin ? 'Sign In' : 'Sign Up'}
-        description={isLogin ? 'Sign in to manage your CVs and saved templates' : 'Create an account to build CVs and save templates'}
+        description={isLogin
+          ? 'Sign in to UNICV to manage your CVs, edit saved templates, and download polished resumes ready to send to recruiters.'
+          : 'Create a free UNICV account to build professional CVs from beautifully designed templates and save your work across devices.'}
       />
       <div className="w-full max-w-md space-y-8">
         <div>
