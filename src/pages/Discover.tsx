@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import arrowDown from '@/assets/arrow-down.png';
 import { SEOHead } from '@/components/SEOHead';
@@ -60,11 +60,20 @@ const Discover = () => {
   const [loading, setLoading] = useState(true);
   const [userCountry, setUserCountry] = useState<string>('the world');
   const [initialDateSet, setInitialDateSet] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     fetchEvents();
     detectUserCountry();
   }, []);
+
+  useEffect(() => {
+    if (location.hash === '#how-it-works') {
+      setTimeout(() => {
+        document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [location.hash, location.pathname]);
 
   // Set initial date only if there are events today
   useEffect(() => {
@@ -228,7 +237,7 @@ const Discover = () => {
       </section>
 
       {/* How it Works Section */}
-      <section className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
+      <section id="how-it-works" className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
         <div className="max-w-6xl mx-auto">
           <div className="mb-10 md:mb-16">
             <h2 className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">How it works</h2>

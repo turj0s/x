@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -10,7 +10,16 @@ export const Navbar: React.FC = () => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+
+  const scrollToHowItWorks = () => {
+    if (location.pathname === '/') {
+      document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/#how-it-works');
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -49,6 +58,20 @@ export const Navbar: React.FC = () => {
         <Link 
           to="/" 
           className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border border-black leading-none group"
+        >
+          <span className="relative z-10">HOME</span>
+          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+        </Link>
+        <button 
+          onClick={scrollToHowItWorks}
+          className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
+        >
+          <span className="relative z-10">HOW</span>
+          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+        </button>
+        <Link 
+          to="/" 
+          className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
         >
           <span className="relative z-10">TEMPLATES</span>
           <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
@@ -93,6 +116,24 @@ export const Navbar: React.FC = () => {
               className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
               style={{ animationDelay: '0.1s', animationFillMode: 'both' }}
             >
+              HOME
+            </Link>
+            <button 
+              onClick={() => {
+                scrollToHowItWorks();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.15s', animationFillMode: 'both' }}
+            >
+              HOW
+            </button>
+            <Link 
+              to="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+            >
               TEMPLATES
             </Link>
             {user ? (
@@ -102,7 +143,7 @@ export const Navbar: React.FC = () => {
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
               >
                 SIGN OUT
               </button>
@@ -113,7 +154,7 @@ export const Navbar: React.FC = () => {
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
               >
                 SIGN IN
               </button>
