@@ -59,6 +59,20 @@ export const Navbar: React.FC = () => {
           to="/" 
           className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border border-black leading-none group"
         >
+          <span className="relative z-10">HOME</span>
+          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+        </Link>
+        <button 
+          onClick={scrollToHowItWorks}
+          className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
+        >
+          <span className="relative z-10">HOW</span>
+          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+        </button>
+        <Link 
+          to="/" 
+          className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
+        >
           <span className="relative z-10">TEMPLATES</span>
           <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
