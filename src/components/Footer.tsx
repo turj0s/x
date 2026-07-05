@@ -70,16 +70,19 @@ export const Footer: React.FC = () => {
             </span>
             <ul className="space-y-2">
               <li>
-                <Link to="/my-events" className="text-sm text-muted-foreground hover:text-black transition-colors">
+                <a href="/my-events" onClick={handleMyCVs} className="text-sm text-muted-foreground hover:text-black transition-colors cursor-pointer">
                   My CVs
-                </Link>
+                </a>
               </li>
-              <li>
-                <Link to="/auth" className="text-sm text-muted-foreground hover:text-black transition-colors">
-                  Sign In
-                </Link>
-              </li>
+              {!user && (
+                <li>
+                  <button type="button" onClick={() => setIsAuthOpen(true)} className="text-sm text-muted-foreground hover:text-black transition-colors text-left">
+                    Sign In
+                  </button>
+                </li>
+              )}
             </ul>
+
           </div>
 
           {/* Legal */}
