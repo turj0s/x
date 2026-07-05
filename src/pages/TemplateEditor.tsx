@@ -606,16 +606,10 @@ const TemplateEditor = () => {
     );
   }
 
-  // Full-fidelity Word template via OnlyOffice DocSpace public share.
-  // DocSpace blocks cross-origin iframes, so open the editor directly in this tab.
-  if (template.docspace_url && !useImageEditor) {
-    return (
-      <>
-        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} Word CV template directly in your browser, customize every section, then download as DOCX or PDF ready to send.`} />
-        <DocSpaceEditorRedirect title={template.title} url={template.docspace_url} />
-      </>
-    );
-  }
+  // Always edit in-site using the built-in image editor with OCR-detected
+  // text boxes. The OnlyOffice DocSpace redirect was removed because it
+  // sends users off-site (and blocks iframe embedding via X-Frame-Options).
+
 
 
   const paperWidth = 800;
