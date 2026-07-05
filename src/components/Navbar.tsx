@@ -93,44 +93,19 @@ export const Navbar: React.FC = () => {
               className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
               style={{ animationDelay: '0.1s', animationFillMode: 'both' }}
             >
-              DISCOVER
+              TEMPLATES
             </Link>
-            <button 
-              onClick={() => {
-                if (user) {
-                  navigate('/create-event');
-                } else {
-                  setPendingRoute('/create-event');
-                  setIsAuthOpen(true);
-                }
-                setIsMobileMenuOpen(false);
-              }}
-              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
-              style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
-            >
-              CREATE CV
-            </button>
             {user ? (
-              <>
-                <Link 
-                  to="/my-events" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
-                  style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
-                >
-                  MY CVS
-                </Link>
-                <button 
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                  style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
-                >
-                  SIGN OUT
-                </button>
-              </>
+              <button 
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
+                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+              >
+                SIGN OUT
+              </button>
             ) : (
               <button 
                 onClick={() => {
@@ -138,7 +113,7 @@ export const Navbar: React.FC = () => {
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
+                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
               >
                 SIGN IN
               </button>
