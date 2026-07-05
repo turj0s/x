@@ -338,25 +338,26 @@ const Discover = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Faster hiring workflows</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Stop wrestling with Word formatting. Your team builds consistent, recruiter-ready CVs in minutes instead of hours.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Templates for your country</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">No more guessing which CV format recruiters expect. UNICV detects your country and only shows templates that fit local hiring conventions.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Better candidate experience</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Give your applicants and employees beautiful templates that reflect your company&apos;s professionalism and care.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Real editing, not just forms</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Every template opens in a built-in ONLYOFFICE editor, so you can restyle, rewrite, and reorder anything — just like a desktop word processor.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <div className="w-10 h-10 border border-black flex items-center justify-center mb-4">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Easy sharing & export</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Download, print, or share CVs instantly. No software lock-in, no compatibility headaches, just clean PDFs every time.</p>
+              <h3 className="text-base md:text-lg font-medium mb-2">Your CVs, always saved</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Sign in with Google and every CV lands in My CVs. Re-open, tweak for a new role, and download in seconds — no lost drafts.</p>
             </div>
+
           </div>
         </div>
       </section>
