@@ -41,7 +41,7 @@ export const EventsCarousel = () => {
           {multipliedEvents.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
-              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[4/5] max-h-[800px] overflow-hidden animate-fade-in"
+              className="relative flex-shrink-0 w-[65vw] md:w-[calc(40vw-0.5px)] aspect-[3/4] max-h-[900px] overflow-hidden animate-fade-in bg-[#f4f4f4]"
               style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
             >
               <img
@@ -49,26 +49,14 @@ export const EventsCarousel = () => {
                 alt={event.title}
                 width={800}
                 height={1000}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
                 decoding={index === 0 ? "sync" : "async"}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-              
-              <div className="absolute top-4 left-4 flex flex-col gap-0">
-                <div className="bg-white border border-black px-3 h-[23px] flex items-center">
-                  <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
-                </div>
-                <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-                  <div className="text-[11px] font-medium uppercase leading-none">{event.time}</div>
-                </div>
-              </div>
-
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
-                <h3 className="text-xl md:text-2xl font-medium mb-1 tracking-tight">{event.title}</h3>
-                <p className="text-sm md:text-base text-white/80">{event.address}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
+                <h3 className="text-xl md:text-2xl font-medium tracking-tight">{event.title}</h3>
               </div>
             </div>
           ))}
