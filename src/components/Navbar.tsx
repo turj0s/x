@@ -10,7 +10,16 @@ export const Navbar: React.FC = () => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const [pendingRoute, setPendingRoute] = useState<string | null>(null);
+
+  const scrollToHowItWorks = () => {
+    if (location.pathname === '/') {
+      document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/#how-it-works');
+    }
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
