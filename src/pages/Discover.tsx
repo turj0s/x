@@ -299,32 +299,33 @@ const Discover = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 leading-tight">Designed for the way modern teams hire and grow</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium mb-6 leading-tight">One CV builder for job seekers everywhere</h2>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
-                Whether you are a startup scaling fast or an enterprise refining your employer brand, our CV builder helps you create consistent, professional resumes across your entire organization.
+                UNICV pairs country-specific templates with a full ONLYOFFICE editor in the browser. Sign in with Google, pick a template that fits your market, edit it live, and keep every version in your My CVs library.
               </p>
               <div className="flex flex-wrap gap-3">
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Startups</span>
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Agencies</span>
-                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Enterprise</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Students</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Job seekers</span>
                 <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Freelancers</span>
+                <span className="text-[11px] font-medium uppercase border border-black px-3 py-1">Career switchers</span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">CVs created</div>
-              </div>
-              <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">11</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">9</div>
                 <div className="text-[11px] font-medium uppercase text-muted-foreground">Templates</div>
               </div>
               <div className="border border-black p-5 md:p-6 text-center">
-                <div className="text-2xl md:text-3xl font-medium mb-1">0</div>
-                <div className="text-[11px] font-medium uppercase text-muted-foreground">Users</div>
+                <div className="text-2xl md:text-3xl font-medium mb-1">1</div>
+                <div className="text-[11px] font-medium uppercase text-muted-foreground">Click sign‑in</div>
+              </div>
+              <div className="border border-black p-5 md:p-6 text-center">
+                <div className="text-2xl md:text-3xl font-medium mb-1">∞</div>
+                <div className="text-[11px] font-medium uppercase text-muted-foreground">Saved CVs</div>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
