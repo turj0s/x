@@ -715,28 +715,8 @@ const TemplateEditor = () => {
     return (
       <>
         <SEOHead title={`Edit ${template.title}`} description="Edit this Word CV template in-browser and download as DOCX or PDF." />
-        <div className="min-h-screen flex flex-col bg-white">
-          <Navbar />
-          <div className="flex items-center justify-between px-4 md:px-6 pt-20 md:pt-24 pb-3 border-b border-black">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-[11px] uppercase tracking-wider hover:opacity-70"
-            >
-              <ArrowLeft className="w-3 h-3" /> Back to templates
-            </button>
-            <h1 className="text-sm md:text-base font-medium truncate">{template.title}</h1>
-            <a
-              href={template.docspace_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[11px] uppercase tracking-wider border border-black px-3 py-1 hover:bg-black hover:text-white transition-colors"
-            >
-              Open in new tab
-            </a>
-          </div>
-          <div className="flex-1 min-h-[calc(100vh-120px)]">
-            <DocSpaceEditorFrame title={template.title} url={template.docspace_url} />
-          </div>
+        <div className="h-screen w-screen overflow-hidden bg-white">
+          <DocSpaceEditorFrame title={template.title} url={template.docspace_url} />
         </div>
       </>
     );
