@@ -21,24 +21,27 @@ const App = () => (
   <TooltipProvider>
     <Toaster />
     <Sonner />
-    <Routes>
-      <Route path="/" element={<Discover />} />
-      <Route path="/event/:id" element={<Index />} />
-      <Route path="/event/:id/edit" element={<EditEvent />} />
-      <Route path="/event/:id/editor" element={<TemplateEditor />} />
-      <Route path="/dev/editable-fixture" element={<EditableFixture />} />
+    <main>
+      <Routes>
+        <Route path="/" element={<Discover />} />
+        <Route path="/event/:id" element={<Index />} />
+        <Route path="/event/:id/edit" element={<EditEvent />} />
+        <Route path="/event/:id/editor" element={<TemplateEditor />} />
+        <Route path="/dev/editable-fixture" element={<EditableFixture />} />
 
-      <Route path="/my-events" element={<MyEvents />} />
-      <Route path="/create-event" element={<CreateEvent />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/privacy" element={<PrivacyPolicy />} />
-      <Route path="/terms" element={<TermsOfService />} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="/my-events" element={<MyEvents />} />
+        <Route path="/create-event" element={<CreateEvent />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </main>
     <Footer />
   </TooltipProvider>
 );
+
 
 export default App;
