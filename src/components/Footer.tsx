@@ -115,6 +115,8 @@ export const Footer: React.FC = () => {
           </a>
         </div>
       </div>
+      <AuthSheet isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </footer>
   );
+
 };
