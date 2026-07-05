@@ -51,6 +51,7 @@ export type Database = {
           creator: string
           date: string
           description: string
+          docspace_url: string | null
           id: string
           target_date: string
           time: string
@@ -63,6 +64,7 @@ export type Database = {
           creator: string
           date: string
           description: string
+          docspace_url?: string | null
           id?: string
           target_date: string
           time: string
@@ -75,6 +77,7 @@ export type Database = {
           creator?: string
           date?: string
           description?: string
+          docspace_url?: string | null
           id?: string
           target_date?: string
           time?: string
