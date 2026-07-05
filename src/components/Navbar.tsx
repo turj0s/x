@@ -53,39 +53,14 @@ export const Navbar: React.FC = () => {
           <span className="relative z-10">TEMPLATES</span>
           <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
         </Link>
-        <button 
-          onClick={() => {
-            if (user) {
-              navigate('/create-event');
-            } else {
-              setPendingRoute('/create-event');
-              setIsAuthOpen(true);
-            }
-          }}
-          className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
-        >
-          <span className="relative z-10">CREATE CV</span>
-          <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-        </button>
         {user ? (
-          <>
-            <Link 
-              to="/my-events" 
-              className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
-            >
-              <span className="relative z-10">MY CVS</span>
-              <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-            </Link>
-            <button 
-              onClick={async () => {
-                await supabase.auth.signOut();
-              }}
-              className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
-            >
-              <span className="relative z-10">SIGN OUT</span>
-              <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
-            </button>
-          </>
+          <button 
+            onClick={async () => { await supabase.auth.signOut(); }}
+            className="relative overflow-hidden bg-white text-black h-[34px] px-3 flex items-center text-[11px] font-medium uppercase border-l-0 border border-black leading-none group"
+          >
+            <span className="relative z-10">SIGN OUT</span>
+            <span className="absolute inset-0 bg-[#FA76FF] translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+          </button>
         ) : (
           <button 
             onClick={() => setIsAuthOpen(true)}
