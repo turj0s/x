@@ -72,8 +72,13 @@ const Discover = () => {
       setTimeout(() => {
         document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
+    } else if (location.hash === '#templates') {
+      setTimeout(() => {
+        document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
   }, [location.hash, location.pathname]);
+
 
   // Set initial date only if there are events today
   useEffect(() => {
