@@ -57,6 +57,9 @@ type DocSpaceSDK = {
       hideRulers?: boolean;
       zoom?: number;
     };
+    events?: {
+      onAppError?: (message: string) => void;
+    };
   }) => DocSpaceSDKFrame;
 };
 
@@ -94,8 +97,8 @@ const getDocSpaceFile = (url: string) => {
 
   try {
     const parsed = new URL(url);
-    const fileId = parsed.searchParams.get('fileid');
-    const requestToken = parsed.searchParams.get('share') || undefined;
+    const fileId = parsed.searchParams.get('fileid') || parsed.searchParams.get('fileId');
+    const requestToken = parsed.searchParams.get('share') || parsed.searchParams.get('key') || undefined;
     if (fileId) return { fileId, requestToken };
   } catch {
     return null;
@@ -126,7 +129,7 @@ const loadDocSpaceSDK = () => new Promise<DocSpaceSDK>((resolve, reject) => {
   document.head.appendChild(script);
 });
 
-const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => {
+const DocSpaceEditorFrame = ({ title, url, onUnavailable }: { title: string; url: string; onUnavailable?: () => void }) => {
   const frameIdRef = useRef(`docspace-frame-${uid()}`);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
@@ -134,9 +137,15 @@ const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => 
     let cancelled = false;
     let frame: DocSpaceSDKFrame | null = null;
     const file = getDocSpaceFile(url);
+    const fail = (err?: unknown) => {
+      if (err) console.error(err);
+      if (cancelled) return;
+      setStatus('error');
+      onUnavailable?.();
+    };
 
     if (!file) {
-      setStatus('error');
+      fail(new Error('DocSpace file details are missing'));
       return undefined;
     }
 
@@ -151,6 +160,7 @@ const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => 
           requestToken: file.requestToken,
           width: '100%',
           height: '100%',
+          checkCSP: true,
           editorCustomization: {
             compactHeader: true,
             toolbarNoTabs: true,
@@ -161,19 +171,19 @@ const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => 
             hideRulers: true,
             zoom: 100,
           },
+          events: {
+            onAppError: (message) => fail(new Error(message)),
+          },
         });
         setStatus('ready');
       })
-      .catch((err) => {
-        console.error(err);
-        if (!cancelled) setStatus('error');
-      });
+      .catch(fail);
 
     return () => {
       cancelled = true;
       frame?.destroyFrame?.();
     };
-  }, [url]);
+  }, [onUnavailable, url]);
 
   return (
     <div className="relative h-[calc(100vh-120px)] w-full bg-white">
@@ -424,6 +434,7 @@ const TemplateEditor = () => {
   const [imgSize, setImgSize] = useState<{ w: number; h: number } | null>(null);
   const [detecting, setDetecting] = useState(false);
   const [ocrProgress, setOcrProgress] = useState(0);
+  const [useImageEditor, setUseImageEditor] = useState(false);
   const paperRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const dragRef = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null);
@@ -439,6 +450,7 @@ const TemplateEditor = () => {
       setSelectedId(null);
       setEditingId(null);
       setImgSize(null);
+      setUseImageEditor(false);
       const { data, error } = await supabase
         .from('events')
         .select('id, title, background_image_url, docspace_url')
@@ -715,12 +727,12 @@ const TemplateEditor = () => {
 
   // Full-fidelity Word template via OnlyOffice DocSpace public share.
   // When docspace_url is set, we embed the room instead of the OCR overlay editor.
-  if (template.docspace_url) {
+  if (template.docspace_url && !useImageEditor) {
     return (
       <>
         <SEOHead title={`Edit ${template.title}`} description="Edit this Word CV template in-browser and download as DOCX or PDF." />
         <div className="h-screen w-screen overflow-hidden bg-white">
-          <DocSpaceEditorFrame title={template.title} url={template.docspace_url} />
+          <DocSpaceEditorFrame title={template.title} url={template.docspace_url} onUnavailable={() => setUseImageEditor(true)} />
         </div>
       </>
     );
