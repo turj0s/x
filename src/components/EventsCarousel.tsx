@@ -47,9 +47,12 @@ export const EventsCarousel = () => {
               <img
                 src={event.background_image_url}
                 alt={event.title}
+                width={800}
+                height={1000}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
               
               <div className="absolute top-4 left-4 flex flex-col gap-0">
