@@ -1,7 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import type { User } from '@supabase/supabase-js';
+import { AuthSheet } from './AuthSheet';
 
 export const Footer: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleMyCVs = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) navigate('/my-events');
+    else setIsAuthOpen(true);
+  };
+
   return (
     <footer className="border-t border-black">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-16">
