@@ -60,6 +60,7 @@ const Discover = () => {
   const [loading, setLoading] = useState(true);
   const [userCountry, setUserCountry] = useState<string>('the world');
   const [initialDateSet, setInitialDateSet] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     fetchEvents();
