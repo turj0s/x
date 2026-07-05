@@ -12,7 +12,6 @@ const DEFAULT_EMBED_ORIGINS = [
   'https://pixel-perfect-clone-02726.lovable.app',
   'https://unicv.turjo.dev',
   'https://lovable.dev',
-  'http://localhost:8080',
 ];
 
 const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> = {
@@ -60,7 +59,7 @@ const ensureDocSpaceEmbedOrigins = async (req: Request) => {
   const next = Array.from(new Set([...current, ...required]));
   if (next.length === current.length && next.every((origin) => current.includes(origin))) return;
 
-  await fetch(`${baseUrl}/api/2.0/security/csp`, {
+  const updateResponse = await fetch(`${baseUrl}/api/2.0/security/csp`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -68,7 +67,11 @@ const ensureDocSpaceEmbedOrigins = async (req: Request) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ domains: next }),
-  }).catch(() => null);
+  });
+  if (!updateResponse.ok) {
+    const message = await updateResponse.text().catch(() => '');
+    console.error('DocSpace CSP update failed', updateResponse.status, message.slice(0, 300));
+  }
 };
 
 Deno.serve(async (req) => {
