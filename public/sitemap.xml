@@ -6,4 +6,22 @@
   <url><loc>https://unicv.turjo.dev/auth</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://unicv.turjo.dev/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://unicv.turjo.dev/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/0c3f0d18-53a2-4b19-8c02-b0bf305c105d</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/0c3f0d18-53a2-4b19-8c02-b0bf305c105d/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/45ede2c3-a5bd-46e3-b73d-2f87242eabe4</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/45ede2c3-a5bd-46e3-b73d-2f87242eabe4/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/1cc7c2fa-7129-47c9-969d-c49945dbfe59</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/1cc7c2fa-7129-47c9-969d-c49945dbfe59/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/e1541493-d8cc-4569-9613-686726695942</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/e1541493-d8cc-4569-9613-686726695942/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/eb0864b9-387c-4ae3-9b66-866ab26108e6</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/eb0864b9-387c-4ae3-9b66-866ab26108e6/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/2357cf01-343c-4cd4-bf36-5abd4275cd19</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/2357cf01-343c-4cd4-bf36-5abd4275cd19/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/84d53a63-abf8-4c73-9f59-a1f730441c03</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/84d53a63-abf8-4c73-9f59-a1f730441c03/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/f9b40ab9-bc2f-47a4-b3d0-0135256e4c2f</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/f9b40ab9-bc2f-47a4-b3d0-0135256e4c2f/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/009f83b0-6d32-464f-b644-4a8287cb7c20</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://unicv.turjo.dev/event/009f83b0-6d32-464f-b644-4a8287cb7c20/editor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
