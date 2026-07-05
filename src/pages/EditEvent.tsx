@@ -179,6 +179,13 @@ const EditEvent = () => {
   };
 
   const handleSubmit = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error('Please sign in to edit');
+      navigate('/auth');
+      return;
+    }
+
 
 
     // Validate date fields first
