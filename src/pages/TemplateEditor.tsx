@@ -45,8 +45,7 @@ const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) 
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        if (!cancelled) setError('Please sign in to open the editor.');
-        return;
+        toast.info('Please sign in to save or download your CV.');
       }
       const { data, error } = await supabase.functions.invoke('get-docspace-file', {
         body: { url },
@@ -62,6 +61,7 @@ const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) 
     })();
     return () => { cancelled = true; };
   }, [url]);
+
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-white px-4 text-center text-[#1A1A1A]">
@@ -414,7 +414,15 @@ const TemplateEditor = () => {
 
   const exportPdf = async () => {
     if (!paperRef.current || !imgSize) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.info('Please sign in to save or download your CV.', {
+        action: { label: 'Sign in', onClick: () => navigate('/auth') },
+      });
+      return;
+    }
     setExporting(true);
+
     setSelectedId(null);
     (document.activeElement as HTMLElement | null)?.blur();
     await new Promise((r) => setTimeout(r, 80));
