@@ -118,32 +118,75 @@ const loadDocSpaceSDK = () => new Promise<DocSpaceSDK>((resolve, reject) => {
 });
 
 const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => {
+  const frameIdRef = useRef(`docspace-frame-${uid()}`);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+
+  useEffect(() => {
+    let cancelled = false;
+    let frame: DocSpaceSDKFrame | null = null;
+    const file = getDocSpaceFile(url);
+
+    if (!file) {
+      setStatus('error');
+      return undefined;
+    }
+
+    setStatus('loading');
+    loadDocSpaceSDK()
+      .then((sdk) => {
+        if (cancelled) return;
+        frame = sdk.initEditor({
+          frameId: frameIdRef.current,
+          src: DOCSPACE_ORIGIN,
+          id: file.fileId,
+          requestToken: file.requestToken,
+          width: '100%',
+          height: '100%',
+          editorCustomization: {
+            compactHeader: true,
+            toolbarNoTabs: false,
+            help: false,
+          },
+        });
+        setStatus('ready');
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!cancelled) setStatus('error');
+      });
+
+    return () => {
+      cancelled = true;
+      frame?.destroyFrame?.();
+    };
+  }, [url]);
+
   return (
-    <div className="flex h-[calc(100vh-120px)] w-full flex-col items-center justify-center gap-6 bg-white px-6 text-center">
-      <div className="max-w-md space-y-2">
-        <div className="text-[11px] uppercase tracking-[0.2em] text-gray-500">DocSpace editor</div>
-        <h2 className="text-xl font-semibold text-black">{title}</h2>
-        <p className="text-sm text-gray-600">
-          DocSpace blocks in-page embedding (<code className="text-xs">X-Frame-Options: SAMEORIGIN</code>).
-          Open the document in a new tab to edit it.
-        </p>
-      </div>
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center gap-2 border border-black bg-black px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-white transition-colors hover:bg-white hover:text-black"
-      >
-        Open in DocSpace
-      </a>
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        className="text-[11px] uppercase tracking-[0.2em] text-gray-500 underline-offset-4 hover:underline"
-      >
-        {url}
-      </a>
+    <div className="relative h-[calc(100vh-120px)] w-full bg-white">
+      {status === 'loading' && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center text-[11px] uppercase tracking-wider text-gray-500">
+          Loading DocSpace editor…
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 px-4 text-center">
+          <div className="text-sm font-medium">DocSpace embed could not load.</div>
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-[11px] uppercase tracking-wider border border-black px-3 py-2 hover:bg-black hover:text-white transition-colors"
+          >
+            Open in new tab
+          </a>
+        </div>
+      )}
+      <iframe
+        id={frameIdRef.current}
+        title={title}
+        className="h-full w-full border-0"
+        allow="clipboard-read; clipboard-write; fullscreen"
+      />
     </div>
   );
 };
