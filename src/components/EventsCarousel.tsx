@@ -50,7 +50,9 @@ export const EventsCarousel = () => {
                 width={800}
                 height={1000}
                 className="w-full h-full object-cover"
-                loading="lazy"
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                decoding={index === 0 ? "sync" : "async"}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
