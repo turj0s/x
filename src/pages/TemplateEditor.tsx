@@ -598,7 +598,7 @@ const TemplateEditor = () => {
   if (template.docspace_url && !useImageEditor) {
     return (
       <>
-        <SEOHead title={`Edit ${template.title}`} description="Edit this Word CV template in-browser and download as DOCX or PDF." />
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} Word CV template directly in your browser, customize every section, then download as DOCX or PDF ready to send.`} />
         <DocSpaceEditorRedirect title={template.title} url={template.docspace_url} />
       </>
     );
@@ -610,7 +610,7 @@ const TemplateEditor = () => {
 
   return (
     <>
-      <SEOHead title={`Edit ${template.title}`} description="Edit CV template in real time and download as PDF." />
+      <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template in real time, tweak text, colors, and layout, then export a polished PDF ready for recruiters.`} />
       <div className="min-h-screen bg-[#EDEDED]">
         <Navbar />
         <div className="pt-20 md:pt-24 flex flex-col lg:flex-row gap-4 lg:gap-6 px-3 md:px-6 pb-10">
