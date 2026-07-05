@@ -6,6 +6,14 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+const DEFAULT_EMBED_ORIGINS = [
+  'https://id-preview--5c428605-0f20-4778-aee9-1ad659bf3ce4.lovable.app',
+  'https://5c428605-0f20-4778-aee9-1ad659bf3ce4.lovableproject.com',
+  'https://pixel-perfect-clone-02726.lovable.app',
+  'https://unicv.turjo.dev',
+  'https://lovable.dev',
+];
+
 const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> = {
   'https://docspace-bg94v1.onlyoffice.com/s/MX8VCKSGCqZPZX9': { fileId: '4556646', requestToken: 'SVpmbTFyeVVEYkNlVEhGa25JUU1JMnRjUUdwZ3YxMWtjcG5Ud1VZdnFHTT0_ImUwN2NjMWU2LTg2NzQtNDhlOS1hMTI0LThlMjM5NTQ2NjI2ZSI' },
   'https://docspace-bg94v1.onlyoffice.com/s/rjVgN5nvLb7YyPY': { fileId: '4556645', requestToken: 'bXVsY1NNc2hrbFNCampZN2JBam52QkRXQnk4KzJvL1g4TFhBUmhiVVQvdz0_ImZjOTc5Y2NlLWNjNjItNDI4MC05ZDA2LTYxMTkyYTYxNjE4YyI' },
@@ -22,6 +30,50 @@ const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> =
   'https://docspace-bg94v1.onlyoffice.com/s/2BgmJmDZv2Pv69y': { fileId: '4558409', requestToken: 'RitQRjJXVGxsekZyNFNuT3hhNjNpR0JNK1J4RWhxZVJMaDhIN3A1QTBhYz0_ImRiODVkNWYzLWVlMGYtNGU0MS1hMDFjLTM1ZGU3YTQ3MDUzZCI' },
 };
 
+const normalizeOrigin = (value: string) => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return '';
+  }
+};
+
+const ensureDocSpaceEmbedOrigins = async (req: Request) => {
+  const apiKey = Deno.env.get('DOCSPACE_API_KEY');
+  const baseUrl = (Deno.env.get('DOCSPACE_URL') || 'https://docspace-bg94v1.onlyoffice.com').replace(/\/$/, '');
+  if (!apiKey) return;
+
+  const dynamicOrigins = [
+    req.headers.get('origin') || '',
+    normalizeOrigin(req.headers.get('referer') || ''),
+  ].filter(Boolean);
+  const required = [...DEFAULT_EMBED_ORIGINS, ...dynamicOrigins].map(normalizeOrigin).filter(Boolean);
+
+  const currentResponse = await fetch(`${baseUrl}/api/2.0/security/csp`, {
+    headers: { Accept: 'application/json' },
+  });
+  if (!currentResponse.ok) return;
+
+  const currentJson = await currentResponse.json().catch(() => null) as { response?: { domains?: string[] } } | null;
+  const current = (currentJson?.response?.domains || []).map(normalizeOrigin).filter(Boolean);
+  const next = Array.from(new Set([...current, ...required]));
+  if (next.length === current.length && next.every((origin) => current.includes(origin))) return;
+
+  const updateResponse = await fetch(`${baseUrl}/api/2.0/security/csp`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ domains: next }),
+  });
+  if (!updateResponse.ok) {
+    const message = await updateResponse.text().catch(() => '');
+    console.error('DocSpace CSP update failed', updateResponse.status, message.slice(0, 300));
+  }
+};
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
@@ -35,6 +87,7 @@ Deno.serve(async (req) => {
 
     const direct = DOCSPACE_FILES[url];
     if (direct) {
+      await ensureDocSpaceEmbedOrigins(req).catch((error) => console.error('DocSpace CSP sync failed', error));
       return new Response(JSON.stringify(direct), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -43,6 +96,7 @@ Deno.serve(async (req) => {
       const fileId = parsed.searchParams.get('fileid') || parsed.searchParams.get('fileId');
       const requestToken = parsed.searchParams.get('share') || parsed.searchParams.get('requestToken');
       if (fileId && requestToken) {
+        await ensureDocSpaceEmbedOrigins(req).catch((error) => console.error('DocSpace CSP sync failed', error));
         return new Response(JSON.stringify({ fileId, requestToken }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
     } catch { /* noop */ }

@@ -36,55 +36,202 @@ interface TextBox {
 
 const DOCSPACE_ORIGIN = 'https://docspace-bg94v1.onlyoffice.com';
 
-const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) => {
-  const [editorUrl, setEditorUrl] = useState<string | null>(null);
+type DocSpaceFile = { fileId: string; requestToken: string };
+type DocSpaceInstance = { destroyFrame?: () => void } | HTMLIFrameElement | null;
+
+declare global {
+  interface Window {
+    DocSpace?: {
+      SDK: {
+        initEditor: (config: Record<string, unknown>) => DocSpaceInstance;
+        frames?: Record<string, DocSpaceInstance>;
+      };
+    };
+  }
+}
+
+let docSpaceSdkPromise: Promise<void> | null = null;
+
+const destroyDocSpaceInstance = (instance: DocSpaceInstance) => {
+  if (instance && 'destroyFrame' in instance) instance.destroyFrame?.();
+};
+
+const loadDocSpaceSdk = () => {
+  if (window.DocSpace?.SDK) return Promise.resolve();
+  if (docSpaceSdkPromise) return docSpaceSdkPromise;
+
+  docSpaceSdkPromise = new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>('script[data-docspace-sdk="true"]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => reject(new Error('Could not load DocSpace SDK')), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `${DOCSPACE_ORIGIN}/static/scripts/sdk/2.2.0/api.js`;
+    script.async = true;
+    script.dataset.docspaceSdk = 'true';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Could not load DocSpace SDK'));
+    document.head.appendChild(script);
+  });
+
+  return docSpaceSdkPromise;
+};
+
+const DocSpaceEditor = ({
+  title,
+  url,
+  onBack,
+}: {
+  title: string;
+  url: string;
+  onBack: () => void;
+}) => {
+  const navigate = useNavigate();
+  const frameId = useMemo(() => `docspace-editor-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'template'}`, [title]);
+  const instanceRef = useRef<DocSpaceInstance>(null);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);
+  const [signedIn, setSignedIn] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      if (!session) {
-        toast.info('Please sign in to save or download your CV.');
-      }
-      setEditorUrl(url);
-      // Break out of the Lovable preview iframe. OnlyOffice sends
-      // X-Frame-Options: DENY, so an in-iframe navigation shows
-      // "refused to connect". Open in a new tab as a top-level document.
-      const win = window.open(url, '_blank', 'noopener,noreferrer');
-      if (!win) {
-        // Popup blocked — fall back to top-level navigation.
-        try {
-          (window.top ?? window).location.href = url;
-        } catch {
-          window.location.href = url;
+      try {
+        setStatus('loading');
+        setError(null);
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (cancelled) return;
+        setSignedIn(Boolean(session));
+        if (!session) {
+          toast.info('You can edit now. Please sign in before saving or downloading your CV.', {
+            action: { label: 'Sign in', onClick: () => navigate('/auth') },
+          });
         }
+
+        const { data, error: fileError } = await supabase.functions.invoke<DocSpaceFile>('get-docspace-file', {
+          body: { url },
+        });
+        if (cancelled) return;
+        if (fileError || !data?.fileId || !data?.requestToken) {
+          throw new Error('This template is not connected to DocSpace yet.');
+        }
+
+        await loadDocSpaceSdk();
+        if (cancelled) return;
+
+        destroyDocSpaceInstance(instanceRef.current);
+        const mount = document.getElementById(frameId);
+        if (!mount || !window.DocSpace?.SDK) {
+          throw new Error('DocSpace editor could not start.');
+        }
+
+        instanceRef.current = window.DocSpace.SDK.initEditor({
+          frameId,
+          src: DOCSPACE_ORIGIN,
+          id: data.fileId,
+          requestToken: data.requestToken,
+          width: '100%',
+          height: '100%',
+          theme: 'base',
+          editorType: window.innerWidth < 768 ? 'mobile' : 'desktop',
+          editorGoBack: false,
+          checkCSP: true,
+          events: {
+            onAppReady: () => setStatus('ready'),
+            onContentReady: () => setStatus('ready'),
+            onAppError: () => {
+              setStatus('error');
+              setError('DocSpace could not open this template.');
+            },
+            onNoAccess: () => {
+              setStatus('error');
+              setError('DocSpace access is not available for this template.');
+            },
+            onNotFound: () => {
+              setStatus('error');
+              setError('This DocSpace template was not found.');
+            },
+          },
+        });
+      } catch (err) {
+        if (cancelled) return;
+        console.error(err);
+        setStatus('error');
+        setError(err instanceof Error ? err.message : 'Could not open DocSpace editor.');
       }
     })();
-    return () => { cancelled = true; };
-  }, [url]);
+
+    return () => {
+      cancelled = true;
+      destroyDocSpaceInstance(instanceRef.current);
+      instanceRef.current = null;
+    };
+  }, [frameId, navigate, url]);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-white px-4 text-center text-[#1A1A1A]">
-      <div className="flex flex-col items-center gap-3">
-        <div className="text-[11px] font-medium uppercase tracking-wider">
-          {error ? error : `Opening ${title} editor in a new tab…`}
+    <div className="flex h-screen min-h-[720px] flex-col bg-white text-[#1A1A1A]">
+      <div className="flex min-h-14 items-center justify-between gap-3 border-b border-black px-3 md:px-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider hover:opacity-70"
+        >
+          <ArrowLeft className="h-3 w-3" /> Back
+        </button>
+        <div className="min-w-0 flex-1 text-center text-[11px] font-medium uppercase tracking-wider">
+          <span className="block truncate">{title}</span>
         </div>
-        {editorUrl && (
-          <a
-            href={editorUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
+        {!signedIn ? (
+          <button
+            onClick={() => navigate('/auth')}
+            className="border border-black px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
           >
-            Open editor
-          </a>
+            Sign in to save
+          </button>
+        ) : (
+          <div className="w-[92px]" aria-hidden />
         )}
+      </div>
+
+      <div className="relative flex-1 overflow-hidden">
+        {status !== 'ready' && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white px-4 text-center">
+            <div className="text-[11px] font-medium uppercase tracking-wider">
+              {status === 'error' ? error : 'Opening DocSpace editor...'}
+            </div>
+          </div>
+        )}
+        <div id={frameId} className="h-full w-full" />
       </div>
     </div>
   );
 };
+
+const DocSpaceUnavailable = ({ title, onBack, onUseImageEditor }: { title: string; onBack: () => void; onUseImageEditor: () => void }) => (
+  <div className="flex h-screen w-screen items-center justify-center bg-white px-4 text-center text-[#1A1A1A]">
+    <div className="flex max-w-sm flex-col items-center gap-3">
+      <div className="text-[11px] font-medium uppercase tracking-wider">DocSpace is not connected for {title}</div>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onBack}
+          className="border border-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
+        >
+          Back
+        </button>
+        <button
+          onClick={onUseImageEditor}
+          className="border border-[#1A1A1A] bg-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider text-white transition-colors hover:bg-white hover:text-[#1A1A1A]"
+        >
+          Use image editor
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 
 
@@ -606,10 +753,23 @@ const TemplateEditor = () => {
     );
   }
 
-  // Always edit in-site using the built-in image editor with OCR-detected
-  // text boxes. The OnlyOffice DocSpace redirect was removed because it
-  // sends users off-site (and blocks iframe embedding via X-Frame-Options).
+  if (template.docspace_url && !useImageEditor) {
+    return (
+      <>
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template in ONLYOFFICE DocSpace, then save or download your polished CV.`} />
+        <DocSpaceEditor title={template.title} url={template.docspace_url} onBack={() => navigate(-1)} />
+      </>
+    );
+  }
 
+  if (!template.docspace_url && !useImageEditor) {
+    return (
+      <>
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template and export a polished PDF ready for recruiters.`} />
+        <DocSpaceUnavailable title={template.title} onBack={() => navigate(-1)} onUseImageEditor={() => setUseImageEditor(true)} />
+      </>
+    );
+  }
 
 
   const paperWidth = 800;
