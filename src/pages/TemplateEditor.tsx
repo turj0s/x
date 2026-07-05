@@ -403,7 +403,7 @@ const TemplateEditor = () => {
   useEffect(() => {
     if (!id || loading) return;
     const t = setTimeout(() => {
-      try { localStorage.setItem(STORAGE_KEY(id), JSON.stringify(boxes)); } catch {}
+      try { localStorage.setItem(STORAGE_KEY(id), JSON.stringify(boxes)); } catch { return; }
     }, 300);
     return () => clearTimeout(t);
   }, [boxes, id, loading]);
