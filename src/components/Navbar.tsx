@@ -138,14 +138,17 @@ export const Navbar: React.FC = () => {
             >
               HOW
             </button>
-            <Link 
-              to="/" 
-              onClick={() => setIsMobileMenuOpen(false)}
+            <button 
+              onClick={() => {
+                scrollToTemplates();
+                setIsMobileMenuOpen(false);
+              }}
               className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
               style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
             >
               TEMPLATES
-            </Link>
+            </button>
+
             {user ? (
               <button 
                 onClick={async () => {
