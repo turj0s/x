@@ -266,7 +266,7 @@ const Discover = () => {
       <section className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
         <div className="max-w-6xl mx-auto">
           <div className="mb-10 md:mb-16">
-            <span className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">Features</span>
+            <h2 className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">Features</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
