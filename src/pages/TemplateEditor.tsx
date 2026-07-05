@@ -34,6 +34,163 @@ interface TextBox {
   edited: boolean; // false means OCR hotspot only; original template pixels stay visible
 }
 
+type DocSpaceSDKFrame = {
+  destroyFrame?: () => void;
+};
+
+type DocSpaceSDK = {
+  initEditor: (config: {
+    frameId: string;
+    src: string;
+    id: string | number;
+    requestToken?: string;
+    width?: string;
+    height?: string;
+    checkCSP?: boolean;
+    editorCustomization?: {
+      compactHeader?: boolean;
+      toolbarNoTabs?: boolean;
+      help?: boolean;
+    };
+  }) => DocSpaceSDKFrame;
+};
+
+declare global {
+  interface Window {
+    DocSpace?: { SDK: DocSpaceSDK };
+  }
+}
+
+const DOCSPACE_ORIGIN = 'https://docspace-bg94v1.onlyoffice.com';
+const DOCSPACE_SDK_SCRIPT_ID = 'onlyoffice-docspace-sdk';
+
+const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> = {
+  'https://docspace-bg94v1.onlyoffice.com/s/MX8VCKSGCqZPZX9': {
+    fileId: '4556646',
+    requestToken: 'SVpmbTFyeVVEYkNlVEhGa25JUU1JMnRjUUdwZ3YxMWtjcG5Ud1VZdnFHTT0_ImUwN2NjMWU2LTg2NzQtNDhlOS1hMTI0LThlMjM5NTQ2NjI2ZSI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/rjVgN5nvLb7YyPY': {
+    fileId: '4556645',
+    requestToken: 'bXVsY1NNc2hrbFNCampZN2JBam52QkRXQnk4KzJvL1g4TFhBUmhiVVQvdz0_ImZjOTc5Y2NlLWNjNjItNDI4MC05ZDA2LTYxMTkyYTYxNjE4YyI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/zY78MwDL5n8ZYck': {
+    fileId: '4556644',
+    requestToken: 'Q3R3MGNteEdhL2k3QUUwMU4yU3JGUTVMc3pvNy8rSFlBQnNsVnA4ZkZ1ST0_ImUxZDlmM2ZlLTljNWMtNGNkZC1hYTM2LTVkMWM0NWIwMTZlNCI',
+  },
+};
+
+const getDocSpaceFile = (url: string) => {
+  const direct = DOCSPACE_FILES[url.replace(/\/$/, '')];
+  if (direct) return direct;
+
+  try {
+    const parsed = new URL(url);
+    const fileId = parsed.searchParams.get('fileid');
+    const requestToken = parsed.searchParams.get('share') || undefined;
+    if (fileId) return { fileId, requestToken };
+  } catch {
+    return null;
+  }
+
+  return null;
+};
+
+const loadDocSpaceSDK = () => new Promise<DocSpaceSDK>((resolve, reject) => {
+  if (window.DocSpace?.SDK) {
+    resolve(window.DocSpace.SDK);
+    return;
+  }
+
+  const existing = document.getElementById(DOCSPACE_SDK_SCRIPT_ID) as HTMLScriptElement | null;
+  if (existing) {
+    existing.addEventListener('load', () => window.DocSpace?.SDK ? resolve(window.DocSpace.SDK) : reject(new Error('DocSpace SDK unavailable')), { once: true });
+    existing.addEventListener('error', () => reject(new Error('Could not load DocSpace SDK')), { once: true });
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.id = DOCSPACE_SDK_SCRIPT_ID;
+  script.src = `${DOCSPACE_ORIGIN}/static/scripts/sdk/2.2.0/api.js`;
+  script.async = true;
+  script.onload = () => window.DocSpace?.SDK ? resolve(window.DocSpace.SDK) : reject(new Error('DocSpace SDK unavailable'));
+  script.onerror = () => reject(new Error('Could not load DocSpace SDK'));
+  document.head.appendChild(script);
+});
+
+const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => {
+  const frameIdRef = useRef(`docspace-frame-${uid()}`);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+
+  useEffect(() => {
+    let cancelled = false;
+    let frame: DocSpaceSDKFrame | null = null;
+    const file = getDocSpaceFile(url);
+
+    if (!file) {
+      setStatus('error');
+      return undefined;
+    }
+
+    setStatus('loading');
+    loadDocSpaceSDK()
+      .then((sdk) => {
+        if (cancelled) return;
+        frame = sdk.initEditor({
+          frameId: frameIdRef.current,
+          src: DOCSPACE_ORIGIN,
+          id: file.fileId,
+          requestToken: file.requestToken,
+          width: '100%',
+          height: '100%',
+          editorCustomization: {
+            compactHeader: true,
+            toolbarNoTabs: false,
+            help: false,
+          },
+        });
+        setStatus('ready');
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!cancelled) setStatus('error');
+      });
+
+    return () => {
+      cancelled = true;
+      frame?.destroyFrame?.();
+    };
+  }, [url]);
+
+  return (
+    <div className="relative h-[calc(100vh-120px)] w-full bg-white">
+      {status === 'loading' && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center text-[11px] uppercase tracking-wider text-gray-500">
+          Loading DocSpace editor…
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 px-4 text-center">
+          <div className="text-sm font-medium">DocSpace embed could not load.</div>
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-[11px] uppercase tracking-wider border border-black px-3 py-2 hover:bg-black hover:text-white transition-colors"
+          >
+            Open in new tab
+          </a>
+        </div>
+      )}
+      <iframe
+        id={frameIdRef.current}
+        title={title}
+        className="h-full w-full border-0"
+        allow="clipboard-read; clipboard-write; fullscreen"
+      />
+    </div>
+  );
+};
+
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 const STORAGE_KEY = (id: string) => `cv-overlay:${id}`;
@@ -568,12 +725,7 @@ const TemplateEditor = () => {
             </a>
           </div>
           <div className="flex-1 min-h-[calc(100vh-120px)]">
-            <iframe
-              src={template.docspace_url}
-              title={template.title}
-              className="w-full h-[calc(100vh-120px)] border-0"
-              allow="clipboard-read; clipboard-write; fullscreen"
-            />
+            <DocSpaceEditorFrame title={template.title} url={template.docspace_url} />
           </div>
         </div>
       </>
