@@ -1,7 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import type { User } from '@supabase/supabase-js';
+import { AuthSheet } from './AuthSheet';
 
 export const Footer: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleMyCVs = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) navigate('/my-events');
+    else setIsAuthOpen(true);
+  };
+
   return (
     <footer className="border-t border-black">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-16">
@@ -51,16 +70,19 @@ export const Footer: React.FC = () => {
             </span>
             <ul className="space-y-2">
               <li>
-                <Link to="/my-events" className="text-sm text-muted-foreground hover:text-black transition-colors">
+                <a href="/my-events" onClick={handleMyCVs} className="text-sm text-muted-foreground hover:text-black transition-colors cursor-pointer">
                   My CVs
-                </Link>
+                </a>
               </li>
-              <li>
-                <Link to="/auth" className="text-sm text-muted-foreground hover:text-black transition-colors">
-                  Sign In
-                </Link>
-              </li>
+              {!user && (
+                <li>
+                  <button type="button" onClick={() => setIsAuthOpen(true)} className="text-sm text-muted-foreground hover:text-black transition-colors text-left">
+                    Sign In
+                  </button>
+                </li>
+              )}
             </ul>
+
           </div>
 
           {/* Legal */}
@@ -93,6 +115,8 @@ export const Footer: React.FC = () => {
           </a>
         </div>
       </div>
+      <AuthSheet isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </footer>
   );
+
 };
