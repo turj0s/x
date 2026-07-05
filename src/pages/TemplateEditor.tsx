@@ -610,7 +610,7 @@ const TemplateEditor = () => {
 
   return (
     <>
-      <SEOHead title={`Edit ${template.title}`} description="Edit CV template in real time and download as PDF." />
+      <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template in real time, tweak text, colors, and layout, then export a polished PDF ready for recruiters.`} />
       <div className="min-h-screen bg-[#EDEDED]">
         <Navbar />
         <div className="pt-20 md:pt-24 flex flex-col lg:flex-row gap-4 lg:gap-6 px-3 md:px-6 pb-10">
