@@ -250,20 +250,21 @@ const Discover = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">01</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Pick a template</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Browse our curated collection of professionally designed CV templates built for every industry and experience level.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Browse templates for your country</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">UNICV auto-detects your country and surfaces CV templates tailored to local hiring standards and formats.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">02</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Customize your story</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Fill in your details, rearrange sections, and tweak colors and fonts to match your personal brand.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Edit live with ONLYOFFICE</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Open any template in our built-in ONLYOFFICE editor and customize your details, layout, and styling right in the browser.</p>
             </div>
             <div className="animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
               <div className="text-4xl md:text-5xl font-medium mb-4">03</div>
-              <h3 className="text-lg md:text-xl font-medium mb-2">Download & share</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Export your CV as a polished PDF ready for recruiters, job boards, or email applications.</p>
+              <h3 className="text-lg md:text-xl font-medium mb-2">Save to My CVs & download</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Sign in with Google to save every version to My CVs, then download your finished resume whenever you need it.</p>
             </div>
           </div>
+
         </div>
       </section>
 
