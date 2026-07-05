@@ -154,7 +154,7 @@ export const Navbar: React.FC = () => {
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
               >
                 SIGN IN
               </button>
