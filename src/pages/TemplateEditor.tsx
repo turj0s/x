@@ -47,20 +47,15 @@ const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) 
       if (!session) {
         toast.info('Please sign in to save or download your CV.');
       }
-      const { data, error } = await supabase.functions.invoke('get-docspace-file', {
-        body: { url },
-      });
       if (cancelled) return;
-      if (error || !data?.fileId || !data?.requestToken) {
-        setError('Unable to open the editor.');
-        return;
-      }
-      const built = `${DOCSPACE_ORIGIN}/doceditor?fileId=${encodeURIComponent(data.fileId)}&share=${encodeURIComponent(data.requestToken)}`;
-      setEditorUrl(built);
-      window.location.replace(built);
+      // Use the original public share URL — the /doceditor?fileId=... form
+      // requires an OnlyOffice account, but /s/<shareId> opens for anyone.
+      setEditorUrl(url);
+      window.location.replace(url);
     })();
     return () => { cancelled = true; };
   }, [url]);
+
 
 
   return (
