@@ -37,29 +37,20 @@ const EventCard = ({
   return (
     <div 
       className="relative cursor-pointer group"
-      onClick={() => navigate(`/event/${event.id}/editor`)}
+      onClick={() => navigate(`/event/${event.id}`)}
     >
-      <div className="overflow-hidden mb-3">
+      <div className="overflow-hidden mb-3 bg-[#f4f4f4]">
         <div 
-          className="aspect-square bg-gray-300 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
+          className="aspect-[3/4] bg-contain bg-center bg-no-repeat transition-transform duration-500 ease-out group-hover:scale-105"
           style={{ backgroundImage: `url(${event.background_image_url})` }}
         ></div>
       </div>
-      <div className="absolute top-4 left-4 flex flex-col gap-0">
-        <div className="bg-white border border-black px-3 h-[23px] flex items-center">
-          <div className="text-[11px] font-medium uppercase leading-none">{event.date}</div>
+      {eventLive && (
+        <div className="absolute top-4 left-4 bg-white border border-black px-3 h-[23px] flex items-center">
+          <div className="text-[11px] font-medium uppercase leading-none">NEW</div>
         </div>
-        <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-          <div className="text-[11px] font-medium leading-none">{event.time}</div>
-        </div>
-        {eventLive && (
-          <div className="bg-white border border-t-0 border-black px-3 h-[23px] flex items-center">
-            <div className="text-[11px] font-medium uppercase leading-none">NEW</div>
-          </div>
-        )}
-      </div>
+      )}
       <h3 className="text-lg font-medium">{event.title}</h3>
-      <p className="text-sm text-gray-500 mt-1">{event.address}</p>
     </div>
   );
 };
