@@ -303,9 +303,16 @@ const EditEvent = () => {
   };
 
   const handleDeleteEvent = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error('Please sign in to delete');
+      navigate('/auth');
+      return;
+    }
     if (!window.confirm('Are you sure you want to delete this CV? This action cannot be undone.')) {
       return;
     }
+
 
     try {
       const { error } = await supabase
