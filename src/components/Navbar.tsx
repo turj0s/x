@@ -116,6 +116,24 @@ export const Navbar: React.FC = () => {
               className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
               style={{ animationDelay: '0.1s', animationFillMode: 'both' }}
             >
+              HOME
+            </Link>
+            <button 
+              onClick={() => {
+                scrollToHowItWorks();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.15s', animationFillMode: 'both' }}
+            >
+              HOW
+            </button>
+            <Link 
+              to="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase border-b border-black tracking-[-0.34px] animate-fade-in"
+              style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+            >
               TEMPLATES
             </Link>
             {user ? (
@@ -125,7 +143,7 @@ export const Navbar: React.FC = () => {
                   setIsMobileMenuOpen(false);
                 }}
                 className="flex-1 flex items-center justify-center text-[#1A1A1A] text-[17px] font-medium uppercase tracking-[-0.34px] animate-fade-in"
-                style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
+                style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
               >
                 SIGN OUT
               </button>
