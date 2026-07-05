@@ -179,6 +179,13 @@ const EditEvent = () => {
   };
 
   const handleSubmit = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error('Please sign in to edit');
+      navigate('/auth');
+      return;
+    }
+
 
 
     // Validate date fields first
@@ -296,9 +303,16 @@ const EditEvent = () => {
   };
 
   const handleDeleteEvent = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error('Please sign in to delete');
+      navigate('/auth');
+      return;
+    }
     if (!window.confirm('Are you sure you want to delete this CV? This action cannot be undone.')) {
       return;
     }
+
 
     try {
       const { error } = await supabase
@@ -338,7 +352,7 @@ const EditEvent = () => {
       <div className="min-h-screen bg-white">
         <Navbar />
         
-        {true ? (
+        {user ? (
           <div className="max-w-7xl mx-auto pt-24 md:pt-32 pb-8 md:pb-16 px-4 md:px-8">
             <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left: Image Upload */}
