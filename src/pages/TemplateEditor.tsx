@@ -149,8 +149,13 @@ const DocSpaceEditorFrame = ({ title, url }: { title: string; url: string }) => 
           height: '100%',
           editorCustomization: {
             compactHeader: true,
-            toolbarNoTabs: false,
+            toolbarNoTabs: true,
             help: false,
+            hideLeftMenu: true,
+            hideRightMenu: true,
+            hideStatusBar: true,
+            hideRulers: true,
+            zoom: 100,
           },
         });
         setStatus('ready');
