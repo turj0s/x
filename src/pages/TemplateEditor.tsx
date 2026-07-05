@@ -44,29 +44,38 @@ const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) 
     let cancelled = false;
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
       if (!session) {
         toast.info('Please sign in to save or download your CV.');
       }
-      if (cancelled) return;
-      // Use the original public share URL — the /doceditor?fileId=... form
-      // requires an OnlyOffice account, but /s/<shareId> opens for anyone.
       setEditorUrl(url);
-      window.location.replace(url);
+      // Break out of the Lovable preview iframe. OnlyOffice sends
+      // X-Frame-Options: DENY, so an in-iframe navigation shows
+      // "refused to connect". Open in a new tab as a top-level document.
+      const win = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!win) {
+        // Popup blocked — fall back to top-level navigation.
+        try {
+          (window.top ?? window).location.href = url;
+        } catch {
+          window.location.href = url;
+        }
+      }
     })();
     return () => { cancelled = true; };
   }, [url]);
-
-
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-white px-4 text-center text-[#1A1A1A]">
       <div className="flex flex-col items-center gap-3">
         <div className="text-[11px] font-medium uppercase tracking-wider">
-          {error ? error : `Opening ${title} editor…`}
+          {error ? error : `Opening ${title} editor in a new tab…`}
         </div>
         {editorUrl && (
           <a
             href={editorUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="border border-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
           >
             Open editor
@@ -76,6 +85,7 @@ const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) 
     </div>
   );
 };
+
 
 
 const uid = () => Math.random().toString(36).slice(2, 10);
