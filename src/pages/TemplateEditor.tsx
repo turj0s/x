@@ -228,21 +228,6 @@ const DocSpaceUnavailable = ({ title, onBack, onUseImageEditor }: { title: strin
     </div>
   </div>
 );
-        </div>
-        {editorUrl && (
-          <a
-            href={editorUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
-          >
-            Open editor
-          </a>
-        )}
-      </div>
-    </div>
-  );
-};
 
 
 
@@ -764,10 +749,23 @@ const TemplateEditor = () => {
     );
   }
 
-  // Always edit in-site using the built-in image editor with OCR-detected
-  // text boxes. The OnlyOffice DocSpace redirect was removed because it
-  // sends users off-site (and blocks iframe embedding via X-Frame-Options).
+  if (template.docspace_url && !useImageEditor) {
+    return (
+      <>
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template in ONLYOFFICE DocSpace, then save or download your polished CV.`} />
+        <DocSpaceEditor title={template.title} url={template.docspace_url} onBack={() => navigate(-1)} />
+      </>
+    );
+  }
 
+  if (!template.docspace_url && !useImageEditor) {
+    return (
+      <>
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} CV template and export a polished PDF ready for recruiters.`} />
+        <DocSpaceUnavailable title={template.title} onBack={() => navigate(-1)} onUseImageEditor={() => setUseImageEditor(true)} />
+      </>
+    );
+  }
 
 
   const paperWidth = 800;
