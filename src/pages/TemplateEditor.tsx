@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Navbar } from '@/components/Navbar';
@@ -34,43 +34,7 @@ interface TextBox {
   edited: boolean; // false means OCR hotspot only; original template pixels stay visible
 }
 
-type DocSpaceSDKFrame = {
-  destroyFrame?: () => void;
-};
-
-type DocSpaceSDK = {
-  initEditor: (config: {
-    frameId: string;
-    src: string;
-    id: string | number;
-    requestToken?: string;
-    width?: string;
-    height?: string;
-    checkCSP?: boolean;
-    editorCustomization?: {
-      compactHeader?: boolean;
-      toolbarNoTabs?: boolean;
-      help?: boolean;
-      hideLeftMenu?: boolean;
-      hideRightMenu?: boolean;
-      hideStatusBar?: boolean;
-      hideRulers?: boolean;
-      zoom?: number;
-    };
-    events?: {
-      onAppError?: (message: string) => void;
-    };
-  }) => DocSpaceSDKFrame;
-};
-
-declare global {
-  interface Window {
-    DocSpace?: { SDK: DocSpaceSDK };
-  }
-}
-
 const DOCSPACE_ORIGIN = 'https://docspace-bg94v1.onlyoffice.com';
-const DOCSPACE_SDK_SCRIPT_ID = 'onlyoffice-docspace-sdk';
 
 const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> = {
   'https://docspace-bg94v1.onlyoffice.com/s/MX8VCKSGCqZPZX9': {
@@ -88,6 +52,42 @@ const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> =
   'https://docspace-bg94v1.onlyoffice.com/s/4czZycbqW42vtj7': {
     fileId: '4557237',
     requestToken: 'MVdFNlc1Q2hjck1IVlBGZUNCRnJFeW5kYWlPUllscjRJMUU2S1ZLZjhzMD0_ImViNzExMDEwLTc1Y2YtNDVlNy1iOGJkLTRhM2MzYWZlY2ZmMyI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/cRnbcdkMv7j6_xz': {
+    fileId: '4558401',
+    requestToken: 'bmhrWTBLMkpybTNOc2lwa2JvSVM5TnhuY0ZIWm1BR2wrSjZtUWpVcGdqOD0_IjM1ZmY5MTY3LTdkYjctNDJjYy05NzdhLWFiNWRhYThkNGMxMCI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/JDHYLLV8WQjvGXk': {
+    fileId: '4558403',
+    requestToken: 'MjIyR2pQV2FTMWZveDU3RHl1Z0ozclpOWHN4djA5cjREK1VvK0xTQnBZcz0_ImYzNDIwMDMwLTFkZmUtNDc4Yy1hMDk1LTI1NzczMzhiZDA2NyI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/XSF7wt7yK_F_hYY': {
+    fileId: '4558404',
+    requestToken: 'SngrbkJWZnIzMjVQRFV3ZUJNSG9sNEVDZFVNRCthUURhdEltSFJoMFU0UT0_IjI0NzBjNWE3LTYzM2EtNDVlNi05Nzk5LTQ3NGRjYWJkMWM4YyI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/H75qz74ntMk-s9t': {
+    fileId: '4558402',
+    requestToken: 'RHZ1eG42R2cvWUR0TjFja2x2RjVzY24xQWpIVVRYRjVFOXpnWm5jU3pHTT0_ImU4MGQ4YWU5LTIzOWYtNDlmMC1iNGI0LWYyMTU2MDBjY2RiMSI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/7jFkXdmqqgX6zpk': {
+    fileId: '4558405',
+    requestToken: 'dkRwc1lmeDRZMU45WVZwNkRrTldqbW5teUk0VDB5VkdvMTJvazRmNnF5QT0_ImQ5ZmJiZjRiLWYyNTUtNDVhNy04ZTBmLTY4NTAwNGU5NzdmYiI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/NQ-NCJ3MF_vyZ6L': {
+    fileId: '4558406',
+    requestToken: 'OVVtYSt6Yit2SmNFalprM24rVEM4ckwzWWRnYko2Q2V4eWlWblNOK3NoUT0_ImUxNTQzNjI5LWM4YTgtNGFkOS04YzhmLTE2YmEzZDUwMzZlMyI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/2DSSqnG4mcwtS-s': {
+    fileId: '4558407',
+    requestToken: 'T2hMeEF6WHN1ZE43cW9FYkVNRUdlT3NHVHVSZFBjSHduekRVV05PdWV5WT0_IjEzN2NiZmU0LTJkMjgtNDgzMC05MWQ2LTE4ZmYxZjQ4OGU0ZCI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/j_bLxMPLQ5gpd3f': {
+    fileId: '4558408',
+    requestToken: 'b0Nwcm1HN3lDVHB4dnNsaEJXQXFGT2dWYzN3cWhhcjF5UCsvdUdQNFJQdz0_IjVlNWI4ZWQ5LWEyZWUtNDE4YS05ZjRlLTM4MTA5M2E1MmJkMCI',
+  },
+  'https://docspace-bg94v1.onlyoffice.com/s/2BgmJmDZv2Pv69y': {
+    fileId: '4558409',
+    requestToken: 'RitQRjJXVGxsekZyNFNuT3hhNjNpR0JNK1J4RWhxZVJMaDhIN3A1QTBhYz0_ImRiODVkNWYzLWVlMGYtNGU0MS1hMDFjLTM1ZGU3YTQ3MDUzZCI',
   },
 };
 
@@ -107,110 +107,33 @@ const getDocSpaceFile = (url: string) => {
   return null;
 };
 
-const loadDocSpaceSDK = () => new Promise<DocSpaceSDK>((resolve, reject) => {
-  if (window.DocSpace?.SDK) {
-    resolve(window.DocSpace.SDK);
-    return;
+const getDocSpaceEditorUrl = (url: string) => {
+  const file = getDocSpaceFile(url);
+  if (file?.fileId && file.requestToken) {
+    return `${DOCSPACE_ORIGIN}/doceditor?fileId=${encodeURIComponent(file.fileId)}&share=${encodeURIComponent(file.requestToken)}`;
   }
 
-  const existing = document.getElementById(DOCSPACE_SDK_SCRIPT_ID) as HTMLScriptElement | null;
-  if (existing) {
-    existing.addEventListener('load', () => window.DocSpace?.SDK ? resolve(window.DocSpace.SDK) : reject(new Error('DocSpace SDK unavailable')), { once: true });
-    existing.addEventListener('error', () => reject(new Error('Could not load DocSpace SDK')), { once: true });
-    return;
-  }
+  return url;
+};
 
-  const script = document.createElement('script');
-  script.id = DOCSPACE_SDK_SCRIPT_ID;
-  script.src = `${DOCSPACE_ORIGIN}/static/scripts/sdk/2.2.0/api.js`;
-  script.async = true;
-  script.onload = () => window.DocSpace?.SDK ? resolve(window.DocSpace.SDK) : reject(new Error('DocSpace SDK unavailable'));
-  script.onerror = () => reject(new Error('Could not load DocSpace SDK'));
-  document.head.appendChild(script);
-});
-
-const DocSpaceEditorFrame = ({ title, url, onUnavailable }: { title: string; url: string; onUnavailable?: () => void }) => {
-  const frameIdRef = useRef(`docspace-frame-${uid()}`);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+const DocSpaceEditorRedirect = ({ title, url }: { title: string; url: string }) => {
+  const editorUrl = useMemo(() => getDocSpaceEditorUrl(url), [url]);
 
   useEffect(() => {
-    let cancelled = false;
-    let frame: DocSpaceSDKFrame | null = null;
-    const file = getDocSpaceFile(url);
-    const fail = (err?: unknown) => {
-      if (err) console.error(err);
-      if (cancelled) return;
-      setStatus('error');
-      onUnavailable?.();
-    };
-
-    if (!file) {
-      fail(new Error('DocSpace file details are missing'));
-      return undefined;
-    }
-
-    setStatus('loading');
-    loadDocSpaceSDK()
-      .then((sdk) => {
-        if (cancelled) return;
-        frame = sdk.initEditor({
-          frameId: frameIdRef.current,
-          src: DOCSPACE_ORIGIN,
-          id: file.fileId,
-          requestToken: file.requestToken,
-          width: '100%',
-          height: '100%',
-          checkCSP: true,
-          editorCustomization: {
-            compactHeader: true,
-            toolbarNoTabs: true,
-            help: false,
-            hideLeftMenu: true,
-            hideRightMenu: true,
-            hideStatusBar: true,
-            hideRulers: true,
-            zoom: 100,
-          },
-          events: {
-            onAppError: (message) => fail(new Error(message)),
-          },
-        });
-        setStatus('ready');
-      })
-      .catch(fail);
-
-    return () => {
-      cancelled = true;
-      frame?.destroyFrame?.();
-    };
-  }, [onUnavailable, url]);
+    window.location.replace(editorUrl);
+  }, [editorUrl]);
 
   return (
-    <div className="relative h-[calc(100vh-120px)] w-full bg-white">
-      {status === 'loading' && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center text-[11px] uppercase tracking-wider text-gray-500">
-          Loading DocSpace editor…
-        </div>
-      )}
-      {status === 'error' && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 px-4 text-center">
-          <div className="text-sm font-medium">DocSpace embed could not load.</div>
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] uppercase tracking-wider border border-black px-3 py-2 hover:bg-black hover:text-white transition-colors"
-          >
-            Open in new tab
-          </a>
-        </div>
-      )}
-      <iframe
-        id={frameIdRef.current}
-        title={title}
-        className="h-full w-full border-0"
-        allow="clipboard-read; clipboard-write; fullscreen"
-      />
+    <div className="flex h-screen w-screen items-center justify-center bg-white px-4 text-center text-[#1A1A1A]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="text-[11px] font-medium uppercase tracking-wider">Opening {title} editor…</div>
+        <a
+          href={editorUrl}
+          className="border border-[#1A1A1A] px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition-colors hover:bg-[#1A1A1A] hover:text-white"
+        >
+          Open editor
+        </a>
+      </div>
     </div>
   );
 };
@@ -726,14 +649,12 @@ const TemplateEditor = () => {
   }
 
   // Full-fidelity Word template via OnlyOffice DocSpace public share.
-  // When docspace_url is set, we embed the room instead of the OCR overlay editor.
+  // DocSpace blocks cross-origin iframes, so open the editor directly in this tab.
   if (template.docspace_url && !useImageEditor) {
     return (
       <>
         <SEOHead title={`Edit ${template.title}`} description="Edit this Word CV template in-browser and download as DOCX or PDF." />
-        <div className="h-screen w-screen overflow-hidden bg-white">
-          <DocSpaceEditorFrame title={template.title} url={template.docspace_url} onUnavailable={() => setUseImageEditor(true)} />
-        </div>
+        <DocSpaceEditorRedirect title={template.title} url={template.docspace_url} />
       </>
     );
   }
