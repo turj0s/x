@@ -21,6 +21,15 @@ export const Navbar: React.FC = () => {
     }
   };
 
+  const scrollToTemplates = () => {
+    if (location.pathname === '/') {
+      document.getElementById('events-section')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/#templates');
+    }
+  };
+
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
