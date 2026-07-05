@@ -276,11 +276,12 @@ const Discover = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { title: 'ATS-friendly', desc: 'Every template is optimized to pass through applicant tracking systems cleanly.' },
-              { title: 'One-click export', desc: 'Download your CV as a high-resolution PDF in seconds, no watermarks.' },
-              { title: 'Mobile editing', desc: 'Build and tweak your resume on any device, wherever inspiration strikes.' },
-              { title: 'Real-time preview', desc: 'See changes instantly as you type, so you know exactly what recruiters will see.' },
+              { title: 'Country-aware templates', desc: 'Templates automatically filter to your detected country so you always see formats that match local hiring norms.' },
+              { title: 'ONLYOFFICE editor built in', desc: 'Edit .docx templates directly in the browser with a full ONLYOFFICE workspace — no downloads or Word required.' },
+              { title: 'Google sign-in', desc: 'One-click sign in with Google. No passwords to remember, no email verification hoops.' },
+              { title: 'My CVs library', desc: 'Every CV you create is saved to your personal My CVs page, ready to re-open, re-edit, or re-download anytime.' },
             ].map((feature, i) => (
+
               <div key={feature.title} className="border border-black p-6 md:p-8 animate-fade-in" style={{ animationDelay: `${0.1 + i * 0.1}s`, animationFillMode: 'both' }}>
                 <h3 className="text-base md:text-lg font-medium mb-3">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
