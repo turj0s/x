@@ -52,6 +52,10 @@ declare global {
 
 let docSpaceSdkPromise: Promise<void> | null = null;
 
+const destroyDocSpaceInstance = (instance: DocSpaceInstance) => {
+  if (instance && 'destroyFrame' in instance) instance.destroyFrame?.();
+};
+
 const loadDocSpaceSdk = () => {
   if (window.DocSpace?.SDK) return Promise.resolve();
   if (docSpaceSdkPromise) return docSpaceSdkPromise;
@@ -120,7 +124,7 @@ const DocSpaceEditor = ({
         await loadDocSpaceSdk();
         if (cancelled) return;
 
-        instanceRef.current?.destroyFrame?.();
+        destroyDocSpaceInstance(instanceRef.current);
         const mount = document.getElementById(frameId);
         if (!mount || !window.DocSpace?.SDK) {
           throw new Error('DocSpace editor could not start.');
@@ -164,7 +168,7 @@ const DocSpaceEditor = ({
 
     return () => {
       cancelled = true;
-      instanceRef.current?.destroyFrame?.();
+      destroyDocSpaceInstance(instanceRef.current);
       instanceRef.current = null;
     };
   }, [frameId, navigate, url]);
