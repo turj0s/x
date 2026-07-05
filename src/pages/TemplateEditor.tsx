@@ -725,12 +725,7 @@ const TemplateEditor = () => {
             </a>
           </div>
           <div className="flex-1 min-h-[calc(100vh-120px)]">
-            <iframe
-              src={template.docspace_url}
-              title={template.title}
-              className="w-full h-[calc(100vh-120px)] border-0"
-              allow="clipboard-read; clipboard-write; fullscreen"
-            />
+            <DocSpaceEditorFrame title={template.title} url={template.docspace_url} />
           </div>
         </div>
       </>
