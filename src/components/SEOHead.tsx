@@ -12,10 +12,11 @@ export const SEOHead = ({
   title, 
   description, 
   keywords = 'cv, resume, cv maker, resume builder, cv templates, resume templates',
-  image = '/placeholder.svg',
+  image = 'https://unicv.turjo.dev/og-preview.png',
   url = window.location.href
 }: SEOHeadProps) => {
   const fullTitle = `${title} | CV Maker`;
+
   
   return (
     <Helmet>

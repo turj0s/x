@@ -1,0 +1,17 @@
+# UNICV
+
+> Build a professional resume in minutes with beautifully designed CV templates.
+
+UNICV is a web-based CV maker that lets anyone browse curated templates, customize them in the browser, and download a polished resume as a PDF.
+
+## Pages
+
+- [Templates](/): Browse the full library of CV templates.
+- [Create CV](/create-event): Start a new CV from scratch.
+- [My CVs](/my-events): Manage saved CVs (requires sign-in).
+- [Sign In](/auth): Log in or create an account.
+
+## Optional
+
+- [Privacy Policy](/privacy)
+- [Terms of Service](/terms)
