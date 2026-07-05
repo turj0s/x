@@ -12,7 +12,9 @@ interface Template {
   id: string;
   title: string;
   background_image_url: string;
+  docspace_url?: string | null;
 }
+
 
 interface TextBox {
   id: string;
@@ -268,9 +270,10 @@ const TemplateEditor = () => {
       setImgSize(null);
       const { data, error } = await supabase
         .from('events')
-        .select('id, title, background_image_url')
+        .select('id, title, background_image_url, docspace_url')
         .eq('id', id)
         .maybeSingle();
+
       if (cancelled) return;
       if (error || !data) {
         toast.error('Template not found');
