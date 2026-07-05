@@ -51,6 +51,11 @@ type DocSpaceSDK = {
       compactHeader?: boolean;
       toolbarNoTabs?: boolean;
       help?: boolean;
+      hideLeftMenu?: boolean;
+      hideRightMenu?: boolean;
+      hideStatusBar?: boolean;
+      hideRulers?: boolean;
+      zoom?: number;
     };
   }) => DocSpaceSDKFrame;
 };
