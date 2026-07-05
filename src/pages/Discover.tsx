@@ -228,7 +228,7 @@ const Discover = () => {
       </section>
 
       {/* How it Works Section */}
-      <section className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
+      <section id="how-it-works" className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
         <div className="max-w-6xl mx-auto">
           <div className="mb-10 md:mb-16">
             <h2 className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">How it works</h2>
