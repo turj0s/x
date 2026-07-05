@@ -598,7 +598,7 @@ const TemplateEditor = () => {
   if (template.docspace_url && !useImageEditor) {
     return (
       <>
-        <SEOHead title={`Edit ${template.title}`} description="Edit this Word CV template in-browser and download as DOCX or PDF." />
+        <SEOHead title={`Edit ${template.title}`} description={`Edit the ${template.title} Word CV template directly in your browser, customize every section, then download as DOCX or PDF ready to send.`} />
         <DocSpaceEditorRedirect title={template.title} url={template.docspace_url} />
       </>
     );
