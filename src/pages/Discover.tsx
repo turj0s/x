@@ -240,7 +240,7 @@ const Discover = () => {
       <section className="px-4 md:px-8 py-16 md:py-24 border-t border-black">
         <div className="max-w-6xl mx-auto">
           <div className="mb-10 md:mb-16">
-            <span className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">How it works</span>
+            <h2 className="text-[11px] font-medium uppercase tracking-wide border border-black px-3 py-1 inline-block">How it works</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div className="animate-fade-in" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
