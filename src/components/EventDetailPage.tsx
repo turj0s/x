@@ -95,7 +95,6 @@ export const EventDetailPage: React.FC = () => {
           title="Template Not Found"
           description="The CV template you're looking for doesn't exist or has been removed."
         />
-        <Navbar />
         <div className="text-center mt-20">
           <h1 className="text-4xl font-medium mb-4 text-[#1A1A1A]">Template Not Found</h1>
           <p className="text-lg text-[#1A1A1A] opacity-70 mb-8">
