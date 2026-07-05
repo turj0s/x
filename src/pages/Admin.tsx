@@ -255,7 +255,7 @@ const Admin = () => {
     <div className="min-h-screen bg-white p-8">
       <SEOHead 
         title="Admin Dashboard"
-        description="Manage CV templates and content for your CV Maker"
+        description="Manage UNICV templates, review saved CVs, and curate the catalog of professional resume designs shown across the app."
       />
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
