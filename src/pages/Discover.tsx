@@ -67,6 +67,14 @@ const Discover = () => {
     detectUserCountry();
   }, []);
 
+  useEffect(() => {
+    if (location.hash === '#how-it-works') {
+      setTimeout(() => {
+        document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [location.hash, location.pathname]);
+
   // Set initial date only if there are events today
   useEffect(() => {
     if (!initialDateSet && events.length > 0) {
