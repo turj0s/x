@@ -82,6 +82,10 @@ const DOCSPACE_FILES: Record<string, { fileId: string; requestToken: string }> =
     fileId: '4556644',
     requestToken: 'Q3R3MGNteEdhL2k3QUUwMU4yU3JGUTVMc3pvNy8rSFlBQnNsVnA4ZkZ1ST0_ImUxZDlmM2ZlLTljNWMtNGNkZC1hYTM2LTVkMWM0NWIwMTZlNCI',
   },
+  'https://docspace-bg94v1.onlyoffice.com/s/4czZycbqW42vtj7': {
+    fileId: '4557237',
+    requestToken: 'MVdFNlc1Q2hjck1IVlBGZUNCRnJFeW5kYWlPUllscjRJMUU2S1ZLZjhzMD0_ImViNzExMDEwLTc1Y2YtNDVlNy1iOGJkLTRhM2MzYWZlY2ZmMyI',
+  },
 };
 
 const getDocSpaceFile = (url: string) => {
