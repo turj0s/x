@@ -357,8 +357,11 @@ const Admin = () => {
                 <img 
                   src={selectedEvent.background_image_url} 
                   alt="Current background" 
+                  width={800}
+                  height={200}
                   className="w-full h-32 object-cover mb-2 rounded"
                 />
+
               )}
               <Input
                 type="file"

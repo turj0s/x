@@ -345,7 +345,7 @@ const EditEvent = () => {
               <div className="flex flex-col gap-3 md:gap-4">
             <label className="w-full aspect-[4/3] border border-black bg-[#D9D9D9] flex items-center justify-center cursor-pointer hover:bg-[#CECECE] transition-colors">
               {imagePreview ? (
-                <img src={imagePreview} alt="CV preview" className="w-full h-full object-cover" />
+                <img src={imagePreview} alt="CV preview" width={800} height={1000} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-black text-[11px] font-medium uppercase tracking-wider">
                   ADD PREVIEW
